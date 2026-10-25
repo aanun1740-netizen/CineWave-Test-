@@ -1,2 +1,4 @@
-// Compatibility alias; the canonical public configuration is shared.
-window.CINEWAVE_ADMIN_CONFIG=window.CINEWAVE_CONFIG;
+window.CINEWAVE_CONFIG = {
+  url: "https://zayssiouqexwdicudalc.supabase.co",
+  key: "sb_publishable_jnNJZVXtRFzWakYL5u4aug_kaVcu85B"
+};
