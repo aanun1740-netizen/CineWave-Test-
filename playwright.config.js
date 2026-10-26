@@ -1,4 +1,3 @@
-import { existsSync } from "node:fs";
 import { defineConfig } from "@playwright/test";
 export default defineConfig({
   testDir: "./e2e",
@@ -7,9 +6,13 @@ export default defineConfig({
   use: {
     baseURL: "http://127.0.0.1:4173/CineWave-Test-/",
     browserName: "chromium",
+    // H.264 (MP4 and our HLS segments) needs a browser with proprietary codecs.
+    // Use the same branded Chrome channel locally and in CI; never silently
+    // switch between a distribution Chromium and Playwright's headless shell.
+    channel: "chrome",
     headless: true,
-    launchOptions: existsSync("/usr/bin/chromium")
-      ? { executablePath: "/usr/bin/chromium" }
+    launchOptions: process.env.PLAYWRIGHT_CHROME_EXECUTABLE_PATH
+      ? { executablePath: process.env.PLAYWRIGHT_CHROME_EXECUTABLE_PATH }
       : {},
   },
   webServer: {

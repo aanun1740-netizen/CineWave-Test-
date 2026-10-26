@@ -23,9 +23,11 @@ npm run preview -- --host 127.0.0.1 --port 4173
 ոճերը պահպանված են։ Guest My List-ը և Continue Watching-ը շարունակում են օգտագործել
 նախկին localStorage բանալիները, authentication-ը՝ նախկին per-tab session storage-ը։
 
-Browser թեստեր՝ build-ից հետո `npm run test:e2e`։ Օգտագործվում է համակարգի
-`/usr/bin/chromium`-ը, եթե այն առկա է։ Հակառակ դեպքում նախ գործարկեք
-`npx playwright install chromium`։ Թեստերը բոլոր արտաքին հարցումները փոխարինում կամ
+Browser թեստեր՝ build-ից հետո `npm run test:e2e`։ Տեղային և CI գործարկումները օգտագործում են
+Playwright-ի `chrome` channel-ը՝ H.264 աջակցությամբ branded Google Chrome։ Նախ
+գործարկեք `npx playwright install chrome`։ Եթե Chrome-ը տեղադրված է ոչ ստանդարտ
+ուղով, օգտագործեք `PLAYWRIGHT_CHROME_EXECUTABLE_PATH` փոփոխականը։ Browser-ի
+ընտրությունն այլևս ինքնաբերաբար չի փոխվում համակարգի Chromium-ի առկայությունից։ Թեստերը բոլոր արտաքին հարցումները փոխարինում կամ
 արգելափակում են և չեն միանում իրական Supabase-ին։ MP4/WebM/HLS fixture-ները
 տեղային սինթետիկ տեսանյութեր են․ վերստեղծման հրահանգները՝ `e2e/fixtures/README.md`։
 
@@ -89,3 +91,5 @@ admin մուտքային տվյալների, playback ապացույցների �
 տեսքի և MP4/WebM/HLS decoding-ի ծածկույթը։ Տվյալների բազայի, schema-ի, RLS-ի,
 իրական տվյալների փոփոխությունների և deployment-ի ցանկացած գործողությունից առաջ
 պահանջվում է առանձին հաստատում։ React + Vite միգրացիան իրականացվել է Phase 0-ի հաստատումից հետո։
+
+CI media decoding-ի ուղղման հետաքննությունը՝ [CI-MEDIA-FIX.md](CI-MEDIA-FIX.md)։

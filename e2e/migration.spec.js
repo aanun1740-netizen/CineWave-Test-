@@ -104,7 +104,8 @@ test("admin entry survives reload under the Pages prefix and shows safe login", 
 for (const extension of ["mp4", "webm", "m3u8"]) {
   test(`real ${extension} decoding, seek and saved progress with synthetic local media`, async ({
     page,
-  }) => {
+    browser,
+  }, testInfo) => {
     const url = `https://media.invalid/sample.${extension}`;
     const movie = {
       ...fixture[0],
@@ -160,8 +161,38 @@ for (const extension of ["mp4", "webm", "m3u8"]) {
     });
     await page.goto("./#/watch/catalog%3A1");
     const video = page.locator("video");
+    // Keep the real decoding assertion; record browser/codec/network evidence
+    // instead of hiding an unsupported decoder behind a longer timeout.
+    await testInfo.attach("media-environment", {
+      body: JSON.stringify(
+        {
+          browser: browser.version(),
+          url,
+          ...(await video.evaluate((node) => ({
+            source: node.currentSrc || node.src,
+            h264: node.canPlayType('video/mp4; codecs="avc1.64000a"'),
+            vp8: node.canPlayType('video/webm; codecs="vp8"'),
+            h264MSE:
+              window.MediaSource?.isTypeSupported(
+                'video/mp4; codecs="avc1.64000a"',
+              ) || false,
+          }))),
+        },
+        null,
+        2,
+      ),
+      contentType: "application/json",
+    });
     await expect
-      .poll(() => video.evaluate((node) => node.readyState))
+      .poll(() =>
+        video.evaluate((node) => {
+          if (node.error)
+            throw new Error(
+              `Media decode failed: ${node.error.code} ${node.error.message}; src=${node.currentSrc || node.src}`,
+            );
+          return node.readyState;
+        }),
+      )
       .toBeGreaterThanOrEqual(2);
     await video.evaluate((node) => node.play());
     await expect
