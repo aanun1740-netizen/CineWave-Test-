@@ -114,3 +114,5 @@ function mapCatalogMovie(row) {
     genres,genre:genres[0] || '',kind:row.media_type==='tv'?'TV Show':'Movie',mediaType:row.media_type==='tv'?'tv':'movie',trailer:cleanText(row.trailer_url),rating:row.rating != null ? String(row.rating) : '',duration:'',
     img:posterURL(row.poster_path),backdrop:backdropURL(row.backdrop_path),approvalRequired:Object.prototype.hasOwnProperty.call(row,'rights_verification_status'),approval:row.playback_verification||null,renditions:verifiedRenditions(row),video:cleanText(row.watch_url),progress:globalThis.CineWavePlayer?.progressFor('catalog:'+String(row.id ?? row.tmdb_id))||0};
 }
+
+window.CineWaveCatalog = {mapCatalogMovie, localizedMovie, genreLabel, availableGenres, canonicalGenre};

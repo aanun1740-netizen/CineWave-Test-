@@ -84,6 +84,7 @@
   listen(volume,'input',()=>{video.volume=Number(volume.value);video.muted=video.volume===0;});
   listen(seek,'input',()=>{if(!seek.disabled){video.currentTime=Number(seek.value);updateProgress();}});
   listen(seek,'change',()=>save(true));
+  listen(video,'seeked',()=>{updateProgress();save(true);});
   listen(fullscreen,'click',async()=>{try{if(document.fullscreenElement===wrap)await document.exitFullscreen();else if(wrap.requestFullscreen)await wrap.requestFullscreen();else if(video.webkitEnterFullscreen)video.webkitEnterFullscreen();else setState('fullscreenError');}catch{setState('fullscreenError');}});
   listen(document,'fullscreenchange',()=>localize());
   listen(retry,'click',attachSource);
