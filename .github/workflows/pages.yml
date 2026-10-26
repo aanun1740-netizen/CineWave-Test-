@@ -1,0 +1,90 @@
+name: Prepare or publish CineWave-Test Pages
+
+# Deliberately no push, pull_request or workflow_run deployment trigger.
+on:
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: Publish only after explicit owner approval (otherwise build only)
+        type: boolean
+        required: true
+        default: false
+      confirm_repository:
+        description: To publish, enter aanun1740-netizen/CineWave-Test-
+        type: string
+        required: false
+      approved_sha:
+        description: To publish, enter the full approved main commit SHA
+        type: string
+        required: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages-cinewave-test
+  cancel-in-progress: false
+
+jobs:
+  build:
+    if: github.repository == 'aanun1740-netizen/CineWave-Test-'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate explicit publication approval
+        env:
+          PUBLISH: ${{ inputs.publish }}
+          CONFIRM_REPOSITORY: ${{ inputs.confirm_repository }}
+          APPROVED_SHA: ${{ inputs.approved_sha }}
+        run: |
+          if [ "$PUBLISH" = "true" ]; then
+            test "$GITHUB_REF" = "refs/heads/main"
+            test "$CONFIRM_REPOSITORY" = "aanun1740-netizen/CineWave-Test-"
+            test "$APPROVED_SHA" = "$GITHUB_SHA"
+          fi
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npm test
+      - run: npm run build
+      - run: npx playwright install --with-deps chrome
+      - run: npm run test:e2e
+      - name: Upload validated dist for this run
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: pages-test-diagnostics
+          path: test-results/
+          retention-days: 7
+
+  deploy:
+    if: >-
+      github.repository == 'aanun1740-netizen/CineWave-Test-' &&
+      github.ref == 'refs/heads/main' &&
+      inputs.publish == true &&
+      inputs.confirm_repository == 'aanun1740-netizen/CineWave-Test-' &&
+      inputs.approved_sha == github.sha
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Read existing Pages configuration without enabling or changing it
+        uses: actions/configure-pages@v5
+        with:
+          enablement: false
+      - name: Publish this run's validated dist artifact
+        id: deployment
+        uses: actions/deploy-pages@v4

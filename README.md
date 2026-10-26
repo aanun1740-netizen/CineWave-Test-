@@ -93,3 +93,7 @@ admin մուտքային տվյալների, playback ապացույցների �
 պահանջվում է առանձին հաստատում։ React + Vite միգրացիան իրականացվել է Phase 0-ի հաստատումից հետո։
 
 CI media decoding-ի ուղղման հետաքննությունը՝ [CI-MEDIA-FIX.md](CI-MEDIA-FIX.md)։
+
+GitHub Pages workflow-ի անվտանգ նախապատրաստումն ու առանձին հաստատման քայլերը՝
+[PAGES-DEPLOYMENT.md](PAGES-DEPLOYMENT.md)։ Workflow-ը լռելյայն միայն build է պատրաստում
+և push/PR իրադարձությամբ ոչինչ չի հրապարակում։

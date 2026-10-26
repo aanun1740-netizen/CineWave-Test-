@@ -13,7 +13,8 @@
     "test:react": "vitest run",
     "test:e2e": "playwright test",
     "test": "npm run check:staging && npm run test:phase0 && npm run test:react",
-    "build": "npm run check:staging && vite build"
+    "build": "npm run check:staging && vite build && npm run check:pages",
+    "check:pages": "node scripts/check-pages-build.cjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "2.118.0",
