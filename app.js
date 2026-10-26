@@ -134,7 +134,7 @@ const PUBLIC_API=window.CINEWAVE_CONFIG;
 async function loadCatalog(){
  if(loadingCatalog)return;loadingCatalog=true;catalogState='loading';render();
  try{
-  const response=await fetch(`${PUBLIC_API.url}/rest/v1/movies?select=*&is_published=eq.true&order=release_date.desc`,{headers:{apikey:PUBLIC_API.key,Authorization:`Bearer ${PUBLIC_API.key}`}});
+  const response=await window.CineWaveStaging.fetch(`${PUBLIC_API.url}/rest/v1/movies?select=*&is_published=eq.true&order=release_date.desc`,{headers:{apikey:PUBLIC_API.key,Authorization:`Bearer ${PUBLIC_API.key}`}});
   if(!response.ok)throw new Error('catalog-unavailable');const rows=await response.json();if(!Array.isArray(rows))throw new Error('invalid-catalog');
   movies.splice(0,movies.length,...rows.map(mapCatalogMovie));catalogState='ready';
  }catch{catalogState='error';}finally{loadingCatalog=false;render();}

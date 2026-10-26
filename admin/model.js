@@ -2,16 +2,16 @@
 (() => {
  const fields=['title_en','title_ru','title_hy','overview_en','overview_ru','overview_hy','release_date','poster_path','backdrop_path','trailer_url','watch_url','rights_holder','license_type','original_source_url','license_evidence_url','license_terms_url','attribution'];
  const https=value=>{try{const url=new URL(value);return url.protocol==='https:'&&!url.username&&!url.password;}catch{return false;}};
- const media=value=>https(value)&&/\.(mp4|m3u8)$/i.test(new URL(value).pathname);
+ const media=value=>https(value)&&/\.(mp4|webm|m3u8)$/i.test(new URL(value).pathname);
  function renditions(values){
   if(!Array.isArray(values)||values.length>4)throw new Error('Use at most four actual renditions.');
-  const seen=new Set(),urls=new Set();return values.map(row=>{const height=Number(row.height),url=String(row.url||'').trim();if(![360,480,720,1080].includes(height)||seen.has(height)||urls.has(url)||!media(url))throw new Error('Each rendition needs a distinct supported height and an actual HTTPS MP4/HLS URL.');seen.add(height);urls.add(url);return {height,url};});
+  const seen=new Set(),urls=new Set();return values.map(row=>{const height=Number(row.height),url=String(row.url||'').trim();if(![360,480,720,1080].includes(height)||seen.has(height)||urls.has(url)||!media(url))throw new Error('Each rendition needs a distinct supported height and an actual HTTPS MP4/WebM/HLS URL.');seen.add(height);urls.add(url);return {height,url};});
  }
  function payload(values,sources){
   const out={};for(const name of fields)out[name]=String(values[name]||'').trim()||null;
   if(!out.title_en)throw new Error('An English title is required.');
   for(const name of ['trailer_url','original_source_url','license_evidence_url','license_terms_url'])if(out[name]&&!https(out[name]))throw new Error(name+' must be an HTTPS URL without credentials.');
-  if(out.watch_url&&!media(out.watch_url))throw new Error('Use an HTTPS MP4 or .m3u8 URL for playback.');
+  if(out.watch_url&&!media(out.watch_url))throw new Error('Use an HTTPS MP4, WebM or .m3u8 URL for playback.');
   for(const name of ['poster_path','backdrop_path'])if(out[name]&&!https(out[name])&&!/^\/?[\w-]+\.(png|jpg|jpeg|webp)$/i.test(out[name]))throw new Error('Artwork must be an HTTPS URL or an existing TMDB file path.');
   if(out.release_date&&!/^\d{4}-\d{2}-\d{2}$/.test(out.release_date))throw new Error('Use a valid ISO release date.');
   out.media_type=values.media_type==='tv'?'tv':'movie';

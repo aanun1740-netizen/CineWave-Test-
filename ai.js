@@ -8,7 +8,7 @@
  form.addEventListener('submit',async event=>{
   event.preventDefault();const message=input.value.trim();if(!message||send.disabled)return;addMessage(message,'user');input.value='';input.disabled=true;send.disabled=true;const waiting=addMessage(uiText('aiThinking'),'bot');waiting.dataset.aiStatus='aiThinking';
   try{
-   const response=await fetch(`${PUBLIC_API.url}/functions/v1/cinewave-ai`,{method:'POST',headers:{'Content-Type':'application/json',apikey:PUBLIC_API.key,Authorization:PUBLIC_API.key},body:JSON.stringify({message})});
+   const response=await window.CineWaveStaging.fetch(`${PUBLIC_API.url}/functions/v1/cinewave-ai`,{method:'POST',headers:{'Content-Type':'application/json',apikey:PUBLIC_API.key,Authorization:PUBLIC_API.key},body:JSON.stringify({message})});
    const data=await response.json();if(!response.ok)throw new Error('ai-unavailable');if(typeof data.answer==='string'&&data.answer.trim()){waiting.textContent=data.answer;delete waiting.dataset.aiStatus;}else{waiting.textContent=uiText('aiNoAnswer');waiting.dataset.aiStatus='aiNoAnswer';}
   }catch{waiting.textContent=uiText('aiError');waiting.dataset.aiStatus='aiError';}finally{input.disabled=false;send.disabled=false;if(!panel.hidden)input.focus();}
  });
