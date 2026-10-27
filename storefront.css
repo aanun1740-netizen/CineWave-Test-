@@ -22,3 +22,106 @@ body.cinewave-site.has-player-dialog{overflow:hidden}
 
 body.cinewave-site.is-browsing .hero{display:none}
 .cinewave-site .secondary[aria-pressed="true"]{border-color:#f83d6560;background:#f83d6514;color:#ff9ab2}
+/* MOVIE LAB — NEON THEME */
+body.cinewave-site {
+  --bg: #050916;
+  --panel: #0d1426;
+  --muted: #a8b5d2;
+  --red: #ff00b8;
+  --line: #3178ff30;
+  background: var(--bg);
+  color: #f7f9ff;
+}
+
+.cinewave-site .topbar {
+  background: #050916;
+  border-bottom: 1px solid #247dff55;
+  box-shadow: 0 3px 22px #007bff15;
+}
+
+.cinewave-site .brand {
+  color: #ffffff;
+  text-shadow: 0 0 15px #008cff55;
+}
+
+.cinewave-site .brand > span:last-child {
+  color: #ff00b8;
+  text-shadow: 0 0 14px #ff00b866;
+}
+
+.cinewave-site .brand-wave i {
+  background: linear-gradient(#00c8ff, #ff00b8);
+  box-shadow: 0 0 9px #ff00b855;
+}
+
+.cinewave-site .nav button.active:after {
+  background: linear-gradient(90deg, #00c8ff, #ff00b8);
+}
+
+.cinewave-site .hero {
+  background:
+    radial-gradient(ellipse at 78% 40%, #7022d744, transparent 60%),
+    linear-gradient(110deg, #050916, #101637);
+}
+
+.cinewave-site .hero-shade {
+  background: linear-gradient(
+    90deg,
+    #050916 3%,
+    #050916b8 45%,
+    #05091610
+  );
+}
+
+.cinewave-site .primary {
+  background: linear-gradient(110deg, #00baff, #8b3dff, #ff00b8);
+  box-shadow: 0 5px 24px #a124ff55;
+}
+
+.cinewave-site .primary:hover:not(:disabled) {
+  background: linear-gradient(110deg, #26d7ff, #a45cff, #ff32ca);
+  box-shadow: 0 8px 32px #a124ff77;
+}
+
+.cinewave-site .secondary {
+  background: #0b1428;
+  border: 1px solid #3178ff70;
+}
+
+.cinewave-site .genre {
+  background: #0c1428;
+  border: 1px solid #3178ff35;
+  color: #dce6ff;
+}
+
+.cinewave-site .genre.active {
+  background: #ff00b822;
+  border-color: #ff00b8;
+  color: #ff80dc;
+}
+
+.cinewave-site .poster {
+  border: 1px solid #3178ff35;
+  box-shadow: 0 7px 24px #0007;
+}
+
+.cinewave-site .movie:hover .poster {
+  border-color: #ff00b8;
+  box-shadow: 0 0 20px #ff00b844;
+}
+
+.cinewave-site .progress > div,
+.cinewave-site .hero-pagination button.active:after {
+  background: linear-gradient(90deg, #00c8ff, #ff00b8);
+}
+
+@media (max-width: 600px) {
+  .cinewave-site .hero-shade {
+    background: linear-gradient(
+      0deg,
+      #050916 4%,
+      #050916bb 60%,
+      #05091666
+    );
+  }
+}
