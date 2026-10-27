@@ -38,16 +38,16 @@ export function Icons() {
 
 export function Brand({ href = "#/home" }) {
   return (
-    <a className="brand" href={href}>
+    <a className="brand" href={href} aria-label="MovieLab Home">
       <img
         src={`${import.meta.env.BASE_URL}assets/Neon%20Movie%20Lab%20Cinema%20Logo.png`}
         alt="MovieLab"
         style={{
-          width: "180px",
-          height: "58px",
-          objectFit: "cover",
-          objectPosition: "center",
-          borderRadius: "6px"
+          width: "210px",
+          maxWidth: "100%",
+          height: "64px",
+          objectFit: "contain",
+          objectPosition: "left center",
         }}
       />
     </a>
