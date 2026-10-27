@@ -35,16 +35,22 @@ export function Icons() {
     </svg>
   );
 }
+
 export function Brand({ href = "#/home" }) {
   return (
- <a className="brand" href={href}>
-  <span className="brand-wave" aria-hidden="true">
-    <i />
-    <i />
-    <i />
-    <i />
-  </span>
-  Movie<span>Lab</span>
-</a>
+    <a className="brand" href={href}>
+      <img
+        src={`${import.meta.env.BASE_URL}assets/Neon%20Movie%20Lab%20Cinema%20Logo.png`}
+        alt="MovieLab"
+        style={{
+          width: "180px",
+          height: "58px",
+          objectFit: "cover",
+          objectPosition: "center",
+          borderRadius: "6px"
+        }}
+      />
+    </a>
   );
 }
+
