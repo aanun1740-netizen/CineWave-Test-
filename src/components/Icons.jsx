@@ -37,14 +37,14 @@ export function Icons() {
 }
 export function Brand({ href = "#/home" }) {
   return (
-    <a className="brand" href={href}>
-      <span className="brand-wave" aria-hidden="true">
-        <i />
-        <i />
-        <i />
-        <i />
-      </span>
-      Cine<span>Wave</span>
-    </a>
+ <a className="brand" href={href}>
+  <span className="brand-wave" aria-hidden="true">
+    <i />
+    <i />
+    <i />
+    <i />
+  </span>
+  Movie<span>Lab</span>
+</a>
   );
 }
