@@ -59,7 +59,7 @@ export default function AI({ open, setOpen, t }) {
         aria-controls="cw-ai-panel"
         aria-expanded={open}
       >
-        ✦ <span>CineWave AI</span>
+        ✦ <span>MovieLab AI</span>
       </button>
       <section
         id="cw-ai-panel"
@@ -70,7 +70,7 @@ export default function AI({ open, setOpen, t }) {
         <header id="cw-ai-head">
           <div>
             <span className="eyebrow">{t("aiEyebrow")}</span>
-            <h2 id="cw-ai-title">CineWave AI</h2>
+            <h2 id="cw-ai-title">MovieLab AI</h2>
           </div>
           <button
             id="cw-ai-close"
