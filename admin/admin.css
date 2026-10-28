@@ -3,3 +3,32 @@
 #adminLanguage{position:fixed;right:20px;top:12px;width:95px;z-index:10;font-size:11px;padding:6px;background:#27202b}.header-actions{margin-top:16px}
 
 .editor-fields{border:0;padding:0;margin:0;min-width:0}
+
+/* MovieLab Admin — Neon Theme */
+:root {
+  --accent: #e500d6;
+  --muted: #a8a3c5;
+}
+
+.brand span {
+  color: #f000cb;
+  text-shadow: 0 0 12px rgba(240, 0, 203, 0.35);
+}
+
+button.primary,
+.btn-primary {
+  background: linear-gradient(110deg, #39b9ff, #7950ff, #ed00c8);
+  border-color: transparent;
+  color: #fff;
+}
+
+button.primary:hover,
+.btn-primary:hover {
+  filter: brightness(1.12);
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline-color: #8b5cf6;
+}
