@@ -125,3 +125,38 @@ body.cinewave-site {
     );
   }
 }
+/* MOVIELAB — SOFT NEON FINISH */
+
+/* Navigation */
+.cinewave-site .nav button:hover {
+  color: #8edcff;
+  text-shadow: 0 0 9px #39bfff45;
+}
+
+.cinewave-site .nav button.active {
+  color: #f4eaff;
+  text-shadow: 0 0 9px #d18aff40;
+}
+
+/* Collection heading */
+.cinewave-site .hero .eyebrow {
+  color: #b9dfff;
+  text-shadow: 0 0 10px #65aaff55;
+}
+
+.cinewave-site .hero .eyebrow::before {
+  background: linear-gradient(90deg, #69d9ff, #df83d9);
+}
+
+/* MovieLab AI floating button */
+.cinewave-site #cw-ai-button {
+  background: linear-gradient(120deg, #10243b, #292044);
+  color: #e5dcff;
+  border: 1px solid #8e8af080;
+  box-shadow: 0 5px 22px #579cff25;
+}
+
+.cinewave-site #cw-ai-button:hover {
+  border-color: #c18fff;
+  box-shadow: 0 7px 26px #b577f944;
+}
