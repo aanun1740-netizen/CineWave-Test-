@@ -32,3 +32,25 @@ textarea:focus,
 select:focus {
   outline-color: #8b5cf6;
 }
+/* MovieLab neon theme — Admin Panel */
+
+:root {
+  --accent: #b94cff;
+}
+
+.sidebar a.active,
+.sidebar .active,
+nav a.active {
+  background: linear-gradient(
+    90deg,
+    rgba(55, 169, 255, 0.18),
+    rgba(237, 0, 190, 0.16)
+  ) !important;
+  color: #f4eaff !important;
+  border-left: 3px solid #bb5cff;
+}
+
+button:hover {
+  border-color: #a65cff;
+  box-shadow: 0 0 14px rgba(177, 78, 255, 0.18);
+}
