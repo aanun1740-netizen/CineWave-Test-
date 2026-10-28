@@ -517,9 +517,9 @@ export default function Admin() {
         <div className="shell">
           <aside>
             <a className="brand" href={base}>
-              Cine<span>Wave</span>
-              <small>STUDIO</small>
-            </a>
+             Movie<span>Lab</span>
+            <small>STUDIO</small>
+             </a>
             <nav>
               {["overview", "movies"].map((page) => (
                 <button
