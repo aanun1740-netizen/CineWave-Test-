@@ -54,3 +54,18 @@ button:hover {
   border-color: #a65cff;
   box-shadow: 0 0 14px rgba(177, 78, 255, 0.18);
 }
+/* MovieLab — Admin navigation */
+.shell aside nav button.active {
+  background: linear-gradient(
+    90deg,
+    rgba(48, 160, 255, 0.22),
+    rgba(170, 73, 255, 0.18)
+  ) !important;
+  color: #e8dfff !important;
+  box-shadow: inset 3px 0 #9d75ff;
+}
+
+.shell aside nav button:hover {
+  color: #b9ddff;
+  background: rgba(91, 85, 185, 0.12);
+}
