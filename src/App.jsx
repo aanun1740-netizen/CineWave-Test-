@@ -10,7 +10,7 @@ import {
   routeFromHash,
   POSTER_FALLBACK,
 } from "./domain";
-import { useLanguage } from "./hooks/useLanguage";
+import { useLanguage } from "./hooks/useLanguage";F
 import useAccount from "./hooks/useAccount";
 import Accounts from "./components/Accounts";
 import MovieRow, { Artwork } from "./components/MovieRow";
@@ -299,7 +299,7 @@ export default function App() {
           aria-labelledby="profileTitle"
           hidden={!profile}
         >
-          <p className="eyebrow">CINEWAVE</p>
+          <p className="eyebrow">MOVIELAB AI</p>
           <h2 id="profileTitle">{t("profile")}</h2>
           <p>
             {account.session?.user.email ||
@@ -593,7 +593,7 @@ export default function App() {
                   ✦
                 </span>
                 <div>
-                  <p className="eyebrow">CINEWAVE AI</p>
+                  <p className="eyebrow">MOVIELAB AI</p>
                   <h2>{t("askTitle")}</h2>
                   <p>{t("askText")}</p>
                 </div>
@@ -608,7 +608,7 @@ export default function App() {
       <footer>
         <Brand />
         <p>{t("footer")}</p>
-        <span>© CineWave</span>
+        <span>© MovieLab</span>
       </footer>
       {navigation(true)}
       {modal && (
