@@ -14,7 +14,7 @@ export const translations = {
     skip: "Skip to movies",
     mainNav: "Main navigation",
     mobileNav: "Mobile navigation",
-    collection: "THE CINEWAVE COLLECTION",
+    collection: "THE MOVIELAB COLLECTION",
     genericHero: "Your next great film.",
     genericDescription:
       "A new perspective. A familiar favorite. Find a story that stays with you.",
@@ -58,11 +58,8 @@ export const translations = {
     footer:
       "Discover stories. Save your favorites. Playback is available for approved releases.",
     askTitle: "A little inspiration for your next film?",
-    askText:
-      "Meet your cinema companion. Ask CineWave AI for a recommendation.",
-    ask: "Find my next film",
-    aiWelcome:
-      "Hello! I’m CineWave’s movie assistant. What would you like to watch?",
+    askText: "Meet your cinema companion. Ask MovieLab AI for a recommendation.",
+aiWelcome: "Hello! I’m MovieLab’s movie assistant. What would you like to watch?",
     aiMessage: "Your message",
     aiPlaceholder: "Ask about a film…",
     aiThinking: "Finding a little movie inspiration…",
@@ -87,7 +84,7 @@ export const translations = {
     skip: "Перейти к фильмам",
     mainNav: "Главная навигация",
     mobileNav: "Мобильная навигация",
-    collection: "КОЛЛЕКЦИЯ CINEWAVE",
+    collection: "КОЛЛЕКЦИЯ MOVIELAB",
     genericHero: "Ваш следующий любимый фильм.",
     genericDescription:
       "Новый взгляд. Любимая классика. Найдите историю, которая останется с вами.",
@@ -132,11 +129,8 @@ export const translations = {
     footer:
       "Открывайте истории. Сохраняйте любимое. Просмотр доступен для одобренных релизов.",
     askTitle: "Ищете вдохновение для киновечера?",
-    askText:
-      "Ваш помощник в мире кино. Попросите CineWave AI порекомендовать фильм.",
-    ask: "Подобрать фильм",
-    aiWelcome:
-      "Здравствуйте! Я кинопомощник CineWave. Что вы хотели бы посмотреть?",
+    askText: "Ваш помощник в мире кино. Попросите MovieLab AI порекомендовать фильм.",
+aiWelcome: "Здравствуйте! Я кинопомощник MovieLab. Что вы хотели бы посмотреть?",
     aiMessage: "Ваше сообщение",
     aiPlaceholder: "Спросите о фильме…",
     aiThinking: "Ищем вдохновение для киновечера…",
@@ -161,7 +155,7 @@ export const translations = {
     skip: "Անցնել ֆիլմերին",
     mainNav: "Գլխավոր նավարկում",
     mobileNav: "Բջջային նավարկում",
-    collection: "CINEWAVE ՀԱՎԱՔԱԾՈՒ",
+    collection: "MOVIELAB ՀԱՎԱՔԱԾՈՒ",
     genericHero: "Ձեր հաջորդ սիրելի ֆիլմը։",
     genericDescription:
       "Նոր հայացք։ Սիրելի դասական։ Գտեք մի պատմություն, որը կմնա ձեզ հետ։",
@@ -206,10 +200,8 @@ export const translations = {
     footer:
       "Բացահայտեք պատմություններ։ Պահպանեք սիրելիները։ Դիտումը հասանելի է հաստատված թողարկումների համար։",
     askTitle: "Ոգեշնչո՞ւմ եք փնտրում հաջորդ ֆիլմի համար։",
-    askText:
-      "Ձեր ուղեկիցը կինոյի աշխարհում։ Խնդրեք CineWave AI-ին ֆիլմ առաջարկել։",
-    ask: "Գտնել իմ հաջորդ ֆիլմը",
-    aiWelcome: "Բարև։ Ես CineWave-ի կինոօգնականն եմ։ Ի՞նչ կցանկանաք դիտել։",
+    askText: "Ձեր ուղեկիցը կինոյի աշխարհում։ Խնդրեք MovieLab AI-ին ֆիլմ առաջարկել։",
+aiWelcome: "Բարև։ Ես MovieLab-ի կինոօգնականն եմ։ Ի՞նչ կցանկանաք դիտել։",
     aiMessage: "Ձեր հաղորդագրությունը",
     aiPlaceholder: "Հարցրեք ֆիլմի մասին…",
     aiThinking: "Որոնում ենք կինոոգեշնչում…",
