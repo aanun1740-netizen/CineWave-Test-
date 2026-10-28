@@ -152,7 +152,7 @@ export default function Accounts({
   return (
     <section className="account-pages" id="accountPages">
       <div className="account-card">
-        <p className="eyebrow">CINEWAVE</p>
+        <p className="eyebrow">MOVIELAB</p>
         <h1>
           {text(
             {
