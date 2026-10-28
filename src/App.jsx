@@ -299,7 +299,7 @@ export default function App() {
           aria-labelledby="profileTitle"
           hidden={!profile}
         >
-          <p className="eyebrow">MOVIELAB AI</p>
+          <p className="eyebrow">MY ACCOUNT</p>
           <h2 id="profileTitle">{t("profile")}</h2>
           <p>
             {account.session?.user.email ||
