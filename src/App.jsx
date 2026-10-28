@@ -10,7 +10,7 @@ import {
   routeFromHash,
   POSTER_FALLBACK,
 } from "./domain";
-import { useLanguage } from "./hooks/useLanguage";F
+import { useLanguage } from "./hooks/useLanguage";
 import useAccount from "./hooks/useAccount";
 import Accounts from "./components/Accounts";
 import MovieRow, { Artwork } from "./components/MovieRow";
