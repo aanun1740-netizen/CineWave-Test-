@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { backendFetch, config } from "../services/backend";
+import { backendFetch, config, client } from "../services/backend";
 export default function AI({ open, setOpen, t }) {
   const [messages, setMessages] = useState([]),
     [busy, setBusy] = useState(false),
@@ -24,6 +24,13 @@ export default function AI({ open, setOpen, t }) {
       { status: "aiThinking" },
     ]);
     try {
+      const {
+  data: { session },
+} = await client.auth.getSession();
+
+if (!session?.access_token) {
+  throw new Error("Sign in required");
+}
       const response = await backendFetch(
         `${config.url}/functions/v1/cinewave-ai`,
         {
@@ -31,9 +38,9 @@ export default function AI({ open, setOpen, t }) {
           headers: {
             "Content-Type": "application/json",
             apikey: config.key,
-            Authorization: config.key,
-          },
-          body: JSON.stringify({ message: value }),
+Authorization: `Bearer ${session.access_token}`,
+},
+body: JSON.stringify({ message: value }),
         },
       );
       const data = await response.json();
