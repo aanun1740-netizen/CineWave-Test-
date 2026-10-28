@@ -543,7 +543,7 @@ export default function Admin() {
           <main>
             <header>
               <div>
-                <p className="eyebrow">{t({t("MOVIELAB ADMIN")})}</p>
+                <p className="eyebrow">{t("MOVIELAB ADMIN")}</p>
                 <h1>
                   {t(
                     {
