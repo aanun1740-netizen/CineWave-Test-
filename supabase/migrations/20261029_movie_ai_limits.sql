@@ -49,12 +49,12 @@ BEGIN
   END IF;
 
   -- Up to five requests per account per UTC day.
-  IF pg_catalog.coalesce(v_user_count, 0) >= 5 THEN
+  IF coalesce(v_user_count, 0) >= 5 THEN
     RETURN pg_catalog.jsonb_build_object('allowed', false, 'reason', 'daily_limit');
   END IF;
 
   -- Shared safeguard against mass sign-ups exhausting the provider quota.
-  SELECT pg_catalog.coalesce(pg_catalog.sum(request_count), 0)
+  SELECT coalesce(pg_catalog.sum(request_count), 0)
   INTO v_global_count
   FROM cinewave_private.ai_daily_usage
   WHERE usage_day = v_day;
@@ -73,7 +73,7 @@ BEGIN
 
   RETURN pg_catalog.jsonb_build_object(
     'allowed', true,
-    'remaining_today', 4 - pg_catalog.coalesce(v_user_count, 0)
+    'remaining_today', 4 - coalesce(v_user_count, 0)
   );
 END;
 $function$;
