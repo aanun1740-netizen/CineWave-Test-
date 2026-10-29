@@ -63,7 +63,7 @@ export default function MovieDialog({
       <div className="dialog">
         <div className="dialog-top">
           <div>
-            <span className="eyebrow">CINEWAVE</span>
+            <span className="eyebrow">MOVIELAB</span>
             <h2 id="modalTitle">
               {info.title || t(loading ? "loading" : "titleUnknown")}
             </h2>
