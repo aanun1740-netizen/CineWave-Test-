@@ -43,7 +43,7 @@ export default {
 
     // A user-supplied ID must never determine quota ownership. Verify the
     // signed-in user's JWT with Supabase Auth and obtain user.id from there.
-    const jwt = req.headers.get("Authorization")?.match(/^Bearer (\\S+)$/i)?.[1];
+    const jwt = req.headers.get("Authorization")?.match(/^Bearer (\S+)$/i)?.[1];
     if (!jwt) {
       return reply({ error: "sign_in_required" }, 401);
     }
