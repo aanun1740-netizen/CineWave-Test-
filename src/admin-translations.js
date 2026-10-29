@@ -11,7 +11,7 @@ export const adminEntries = [
   ["Password", "Пароль", "Գաղտնաբառ"],
   ["Sign in securely", "Войти", "Մուտք գործել"],
   ["Sign out", "Выйти", "Դուրս գալ"],
-  ["← Back to CineWave", "← Вернуться в CineWave", "← Վերադառնալ CineWave"],
+  ["← Back to MovieLab", "← Вернуться в MovieLab", "← Վերադառնալ MovieLab"],
   [
     "Authorization is enforced by Supabase, not by this page.",
     "Права доступа проверяются на сервере Supabase.",
@@ -21,7 +21,7 @@ export const adminEntries = [
   ["▤ Movie library", "▤ Кинобиблиотека", "▤ Ֆիլմադարան"],
   ["＋ Add movie", "＋ Добавить фильм", "＋ Ավելացնել ֆիլմ"],
   ["Visit public website ↗", "Открыть сайт ↗", "Բացել կայքը ↗"],
-  ["CINEWAVE ADMIN", "УПРАВЛЕНИЕ CINEWAVE", "CINEWAVE ԿԱՌԱՎԱՐՈՒՄ"],
+  ["MOVIELAB ADMIN", "АДМИН-ПАНЕЛЬ MOVIELAB", "MOVIELAB ԿԱՌԱՎԱՐՈՒՄ"],
   ["Overview", "Обзор", "Ակնարկ"],
   ["Movie library", "Кинобиблиотека", "Ֆիլմադարան"],
   ["Add movie", "Добавить фильм", "Ավելացնել ֆիլմ"],
@@ -198,9 +198,9 @@ export const adminEntries = [
     "Դուք դուրս եկաք այս սարքում։",
   ],
   [
-    "Access denied. This account is not an authorized CineWave administrator.",
-    "Доступ запрещён. У этого аккаунта нет прав администратора CineWave.",
-    "Մուտքը մերժված է։ Այս հաշիվը CineWave-ի ադմինիստրատորի իրավունքներ չունի։",
+    "Access denied. This account is not an authorized MovieLab administrator.",
+    "Доступ запрещён. У этого аккаунта нет прав администратора MovieLab.",
+    "Մուտքը մերժված է։ Այս հաշիվը MovieLab-ի ադմինիստրատորի իրավունքներ չունի։",
   ],
   [
     "Administrator setup unavailable. Ask the owner to review and apply the Admin migration.",
@@ -265,9 +265,9 @@ export const adminEntries = [
     "Ընդմի՞շտ ջնջել ֆիլմը",
   ],
   [
-    "This removes the record from CineWave. It does not delete shared image assets. Type its exact title to confirm.",
-    "Запись будет удалена из CineWave, но общие изображения останутся. Введите точное название.",
-    "Գրառումը կջնջվի CineWave-ից, իսկ ընդհանուր պատկերները կմնան։ Մուտքագրեք ճշգրիտ վերնագիրը։",
+    "This removes the record from MovieLab. It does not delete shared image assets. Type its exact title to confirm.",
+    "Запись будет удалена из MovieLab, но общие изображения останутся. Введите точное название.",
+    "Գրառումը կջնջվի MovieLab-ից, իսկ ընդհանուր պատկերները կմնան։ Մուտքագրեք ճշգրիտ վերնագիրը։",
   ],
   [
     "This record changed or access was denied. Refresh before editing again.",
