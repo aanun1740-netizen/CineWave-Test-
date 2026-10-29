@@ -254,3 +254,54 @@ body.cinewave-site {
     padding-inline: 7px;
   }
 }
+
+
+/* MOVIELAB — MOBILE NAV COLOR UPDATE
+   Match the blue/pink logo, with legible inactive and active states.
+   Only the small-screen navigation is affected. */
+@media (max-width: 600px) {
+  .cinewave-site .mobile-nav {
+    background: linear-gradient(115deg, rgba(5, 13, 35, .97), rgba(17, 13, 40, .97));
+    border-top: 1px solid rgba(89, 148, 255, .42);
+    box-shadow: 0 -7px 25px rgba(0, 0, 0, .32), 0 -1px 12px rgba(49, 120, 255, .13);
+  }
+
+  .cinewave-site .mobile-nav button {
+    color: #b9c9e6;
+    border-radius: 11px;
+    transition: color .2s ease, background-color .2s ease;
+  }
+
+  .cinewave-site .mobile-nav button span {
+    color: #a7c6f5;
+  }
+
+  .cinewave-site .mobile-nav button b {
+    font-size: 9px;
+    font-weight: 600;
+    color: inherit;
+  }
+
+  .cinewave-site .mobile-nav button.active {
+    color: #ffe1f5;
+    background: linear-gradient(110deg, rgba(0, 186, 255, .18), rgba(255, 0, 184, .17));
+    box-shadow: inset 0 0 0 1px rgba(225, 122, 244, .27);
+  }
+
+  .cinewave-site .mobile-nav button.active span {
+    color: #ff8ae4;
+    text-shadow: 0 0 10px rgba(255, 0, 184, .28);
+  }
+
+  .cinewave-site .mobile-nav button:focus-visible {
+    outline: 2px solid #78d4ff;
+    outline-offset: 2px;
+  }
+}
+
+@media (max-width: 600px) and (hover: hover) {
+  .cinewave-site .mobile-nav button:hover:not(.active) {
+    color: #ffffff;
+    background: rgba(61, 113, 196, .20);
+  }
+}
