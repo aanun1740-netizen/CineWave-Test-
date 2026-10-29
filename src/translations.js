@@ -75,6 +75,7 @@ aiWelcome: "Hello! I’m MovieLab’s movie assistant. What would you like to wa
     aiClose: "Close chat",
     aiSend: "Send message",
     aiEyebrow: "YOUR CINEMA COMPANION",
+    aiCatalogHeading: "Related titles in the MovieLab catalog",
   },
   ru: {
     all: "Все фильмы",
@@ -153,6 +154,7 @@ aiWelcome: "Здравствуйте! Я кинопомощник MovieLab. Чт
     aiClose: "Закрыть чат",
     aiSend: "Отправить сообщение",
     aiEyebrow: "ВАШ ПОМОЩНИК В МИРЕ КИНО",
+    aiCatalogHeading: "Похожие фильмы в каталоге MovieLab",
   },
   hy: {
     all: "Բոլոր ֆիլմերը",
@@ -231,5 +233,6 @@ aiWelcome: "Բարև։ Ես MovieLab-ի կինոօգնականն եմ։ Ի՞նչ
     aiClose: "Փակել զրույցը",
     aiSend: "Ուղարկել հաղորդագրությունը",
     aiEyebrow: "ՁԵՐ ԿԻՆՈՈՒՂԵԿԻՑԸ",
+    aiCatalogHeading: "Համապատասխան ֆիլմեր MovieLab-ի ֆիլմադարանից",
   },
 };
