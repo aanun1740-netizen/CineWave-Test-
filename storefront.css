@@ -311,3 +311,9 @@ body.cinewave-site {
 .cinewave-site .cw-ai-catalog > p { margin: 0 0 9px; font-size: 12px; color: #b9dfff; }
 .cinewave-site .cw-ai-catalog-item { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; min-height: 40px; padding: 8px 10px; margin-top: 5px; border-radius: 8px; border: 1px solid rgba(110,165,255,.30); background: #111e38; color: #f5f8ff; text-align: left; cursor: pointer; }
 .cinewave-site .cw-ai-catalog-item:hover, .cinewave-site .cw-ai-catalog-item:focus-visible { border-color: #8dd7ff; background: #183054; }
+
+/* MovieLab AI 2.2: compact poster-backed result cards */
+.cinewave-site .cw-ai-catalog-item img {width:44px;height:65px;object-fit:cover;border-radius:5px;flex:none;background:#0b1428}
+.cinewave-site .cw-ai-catalog-meta {display:flex;flex:1;min-width:0;flex-direction:column;gap:4px}
+.cinewave-site .cw-ai-catalog-meta strong {font-size:13px;overflow-wrap:anywhere}
+.cinewave-site .cw-ai-catalog-meta small {font-size:11px;color:#bac9df}
