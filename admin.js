@@ -13,7 +13,7 @@
   if(next&&!acceptSessions)return;
   const keep=authorized&&next?.user.id===session?.user.id;const current=++generation;session=next;if(!keep)lock(next?'Checking administrator authorization…':'Sign in to continue.');
   if(!next)return;
-  try{const {data,error}=await client.rpc('cinewave_is_admin');if(current!==generation)return;if(error)throw new Error('Administrator setup unavailable. Ask the owner to review and apply the Admin migration.');if(data!==true){lock('Access denied. This account is not an authorized CineWave administrator.');return;}
+  try{const {data,error}=await client.rpc('cinewave_is_admin');if(current!==generation)return;if(error)throw new Error('Administrator setup unavailable. Ask the owner to review and apply the Admin migration.');if(data!==true){lock('Access denied. This account is not an authorized MovieLab administrator.');return;}
    authorized=true;$('access').hidden=true;$('dashboard').hidden=false;$('accountEmail').textContent=next.user.email||'Administrator';if(!keep)showView('overview');if(!dirty)await loadMovies(current);
   }catch(error){if(current===generation)lock(error.message);}
  }
@@ -54,7 +54,7 @@
    if(!authorized)return;busy=true;try{await update(row,{is_published:!row.is_published});await loadMovies();}catch(error){fail(error);}finally{busy=false;}
   }
   if(name==='delete'){
-   if(!await confirm({title:'Permanently delete this movie?',text:'This removes the record from CineWave. It does not delete shared image assets. Type its exact title to confirm.',typed:row.title_en}))return;
+   if(!await confirm({title:'Permanently delete this movie?',text:'This removes the record from MovieLab. It does not delete shared image assets. Type its exact title to confirm.',typed:row.title_en}))return;
    if(!authorized)return;busy=true;try{const {data,error}=await client.from('movies').delete().eq('id',row.id).eq('updated_at',row.updated_at).select('id');if(error)throw error;if(!data.length)throw new Error('Record changed or access denied. Refresh first.');await loadMovies();}catch(error){fail(error);}finally{busy=false;}
   }
  }
