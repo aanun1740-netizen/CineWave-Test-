@@ -36,6 +36,8 @@ vi.mock("./services/backend", () => ({
 }));
 import App from "./App";
 import Admin from "./Admin";
+import AI from "./components/AI";
+import { translations } from "./translations";
 const proof = (url) => ({
   watch_url: url,
   license_verified: true,
@@ -237,6 +239,47 @@ describe("React storefront", () => {
     expect(screen.getByLabelText("Գաղտնաբառ").value).toBe("");
   });
 });
+describe("MovieLab AI guest and quota messages", () => {
+  const t = (key) => translations.hy[key] || key;
+
+  it("requires an actual session before contacting the function", async () => {
+    const user = userEvent.setup();
+    render(<AI open={true} setOpen={vi.fn()} t={t} />);
+    const field = screen.getByRole("textbox", { name: "Ձեր հաղորդագրությունը" });
+    expect(field.maxLength).toBe(400);
+    await user.type(field, "Բարև");
+    await user.click(screen.getByRole("button", { name: "Ուղարկել հաղորդագրությունը" }));
+    expect(await screen.findByText(translations.hy.aiSignIn)).toBeTruthy();
+    expect(mocks.backendFetch).not.toHaveBeenCalled();
+  });
+
+  it("shows a meaningful daily quota message instead of a generic error", async () => {
+    mocks.getSession.mockResolvedValue({
+      data: { session: { access_token: "user-jwt-test" } },
+      error: null,
+    });
+    mocks.backendFetch.mockResolvedValue({
+      ok: false,
+      status: 429,
+      json: async () => ({ error: "daily_limit" }),
+    });
+    const user = userEvent.setup();
+    render(<AI open={true} setOpen={vi.fn()} t={t} />);
+    await user.type(
+      screen.getByRole("textbox", { name: "Ձեր հաղորդագրությունը" }),
+      "Պատմական ֆիլմ",
+    );
+    await user.click(screen.getByRole("button", { name: "Ուղարկել հաղորդագրությունը" }));
+    expect(await screen.findByText(translations.hy.aiDailyLimit)).toBeTruthy();
+    expect(mocks.backendFetch).toHaveBeenCalledWith(
+      expect.stringMatching(/\/functions\/v1\/cinewave-ai$/),
+      expect.objectContaining({
+        headers: expect.objectContaining({ Authorization: "Bearer user-jwt-test" }),
+      }),
+    );
+  });
+});
+
 describe("React admin", () => {
   it("denies non-admin sessions without querying movie data", async () => {
     mocks.getSession.mockResolvedValue({
