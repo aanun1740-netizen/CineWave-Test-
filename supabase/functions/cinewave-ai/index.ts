@@ -1,7 +1,8 @@
 // STAGING ONLY. Deploy manually to Supabase project zayssiouqexwdicudalc.
-// Keep "Verify JWT with legacy secret" OFF when using @supabase/server auth:user.
-// No Gemini key, service-role secret, or user JWT is ever exposed to the browser.
-import { createSupabaseContext } from "npm:@supabase/server@1";
+// "Verify JWT with legacy secret" may stay OFF; this handler verifies
+// each JWT against Supabase Auth using auth.getUser(token) BEFORE quota/AI.
+// Never expose the Gemini key or service-role key in browser responses.
+import { createClient } from "npm:@supabase/supabase-js@2";
 
 const allowedOrigin = "https://aanun1740-netizen.github.io";
 const MAX_CHARS = 400;
@@ -40,17 +41,38 @@ export default {
       return reply({ error: "message_too_long" }, 413);
     }
 
-    // Verify signed-in Supabase user token before making any paid/limited call.
-    let ctx;
+    // A user-supplied ID must never determine quota ownership. Verify the
+    // signed-in user's JWT with Supabase Auth and obtain user.id from there.
+    const jwt = req.headers.get("Authorization")?.match(/^Bearer (\\S+)$/i)?.[1];
+    if (!jwt) {
+      return reply({ error: "sign_in_required" }, 401);
+    }
+
+    const url = Deno.env.get("SUPABASE_URL");
+    const publishableKey =
+      Deno.env.get("SUPABASE_ANON_KEY") ||
+      JSON.parse(Deno.env.get("SUPABASE_PUBLISHABLE_KEYS") || "{}").default;
+    const secretKey =
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ||
+      JSON.parse(Deno.env.get("SUPABASE_SECRET_KEYS") || "{}").default;
+    if (!url || !publishableKey || !secretKey) {
+      console.error("MovieLab AI Supabase configuration unavailable");
+      return reply({ error: "server_unavailable" }, 503);
+    }
+
+    const userClient = createClient(url, publishableKey, {
+      auth: { persistSession: false, autoRefreshToken: false },
+    });
+    let userId: string;
     try {
-      const result = await createSupabaseContext(req, { auth: "user" });
-      if (result.error || !result.data?.userClaims?.id) {
+      const { data: { user }, error } = await userClient.auth.getUser(jwt);
+      if (error || !user?.id) {
         return reply({ error: "sign_in_required" }, 401);
       }
-      ctx = result.data;
-    } catch (error) {
-      console.error("AI user authentication failed", error instanceof Error ? error.name : "unknown");
-      return reply({ error: "sign_in_required" }, 401);
+      userId = user.id;
+    } catch {
+      console.error("MovieLab AI authentication service unavailable");
+      return reply({ error: "auth_unavailable" }, 503);
     }
 
     let message: string;
@@ -83,8 +105,11 @@ export default {
     // the server-only secret client; browsers have no EXECUTE privilege.
     let remainingToday = 0;
     try {
-      const { data, error } = await ctx.supabaseAdmin.rpc("cinewave_ai_claim_quota", {
-        p_user_id: ctx.userClaims.id,
+      const serviceClient = createClient(url, secretKey, {
+        auth: { persistSession: false, autoRefreshToken: false },
+      });
+      const { data, error } = await serviceClient.rpc("cinewave_ai_claim_quota", {
+        p_user_id: userId,
       });
       if (error || !data || data.allowed !== true) {
         if (error) {
