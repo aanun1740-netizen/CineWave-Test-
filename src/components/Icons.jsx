@@ -49,7 +49,6 @@ export function Brand({ href = "#/home" }) {
           height: "72px",
           objectFit: "contain",
           objectPosition: "left center",
-          filter: "invert(1)",
           display: "block",
         }}
       />
