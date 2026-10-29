@@ -317,3 +317,21 @@ body.cinewave-site {
 .cinewave-site .cw-ai-catalog-meta {display:flex;flex:1;min-width:0;flex-direction:column;gap:4px}
 .cinewave-site .cw-ai-catalog-meta strong {font-size:13px;overflow-wrap:anywhere}
 .cinewave-site .cw-ai-catalog-meta small {font-size:11px;color:#bac9df}
+
+/* MovieLab logo: white by default, soft sky-blue on hover, click and keyboard focus. */
+.cinewave-site .brand img[src*="movielab-house-clapper-logo"] {
+  filter: invert(1);
+  transition: filter .22s ease, transform .22s ease;
+}
+.cinewave-site .brand:hover img[src*="movielab-house-clapper-logo"],
+.cinewave-site .brand:focus-visible img[src*="movielab-house-clapper-logo"] {
+  filter: invert(76%) sepia(25%) saturate(1260%) hue-rotate(167deg) brightness(109%) drop-shadow(0 0 8px rgba(100,210,255,.52));
+  transform: translateY(-1px);
+}
+.cinewave-site .brand:active img[src*="movielab-house-clapper-logo"] {
+  filter: invert(69%) sepia(39%) saturate(1700%) hue-rotate(172deg) brightness(112%) drop-shadow(0 0 12px rgba(70,195,255,.7));
+  transform: scale(.97);
+}
+@media(prefers-reduced-motion:reduce) {
+  .cinewave-site .brand img[src*="movielab-house-clapper-logo"] { transition: none; transform: none; }
+}
