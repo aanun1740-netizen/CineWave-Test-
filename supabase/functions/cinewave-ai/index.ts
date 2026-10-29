@@ -150,7 +150,6 @@ export default {
                 "Answer in the same language as the user (Armenian, Russian or English). " +
                 "Offer concise, accurate movie suggestions. " +
                 "Never claim a movie is available on MovieLab unless verified by the site.",
-              generation_config: { max_output_tokens: 1200 },
               input: message,
             }),
           },
