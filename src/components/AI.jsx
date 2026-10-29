@@ -34,6 +34,7 @@ export default function AI({ open, setOpen, t, movies = [], language = "hy", onO
   const input = useRef(null);
   const panel = useRef(null);
   const [suggestions, setSuggestions] = useState([]);
+  const history = useRef([]);
 
   useEffect(() => {
     if (open) input.current?.focus();
@@ -75,7 +76,7 @@ export default function AI({ open, setOpen, t, movies = [], language = "hy", onO
             apikey: config.key,
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({ message: value }),
+          body: JSON.stringify({ message: value, language, history: history.current.slice(-6) }),
         },
       );
       const payload = await response.json();
@@ -87,6 +88,9 @@ export default function AI({ open, setOpen, t, movies = [], language = "hy", onO
         return;
       }
 
+      if (typeof payload?.answer === "string" && payload.answer.trim()) {
+        history.current = [...history.current, { role: "user", text: value }, { role: "assistant", text: payload.answer.slice(0, 900) }].slice(-6);
+      }
       setSuggestions(findCatalogMatches(value, movies, language));
       setMessages((prev) => [
         ...prev.slice(0, -1),
@@ -150,7 +154,8 @@ export default function AI({ open, setOpen, t, movies = [], language = "hy", onO
               {suggestions.map(({movie,info}) => (
                 <button key={movie.id} type="button" className="cw-ai-catalog-item"
                   onClick={() => onOpenMovie?.(movie)}>
-                  <span>{info.title}</span><span aria-hidden="true">↗</span>
+                  {movie.img && <img src={movie.img} alt="" loading="lazy" onError={e => { e.currentTarget.hidden = true; }} />}
+                  <span className="cw-ai-catalog-meta"><strong>{info.title}</strong><small>{[movie.year, ...(movie.genres || []).slice(0,2).map(g => genreLabel(g, language))].filter(Boolean).join(" · ")}</small></span><span aria-hidden="true">↗</span>
                 </button>
               ))}
             </div>
