@@ -199,6 +199,18 @@ describe("React storefront", () => {
     expect(document.documentElement.lang).toBe("hy");
     expect(screen.getByRole("searchbox").placeholder).toBe("Որոնել ֆիլմ...");
   });
+  it("places the AI entry after account forms without duplicate floating actions", async () => {
+    history.replaceState(null, "", "#/register");
+    render(<App />);
+    await waitFor(() => expect(mocks.getSession).toHaveBeenCalled());
+    const formSection = document.querySelector(".account-pages");
+    const aiSlot = document.querySelector(".account-ai-slot");
+    expect(formSection).toBeTruthy();
+    expect(aiSlot?.previousElementSibling).toBe(formSection);
+    expect(aiSlot?.querySelector("#cw-ai-button")).toBeTruthy();
+    expect(document.querySelectorAll("#cw-ai-button")).toHaveLength(1);
+    expect(document.querySelectorAll(".account-links button")).toHaveLength(4);
+  });
   it("submits sign-in through existing Supabase auth and handles failure", async () => {
     mocks.signIn.mockResolvedValue({ error: Error("bad credentials") });
     history.replaceState(null, "", "#/login");
