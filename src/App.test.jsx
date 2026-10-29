@@ -153,6 +153,35 @@ describe("React storefront", () => {
     );
     expect(screen.getByText("Շարունակել դիտումը")).toBeTruthy();
   });
+  it("restores a signed-in member's saved language after reload", async () => {
+    localStorage.setItem("cinewave:language", "en");
+    document.documentElement.lang = "en";
+    const session = {
+      user: { id: "member-1", email: "member@example.invalid" },
+    };
+    mocks.getSession.mockResolvedValue({ data: { session }, error: null });
+    const profileQuery = {
+      select: vi.fn(() => profileQuery),
+      eq: vi.fn(() => profileQuery),
+      maybeSingle: vi.fn(async () => ({
+        data: { display_name: "Test User", preferred_language: "hy" },
+        error: null,
+      })),
+    };
+    const listQuery = {
+      select: vi.fn(() => listQuery),
+      eq: vi.fn(async () => ({ data: [], error: null })),
+    };
+    mocks.from.mockImplementation((table) =>
+      table === "profiles" ? profileQuery : listQuery,
+    );
+    render(<App />);
+    await waitFor(() =>
+      expect(localStorage.getItem("cinewave:language")).toBe("hy"),
+    );
+    expect(document.documentElement.lang).toBe("hy");
+    expect(screen.getByRole("searchbox").placeholder).toBe("Որոնել ֆիլմեր...");
+  });
   it("submits sign-in through existing Supabase auth and handles failure", async () => {
     mocks.signIn.mockResolvedValue({ error: Error("bad credentials") });
     history.replaceState(null, "", "#/login");
