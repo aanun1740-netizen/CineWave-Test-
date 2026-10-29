@@ -57,6 +57,7 @@ export const translations = {
     close: "Close",
     footer:
       "Discover stories. Save your favorites. Playback is available for approved releases.",
+    ask: "Ask MovieLab AI",
     askTitle: "A little inspiration for your next film?",
     askText: "Meet your cinema companion. Ask MovieLab AI for a recommendation.",
 aiWelcome: "Hello! I’m MovieLab’s movie assistant. What would you like to watch?",
@@ -128,6 +129,7 @@ aiWelcome: "Hello! I’m MovieLab’s movie assistant. What would you like to wa
     close: "Закрыть",
     footer:
       "Открывайте истории. Сохраняйте любимое. Просмотр доступен для одобренных релизов.",
+    ask: "Спросить MovieLab AI",
     askTitle: "Ищете вдохновение для киновечера?",
     askText: "Ваш помощник в мире кино. Попросите MovieLab AI порекомендовать фильм.",
 aiWelcome: "Здравствуйте! Я кинопомощник MovieLab. Что вы хотели бы посмотреть?",
@@ -199,6 +201,7 @@ aiWelcome: "Здравствуйте! Я кинопомощник MovieLab. Чт
     close: "Փակել",
     footer:
       "Բացահայտեք պատմություններ։ Պահպանեք սիրելիները։ Դիտումը հասանելի է հաստատված թողարկումների համար։",
+    ask: "Հարցնել MovieLab AI-ին",
     askTitle: "Ոգեշնչո՞ւմ եք փնտրում հաջորդ ֆիլմի համար։",
     askText: "Ձեր ուղեկիցը կինոյի աշխարհում։ Խնդրեք MovieLab AI-ին ֆիլմ առաջարկել։",
 aiWelcome: "Բարև։ Ես MovieLab-ի կինոօգնականն եմ։ Ի՞նչ կցանկանաք դիտել։",
