@@ -102,6 +102,23 @@ describe("React storefront", () => {
     await user.selectOptions(screen.getByRole("combobox"), "en");
     expect(document.documentElement.lang).toBe("en");
     expect(screen.getByRole("searchbox").placeholder).toBe("Search titles...");
+    expect(
+      within(document.querySelector(".discovery-note")).getByRole("button", {
+        name: "Ask MovieLab AI",
+      }),
+    ).toBeTruthy();
+    await user.selectOptions(screen.getByRole("combobox"), "ru");
+    expect(
+      within(document.querySelector(".discovery-note")).getByRole("button", {
+        name: "Спросить MovieLab AI",
+      }),
+    ).toBeTruthy();
+    await user.selectOptions(screen.getByRole("combobox"), "hy");
+    expect(
+      within(document.querySelector(".discovery-note")).getByRole("button", {
+        name: "Հարցնել MovieLab AI-ին",
+      }),
+    ).toBeTruthy();
   });
   it("saves guest My List and opens/reloads hash movie routes", async () => {
     const user = userEvent.setup();
