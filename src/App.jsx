@@ -77,6 +77,22 @@ export default function App() {
     };
   }, []);
   useEffect(() => {
+    // Restore the signed-in member's saved language after their profile loads.
+    // The device preference is only the fallback for guests or unloaded profiles.
+    const savedLanguage = account.profile?.preferred_language;
+    if (
+      account.session &&
+      account.cloudReady &&
+      ["hy", "ru", "en"].includes(savedLanguage)
+    ) {
+      setLanguage(savedLanguage);
+    }
+  }, [
+    account.session?.user.id,
+    account.cloudReady,
+    account.profile?.preferred_language,
+  ]);
+  useEffect(() => {
     if (account.recovery) navigate("recover", true);
   }, [account.recovery]);
   useEffect(() => {
