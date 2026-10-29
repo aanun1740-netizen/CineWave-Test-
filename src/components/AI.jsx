@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { backendFetch, config, client } from "../services/backend";
+import { canonicalGenre, localizedMovie, genreLabel } from "../domain";
 
 function aiErrorStatus(code, status) {
   if (code === "cooldown") return "aiCooldown";
@@ -11,12 +12,28 @@ function aiErrorStatus(code, status) {
   return "aiError";
 }
 
-export default function AI({ open, setOpen, t }) {
+const GENRES = ["Comedy", "History", "Action", "Drama", "Sci-Fi", "Romance", "Horror", "Animation", "Family", "Adventure", "Thriller", "Documentary", "Fantasy", "War"];
+function findCatalogMatches(question, movies, language) {
+  const q = question.trim().toLocaleLowerCase();
+  const terms = q.split(/[^\\p{L}\\p{N}]+/u).filter(x => x.length > 2);
+  const targetGenres = GENRES.filter(g => [g, genreLabel(g, "hy"), genreLabel(g, "ru")].some(label => q.includes(label.toLocaleLowerCase())));
+  return movies.map(movie => {
+    const info = localizedMovie(movie, language);
+    const titles = Object.values(movie.titles || {}).map(v => String(v).toLocaleLowerCase());
+    const titleHit = titles.some(v => v && q.includes(v));
+    const genreHits = (movie.genres || []).filter(g => targetGenres.includes(canonicalGenre(g))).length;
+    const titleWords = terms.filter(w => titles.some(title => title.includes(w))).length;
+    return {movie, info, score: (titleHit ? 20 : 0) + genreHits * 5 + titleWords};
+  }).filter(x => x.score > 0).sort((a,b) => b.score - a.score || String(a.info.title).localeCompare(String(b.info.title))).slice(0,3);
+}
+
+export default function AI({ open, setOpen, t, movies = [], language = "hy", onOpenMovie }) {
   const [messages, setMessages] = useState([]);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
   const input = useRef(null);
   const panel = useRef(null);
+  const [suggestions, setSuggestions] = useState([]);
 
   useEffect(() => {
     if (open) input.current?.focus();
@@ -29,6 +46,7 @@ export default function AI({ open, setOpen, t }) {
     event.preventDefault();
     if (!message.trim() || busy) return;
     const value = message.trim();
+    setSuggestions([]);
     setMessage("");
     setBusy(true);
     setMessages((prev) => [
@@ -69,6 +87,7 @@ export default function AI({ open, setOpen, t }) {
         return;
       }
 
+      setSuggestions(findCatalogMatches(value, movies, language));
       setMessages((prev) => [
         ...prev.slice(0, -1),
         typeof payload?.answer === "string" && payload.answer.trim()
@@ -125,6 +144,17 @@ export default function AI({ open, setOpen, t }) {
               {row.status ? t(row.status) : row.text}
             </div>
           ))}
+          {suggestions.length > 0 && (
+            <div className="cw-ai-catalog" aria-label={t("aiCatalogHeading")}>
+              <p>{t("aiCatalogHeading")}</p>
+              {suggestions.map(({movie,info}) => (
+                <button key={movie.id} type="button" className="cw-ai-catalog-item"
+                  onClick={() => onOpenMovie?.(movie)}>
+                  <span>{info.title}</span><span aria-hidden="true">↗</span>
+                </button>
+              ))}
+            </div>
+          )}
         </div>
         <form id="cw-ai-form" onSubmit={submit}>
           <input
