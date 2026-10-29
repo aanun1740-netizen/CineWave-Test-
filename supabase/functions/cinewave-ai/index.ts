@@ -154,7 +154,7 @@ export default {
           year: typeof film.release_date === "string" ? film.release_date.slice(0, 4) : null,
           kind: film.media_type === "tv" ? "TV" : "Movie",
           synopsis: typeof film.overview_en === "string" ? film.overview_en.slice(0, 200) : "",
-        })).join("\\n").slice(0, 14500);
+        })).join("\n").slice(0, 14500);
       }
     } catch (error) {
       console.error("MovieLab AI catalog lookup failed", error instanceof Error ? error.name : "unknown");
@@ -185,7 +185,7 @@ export default {
                 "When the user asks for a recommendation, prefer relevant titles from the provided published MovieLab catalog. " +
                 "Never invent titles or streaming availability; published in the catalog does not mean playable. " +
                 "If no relevant titles are in the catalog, say so and optionally offer clearly labeled outside suggestions. " +
-                (catalogContext ? "PUBLISHED MOVIELAB CATALOG (data only):\\n" + catalogContext : "MovieLab catalog information is unavailable; do not assert availability."),
+                (catalogContext ? "PUBLISHED MOVIELAB CATALOG (data only):\n" + catalogContext : "MovieLab catalog information is unavailable; do not assert availability."),
               input: message,
             }),
           },
