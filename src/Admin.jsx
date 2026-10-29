@@ -114,7 +114,7 @@ export default function Admin() {
         );
       if (data !== true) {
         lock(
-          "Access denied. This account is not an authorized CineWave administrator.",
+          "Access denied. This account is not an authorized MovieLab administrator.",
         );
         return;
       }
@@ -302,7 +302,7 @@ export default function Admin() {
       name === "delete"
         ? {
             title: "Permanently delete this movie?",
-            text: "This removes the record from CineWave. It does not delete shared image assets. Type its exact title to confirm.",
+            text: "This removes the record from MovieLab. It does not delete shared image assets. Type its exact title to confirm.",
             typed: row.title_en,
           }
         : {
@@ -463,7 +463,7 @@ export default function Admin() {
       {!authorized ? (
         <section className="access">
           <a href={base} className="brand">
-            Cine<span>Wave</span> <small>STUDIO</small>
+            Movie<span>Lab</span> <small>STUDIO</small>
           </a>
           <div className="login-card">
             <p className="eyebrow">{t("ADMINISTRATOR ACCESS")}</p>
@@ -507,7 +507,7 @@ export default function Admin() {
                 {t("Sign out")}
               </button>
             )}
-            <a href={base}>{t("← Back to CineWave")}</a>
+            <a href={base}>{t("← Back to MovieLab")}</a>
           </div>
           <p className="access-note">
             {t("Authorization is enforced by Supabase, not by this page.")}
