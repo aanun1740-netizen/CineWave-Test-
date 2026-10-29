@@ -244,8 +244,25 @@ describe("React admin", () => {
     });
     render(<Admin />);
     await screen.findByText(
-      "Մուտքը մերժված է։ Այս հաշիվը CineWave-ի ադմինիստրատորի իրավունքներ չունի։",
+      "Մուտքը մերժված է։ Այս հաշիվը MovieLab-ի ադմինիստրատորի իրավունքներ չունի։",
     );
+    expect(
+      document.querySelector(".access .brand")?.textContent.replace(/\s+/g, " ").trim(),
+    ).toBe("MovieLab STUDIO");
+    const user = userEvent.setup();
+    await user.selectOptions(screen.getByLabelText("Language / Язык / Լեզու"), "ru");
+    expect(
+      screen.getByText(
+        "Доступ запрещён. У этого аккаунта нет прав администратора MovieLab.",
+      ),
+    ).toBeTruthy();
+    await user.selectOptions(screen.getByLabelText("Language / Язык / Լեզու"), "en");
+    expect(
+      screen.getByText(
+        "Access denied. This account is not an authorized MovieLab administrator.",
+      ),
+    ).toBeTruthy();
+    expect(screen.getByText("← Back to MovieLab")).toBeTruthy();
     expect(mocks.from).not.toHaveBeenCalled();
   });
   it("loads authorized library, validates editor and confirms deletion without a write", async () => {
@@ -271,6 +288,7 @@ describe("React admin", () => {
     const user = userEvent.setup();
     render(<Admin />);
     await screen.findByText("Solar Story");
+    expect(screen.getByText("MOVIELAB ԿԱՌԱՎԱՐՈՒՄ")).toBeTruthy();
     await user.click(screen.getByRole("button", { name: "▤ Ֆիլմադարան" }));
     await user.click(screen.getByRole("button", { name: "Ջնջել" }));
     expect(screen.getByRole("button", { name: "Հաստատել" }).disabled).toBe(
