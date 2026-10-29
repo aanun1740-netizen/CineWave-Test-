@@ -370,14 +370,19 @@ export default function App() {
       </header>
       <main>
         {accountPage ? (
-          <Accounts
-            route={route}
-            account={account}
-            language={language}
-            setLanguage={setLanguage}
-            navigate={navigate}
-            movies={movies}
-          />
+          <>
+            <Accounts
+              route={route}
+              account={account}
+              language={language}
+              setLanguage={setLanguage}
+              navigate={navigate}
+              movies={movies}
+            />
+            <div className="account-ai-slot">
+              <AI open={ai} setOpen={setAI} t={t} />
+            </div>
+          </>
         ) : (
           <>
             <section className="hero" aria-labelledby="heroTitle">
@@ -645,7 +650,7 @@ export default function App() {
       <div className="toast" role="status" aria-live="polite">
         {toast}
       </div>
-      <AI open={ai} setOpen={setAI} t={t} />
+      {!accountPage && <AI open={ai} setOpen={setAI} t={t} />}
     </>
   );
 }
