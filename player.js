@@ -70,7 +70,7 @@
    if(!url){fail('missing');retry.hidden=true;return;}
    setState('loading');
    if(/\.m3u8$/i.test(new URL(url).pathname)) {
-    if(video.canPlayType('application/vnd.apple.mpegurl')){video.src=url;video.load();}
+    if(!window.Hls?.isSupported() && video.canPlayType('application/vnd.apple.mpegurl')){video.src=url;video.load();}
     else if(window.Hls?.isSupported()){
      hls=new window.Hls({maxBufferLength:30});
      hls.on(window.Hls.Events.ERROR,(_event,data)=>{if(data.fatal)fail(data.type===window.Hls.ErrorTypes.MEDIA_ERROR?'unsupported':'unavailable');});
