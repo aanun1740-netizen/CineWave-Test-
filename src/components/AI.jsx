@@ -1,17 +1,30 @@
 import { useEffect, useRef, useState } from "react";
 import { backendFetch, config, client } from "../services/backend";
+
+function aiErrorStatus(code, status) {
+  if (code === "cooldown") return "aiCooldown";
+  if (code === "daily_limit") return "aiDailyLimit";
+  if (code === "global_limit") return "aiGlobalLimit";
+  if (code === "provider_limit") return "aiProviderLimit";
+  if (code === "message_too_long") return "aiTooLong";
+  if (code === "sign_in_required" || status === 401) return "aiSignIn";
+  return "aiError";
+}
+
 export default function AI({ open, setOpen, t }) {
-  const [messages, setMessages] = useState([]),
-    [busy, setBusy] = useState(false),
-    [message, setMessage] = useState("");
-  const input = useRef(null),
-    panel = useRef(null);
+  const [messages, setMessages] = useState([]);
+  const [busy, setBusy] = useState(false);
+  const [message, setMessage] = useState("");
+  const input = useRef(null);
+  const panel = useRef(null);
+
   useEffect(() => {
     if (open) input.current?.focus();
   }, [open]);
   useEffect(() => {
     if (panel.current) panel.current.scrollTop = panel.current.scrollHeight;
   }, [messages]);
+
   async function submit(event) {
     event.preventDefault();
     if (!message.trim() || busy) return;
@@ -23,14 +36,18 @@ export default function AI({ open, setOpen, t }) {
       { text: value, user: true },
       { status: "aiThinking" },
     ]);
-    try {
-      const {
-  data: { session },
-} = await client.auth.getSession();
 
-if (!session?.access_token) {
-  throw new Error("Sign in required");
-}
+    try {
+      const { data, error } = await client.auth.getSession();
+      const token = data?.session?.access_token;
+      if (error || !token) {
+        setMessages((prev) => [
+          ...prev.slice(0, -1),
+          { status: "aiSignIn" },
+        ]);
+        return;
+      }
+
       const response = await backendFetch(
         `${config.url}/functions/v1/cinewave-ai`,
         {
@@ -38,26 +55,37 @@ if (!session?.access_token) {
           headers: {
             "Content-Type": "application/json",
             apikey: config.key,
-Authorization: `Bearer ${session.access_token}`,
-},
-body: JSON.stringify({ message: value }),
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ message: value }),
         },
       );
-      const data = await response.json();
-      if (!response.ok) throw Error();
+      const payload = await response.json();
+      if (!response.ok) {
+        setMessages((prev) => [
+          ...prev.slice(0, -1),
+          { status: aiErrorStatus(payload?.error, response.status) },
+        ]);
+        return;
+      }
+
       setMessages((prev) => [
         ...prev.slice(0, -1),
-        typeof data.answer === "string" && data.answer.trim()
-          ? { text: data.answer }
+        typeof payload?.answer === "string" && payload.answer.trim()
+          ? { text: payload.answer }
           : { status: "aiNoAnswer" },
       ]);
     } catch {
-      setMessages((prev) => [...prev.slice(0, -1), { status: "aiError" }]);
+      setMessages((prev) => [
+        ...prev.slice(0, -1),
+        { status: "aiError" },
+      ]);
     } finally {
       setBusy(false);
       input.current?.focus();
     }
   }
+
   return (
     <>
       <button
@@ -106,6 +134,7 @@ body: JSON.stringify({ message: value }),
             id="cw-ai-input"
             aria-label={t("aiMessage")}
             placeholder={t("aiPlaceholder")}
+            maxLength={400}
             required
             disabled={busy}
           />
