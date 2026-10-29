@@ -180,7 +180,7 @@ describe("React storefront", () => {
       expect(localStorage.getItem("cinewave:language")).toBe("hy"),
     );
     expect(document.documentElement.lang).toBe("hy");
-    expect(screen.getByRole("searchbox").placeholder).toBe("Որոնել ֆիլմեր...");
+    expect(screen.getByRole("searchbox").placeholder).toBe("Որոնել ֆիլմ...");
   });
   it("submits sign-in through existing Supabase auth and handles failure", async () => {
     mocks.signIn.mockResolvedValue({ error: Error("bad credentials") });
