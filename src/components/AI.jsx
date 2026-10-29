@@ -15,7 +15,7 @@ function aiErrorStatus(code, status) {
 const GENRES = ["Comedy", "History", "Action", "Drama", "Sci-Fi", "Romance", "Horror", "Animation", "Family", "Adventure", "Thriller", "Documentary", "Fantasy", "War"];
 function findCatalogMatches(question, movies, language) {
   const q = question.trim().toLocaleLowerCase();
-  const terms = q.split(/[^\\p{L}\\p{N}]+/u).filter(x => x.length > 2);
+  const terms = q.split(/[^\p{L}\p{N}]+/u).filter(x => x.length > 2);
   const targetGenres = GENRES.filter(g => [g, genreLabel(g, "hy"), genreLabel(g, "ru")].some(label => q.includes(label.toLocaleLowerCase())));
   return movies.map(movie => {
     const info = localizedMovie(movie, language);
