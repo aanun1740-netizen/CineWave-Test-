@@ -380,7 +380,7 @@ export default function App() {
               movies={movies}
             />
             <div className="account-ai-slot">
-              <AI open={ai} setOpen={setAI} t={t} />
+              <AI open={ai} setOpen={setAI} t={t} movies={movies} language={language} onOpenMovie={(movie) => { setAI(false); navigate("movie/" + encodeURIComponent(movie.id)); }} />
             </div>
           </>
         ) : (
@@ -650,7 +650,7 @@ export default function App() {
       <div className="toast" role="status" aria-live="polite">
         {toast}
       </div>
-      {!accountPage && <AI open={ai} setOpen={setAI} t={t} />}
+      {!accountPage && <AI open={ai} setOpen={setAI} t={t} movies={movies} language={language} onOpenMovie={(movie) => { setAI(false); navigate("movie/" + encodeURIComponent(movie.id)); }} />}
     </>
   );
 }
