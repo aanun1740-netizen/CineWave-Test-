@@ -560,7 +560,7 @@ export default function Admin() {
         <div className="shell">
           <aside>
             <a className="brand" href={base}>
-             Movie<span>Lab</span>
+             <img src={`${base}assets/kinolab-logo.svg`} alt="KinoLab" className="admin-brand-logo" />
             <small>STUDIO</small>
              </a>
             <nav>
