@@ -335,3 +335,6 @@ body.cinewave-site {
 @media(prefers-reduced-motion:reduce) {
   .cinewave-site .brand img[src*="movielab-house-clapper-logo"] { transition: none; transform: none; }
 }
+
+/* Explicitly opened, trusted third-party video embeds in movie details. */
+.cinewave-site .movielab-trusted-embed { display:block; width:100%; aspect-ratio:16/9; min-height:220px; border:0; background:#050916; }
