@@ -183,6 +183,12 @@ export default function App() {
         Number(b.img !== POSTER_FALLBACK) - Number(a.img !== POSTER_FALLBACK),
     )
     .slice(0, 5);
+  // Rotate featured movies every six seconds; preserve manual dot selection.
+  useEffect(() => {
+    if (choices.length < 2 || route !== "home" || query || genre !== "All") return;
+    const timer = window.setInterval(() => setHeroIndex(index => (index + 1) % choices.length), 6000);
+    return () => window.clearInterval(timer);
+  }, [choices.length, route, query, genre]);
   const featured = choices[heroIndex % Math.max(choices.length, 1)],
     info = featured ? localizedMovie(featured, language) : null;
   const filtered = filterMovies(movies, {
