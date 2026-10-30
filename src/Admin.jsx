@@ -864,11 +864,11 @@ export default function Admin() {
                       <div className="embed-preview-config">
                         <label>
                           {language === "hy" ? "Embed URL (YouTube / Vimeo)" : language === "ru" ? "Embed URL (YouTube / Vimeo)" : "Embed URL (YouTube / Vimeo)"}
-                          <input type="url" value={values.trailer_url} onChange={e => change("trailer_url", e.target.value)} placeholder="https://www.youtube.com/watch?v=..." />
+                          <input type="url" value={values.embed_url} onChange={e => change("embed_url", e.target.value)} placeholder="https://www.youtube.com/watch?v=..." />
                         </label>
-                        <p className="hint">{language === "hy" ? "Պահպանվում է Trailer URL դաշտում։ Թույլատրվում են միայն YouTube և Vimeo հղումները։ Նախադիտումը հրապարակման թույլտվություն չէ։" : language === "ru" ? "Сохраняется в поле Trailer URL. Только YouTube и Vimeo. Предпросмотр не подтверждает права на публикацию." : "Saved in the existing Trailer URL field. YouTube and Vimeo only. Preview does not grant publishing rights."}</p>
+                        <p className="hint">{language === "hy" ? "Առանձին Embed URL դաշտ։ Միայն YouTube և Vimeo։ Նախադիտումը հրապարակման թույլտվություն չէ։" : language === "ru" ? "Отдельное поле Embed URL. Только YouTube и Vimeo. Предпросмотр не подтверждает права на публикацию." : "Separate from Trailer URL. YouTube and Vimeo only. Preview does not grant publishing rights."}</p>
                         <button type="button" className="secondary" onClick={() => {
-                          const url = safeEmbed(values.trailer_url);
+                          const url = safeEmbed(values.embed_url);
                           if (!url) { setNotice(language === "hy" ? "Մուտքագրիր թույլատրված YouTube կամ Vimeo HTTPS հղում։" : language === "ru" ? "Введите допустимую HTTPS-ссылку YouTube или Vimeo." : "Enter a supported YouTube or Vimeo HTTPS link."); return; }
                           setEmbedPreview(url);
                         }}>{language === "hy" ? "Նախադիտել Embed-ը" : language === "ru" ? "Предпросмотр Embed" : "Preview Embed"}</button>
