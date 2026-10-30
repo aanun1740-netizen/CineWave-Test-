@@ -343,3 +343,30 @@ body.cinewave-site {
 .cinewave-site .movielab-external-watch {display:flex;flex-direction:column;align-items:flex-start;gap:7px;max-width:100%}
 .cinewave-site .movielab-external-watch .btn {text-decoration:none}
 .cinewave-site .movielab-external-disclosure {font-size:11px;line-height:1.4;color:#bdcde4}
+
+
+/* Wide cinematic featured section on desktop; preserve responsive mobile layout. */
+@media (min-width: 951px) {
+  body.cinewave-site .hero {
+    min-height: max(740px, calc(100svh - 90px));
+    padding: 88px clamp(46px, 8vw, 170px) 115px;
+  }
+  body.cinewave-site .hero-content {
+    max-width: 780px;
+    width: min(57%, 780px);
+  }
+  body.cinewave-site .hero-art {
+    width: clamp(310px, 25vw, 450px);
+    height: auto;
+    aspect-ratio: 2 / 3;
+    right: clamp(80px, 13vw, 260px);
+  }
+  body.cinewave-site .hero-content > p { max-width: 590px; }
+}
+@media (min-width: 601px) and (max-width: 950px) {
+  body.cinewave-site .hero { min-height: 680px; }
+  body.cinewave-site .hero-art { width: 230px; height: 345px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  body.cinewave-site .hero-art,body.cinewave-site .hero-backdrop {transition:none;}
+}
