@@ -427,6 +427,7 @@ export default function Admin() {
         else if (u.pathname.startsWith("/embed/")) id = u.pathname.split("/")[2];
       } else if (u.hostname === "youtu.be") id = u.pathname.slice(1);
       if (id && /^[a-zA-Z0-9_-]{11}$/.test(id)) return "https://www.youtube-nocookie.com/embed/" + id;
+      if (u.hostname === "api.nextembed.ws" && /^\/embed\/(movie|tv)\/\d+(?:\/\d+\/\d+)?\/?$/.test(u.pathname) && !u.search && !u.hash) return u.href;
       if (["vimeo.com","www.vimeo.com","player.vimeo.com"].includes(u.hostname)) {
         const match = u.pathname.match(/^\/(?:video\/)?([0-9]+)\/?$/);
         if (match) return "https://player.vimeo.com/video/" + match[1];
@@ -865,13 +866,13 @@ export default function Admin() {
                       )}
                       <div className="embed-preview-config">
                         <label>
-                          {language === "hy" ? "Embed URL (YouTube / Vimeo)" : language === "ru" ? "Embed URL (YouTube / Vimeo)" : "Embed URL (YouTube / Vimeo)"}
+                          {language === "hy" ? "Embed URL (YouTube / Vimeo / NextEmbed)" : language === "ru" ? "Embed URL (YouTube / Vimeo)" : "Embed URL (YouTube / Vimeo)"}
                           <input type="url" value={values.embed_url} onChange={e => change("embed_url", e.target.value)} placeholder="https://www.youtube.com/watch?v=..." />
                         </label>
-                        <p className="hint">{language === "hy" ? "Առանձին Embed URL դաշտ։ HTTPS հղումները կարելի է պահել Draft-ում։ Նախադիտումը միայն YouTube/Vimeo-ի համար է։" : language === "ru" ? "Отдельное поле Embed URL. HTTPS-ссылки сохраняются в Draft. Предпросмотр только YouTube/Vimeo." : "Separate from Trailer URL. HTTPS links can be saved in drafts. Preview supports YouTube/Vimeo only; saving does not grant publishing rights."}</p>
+                        <p className="hint">{language === "hy" ? "Առանձին Embed URL դաշտ։ HTTPS հղումները կարելի է պահել Draft-ում։ Նախադիտումը՝ YouTube, Vimeo, NextEmbed։" : language === "ru" ? "Отдельное поле Embed URL. HTTPS-ссылки сохраняются в Draft. Предпросмотр: YouTube, Vimeo, NextEmbed." : "Separate from Trailer URL. Draft preview supports YouTube, Vimeo, NextEmbed; this does not approve publishing or streaming rights."}</p>
                         <button type="button" className="secondary" onClick={() => {
                           const url = safeEmbed(values.embed_url);
-                          if (!url) { setNotice(language === "hy" ? "Նախադիտումը միայն YouTube/Vimeo-ի համար է։ Այլ HTTPS հղումը կարող ես պահել Draft-ում։" : language === "ru" ? "Введите допустимую HTTPS-ссылку YouTube или Vimeo." : "Preview supports only YouTube/Vimeo. This URL may still be saved as Draft."); return; }
+                          if (!url) { setNotice(language === "hy" ? "Նախադիտումը հասանելի է YouTube, Vimeo և NextEmbed հղումներով։" : language === "ru" ? "Введите допустимую HTTPS-ссылку YouTube или Vimeo." : "Preview supports YouTube/Vimeo/NextEmbed only."); return; }
                           setEmbedPreview(url);
                         }}>{language === "hy" ? "Նախադիտել Embed-ը" : language === "ru" ? "Предпросмотр Embed" : "Preview Embed"}</button>
                       </div>
