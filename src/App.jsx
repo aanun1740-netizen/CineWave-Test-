@@ -406,10 +406,10 @@ export default function App() {
         ) : (
           <>
             <section className="hero" aria-labelledby="heroTitle">
-              {featured?.backdrop && (
+              {featured && (
                 <img
                   className="hero-backdrop"
-                  src={featured.backdrop}
+                  src={featured.backdrop || featured.img}
                   alt=""
                   onError={(e) => (e.currentTarget.hidden = true)}
                 />
@@ -479,7 +479,7 @@ export default function App() {
                     height="750"
                   />
                   <span className="art-stamp">
-                    CINEWAVE
+                    KINOLAB
                     <br />
                     <b>◌</b>
                   </span>
@@ -579,7 +579,7 @@ export default function App() {
                 id="catalogSection"
                 title={
                   genre !== "All"
-                    ? genreLabel(genre, language) + " • CineWave"
+                    ? genreLabel(genre, language) + " • KinoLab"
                     : t(navs[listing] === "home" ? "discover" : navs[listing])
                 }
                 eyebrow={t("catalogEyebrow")}
@@ -643,7 +643,7 @@ export default function App() {
       <footer>
         <Brand />
         <p>{t("footer")}</p>
-        <span>© MovieLab</span>
+        <span>© KinoLab</span>
       </footer>
       {navigation(true)}
       {modal && (
