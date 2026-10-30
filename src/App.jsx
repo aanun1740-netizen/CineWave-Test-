@@ -140,8 +140,20 @@ export default function App() {
       if (!response.ok) throw Error();
       const rows = await response.json();
       if (!Array.isArray(rows)) throw Error();
+      // The metadata-only table contains no video URLs or rights documents.
+      const metadataResponse = await backendFetch(
+        `${config.url}/rest/v1/movie_metadata_public?select=*&order=release_date.desc`,
+        { headers: { apikey: config.key, Authorization: `Bearer ${config.key}` } },
+      );
+      if (!metadataResponse.ok) throw Error("Metadata listing unavailable.");
+      const metadataRows = await metadataResponse.json();
+      if (!Array.isArray(metadataRows)) throw Error();
       if (id === request.current) {
-        setMovies(rows.map(mapCatalogMovie));
+        const publishedIds = new Set(rows.map(row => String(row.id)));
+        const metadataOnly = metadataRows
+          .filter(row => !publishedIds.has(String(row.id)))
+          .map(row => ({ ...row, watch_url:null, embed_url:null, trailer_url:null, playback_verification:null, rights_verification_status:"unverified" }));
+        setMovies([...rows, ...metadataOnly].map(mapCatalogMovie));
         setState("ready");
       }
     } catch {
