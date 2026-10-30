@@ -106,19 +106,19 @@ describe("React storefront", () => {
     expect(screen.getByRole("searchbox").placeholder).toBe("Search titles...");
     expect(
       within(document.querySelector(".discovery-note")).getByRole("button", {
-        name: "Ask MovieLab AI",
+        name: "Ask KinoLab AI",
       }),
     ).toBeTruthy();
     await user.selectOptions(screen.getByRole("combobox"), "ru");
     expect(
       within(document.querySelector(".discovery-note")).getByRole("button", {
-        name: "Спросить MovieLab AI",
+        name: "Спросить KinoLab AI",
       }),
     ).toBeTruthy();
     await user.selectOptions(screen.getByRole("combobox"), "hy");
     expect(
       within(document.querySelector(".discovery-note")).getByRole("button", {
-        name: "Հարցնել MovieLab AI-ին",
+        name: "Հարցնել KinoLab AI-ին",
       }),
     ).toBeTruthy();
   });
@@ -239,7 +239,7 @@ describe("React storefront", () => {
     expect(screen.getByLabelText("Գաղտնաբառ").value).toBe("");
   });
 });
-describe("MovieLab AI guest and quota messages", () => {
+describe("KinoLab AI guest and quota messages", () => {
   const t = (key) => translations.hy[key] || key;
 
   it("requires an actual session before contacting the function", async () => {
@@ -287,7 +287,7 @@ describe("React admin", () => {
     });
     render(<Admin />);
     await screen.findByText(
-      "Մուտքը մերժված է։ Այս հաշիվը MovieLab-ի ադմինիստրատորի իրավունքներ չունի։",
+      "Մուտքը մերժված է։ Այս հաշիվը KinoLab-ի ադմինիստրատորի իրավունքներ չունի։",
     );
     expect(
       document.querySelector(".access .brand")?.textContent.replace(/\s+/g, " ").trim(),
@@ -296,16 +296,16 @@ describe("React admin", () => {
     await user.selectOptions(screen.getByLabelText("Language / Язык / Լեզու"), "ru");
     expect(
       screen.getByText(
-        "Доступ запрещён. У этого аккаунта нет прав администратора MovieLab.",
+        "Доступ запрещён. У этого аккаунта нет прав администратора KinoLab.",
       ),
     ).toBeTruthy();
     await user.selectOptions(screen.getByLabelText("Language / Язык / Լեզու"), "en");
     expect(
       screen.getByText(
-        "Access denied. This account is not an authorized MovieLab administrator.",
+        "Access denied. This account is not an authorized KinoLab administrator.",
       ),
     ).toBeTruthy();
-    expect(screen.getByText("← Back to MovieLab")).toBeTruthy();
+    expect(screen.getByText("← Back to KinoLab")).toBeTruthy();
     expect(mocks.from).not.toHaveBeenCalled();
   });
   it("loads authorized library, validates editor and confirms deletion without a write", async () => {
@@ -331,7 +331,7 @@ describe("React admin", () => {
     const user = userEvent.setup();
     render(<Admin />);
     await screen.findByText("Solar Story");
-    expect(screen.getByText("MOVIELAB ԿԱՌԱՎԱՐՈՒՄ")).toBeTruthy();
+    expect(screen.getByText("KINOLAB ԿԱՌԱՎԱՐՈՒՄ")).toBeTruthy();
     await user.click(screen.getByRole("button", { name: "▤ Ֆիլմադարան" }));
     await user.click(screen.getByRole("button", { name: "Ջնջել" }));
     expect(screen.getByRole("button", { name: "Հաստատել" }).disabled).toBe(
