@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { localizedMovie, genreLabel, adminModel } from "../domain";
+import { localizedMovie, genreLabel, adminModel, externalWatchUrl } from "../domain";
 import Player from "./Player";
 import { Artwork } from "./MovieRow";
 
@@ -64,7 +64,7 @@ export default function MovieDialog({
   // Native MP4/HLS keeps the built-in player; no iframe preflight or popups.
   const hasDirectPlayback = movie ? watchable(movie) : false;
   const official = /^https:\/\/(?:www\.)?netflix\.com\/title\/\d+\/?$/.test(movie?.officialWatch || "") ? movie.officialWatch : null;
-  const externalWatch = !hasDirectPlayback ? (official || trailerEmbed) : null;
+  const externalWatch = !hasDirectPlayback ? externalWatchUrl(movie) : null;
   return (
     <div
       className="modal open"
