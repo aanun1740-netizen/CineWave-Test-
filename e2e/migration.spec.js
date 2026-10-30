@@ -29,6 +29,12 @@ test.beforeEach(async ({ page }) => {
       route.request().method() === "GET"
     )
       return route.fulfill({ json: fixture });
+    if (
+      url.origin === "https://zayssiouqexwdicudalc.supabase.co" &&
+      url.pathname === "/rest/v1/movie_metadata_public" &&
+      route.request().method() === "GET"
+    )
+      return route.fulfill({ json: [] });
     return route.abort();
   });
 });
