@@ -428,11 +428,11 @@ export default function Admin() {
       } else if (u.hostname === "youtu.be") id = u.pathname.slice(1);
       if (id && /^[a-zA-Z0-9_-]{11}$/.test(id)) return "https://www.youtube-nocookie.com/embed/" + id;
       if (u.hostname === "archive.org" || u.hostname === "www.archive.org") {
-        const match = u.pathname.match(/^\\/(?:details|embed)\\/([A-Za-z0-9_][A-Za-z0-9_.-]{0,119})\\/?$/);
+        const match = u.pathname.match(/^\/(?:details|embed)\/([A-Za-z0-9_][A-Za-z0-9_.-]{0,119})\/?$/);
         if (match && !u.search && !u.hash) return "https://archive.org/embed/" + match[1];
       }
       if (u.hostname === "geo.dailymotion.com") {
-        const match = u.pathname.match(/^\\/player\\/([A-Za-z0-9]+)\\.html$/);
+        const match = u.pathname.match(/^\/player\/([A-Za-z0-9]+)\.html$/);
         const video = u.searchParams.get("video");
         if (match && video && /^[A-Za-z0-9]+$/.test(video) && u.searchParams.size === 1 && !u.hash)
           return "https://geo.dailymotion.com/player/" + match[1] + ".html?video=" + video;
