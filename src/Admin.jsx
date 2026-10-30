@@ -880,11 +880,9 @@ export default function Admin() {
                           <input type="url" value={values.embed_url} onChange={e => change("embed_url", e.target.value)} placeholder="https://www.youtube.com/watch?v=..." />
                         </label>
                         <p className="hint">{language === "hy" ? "Առանձին Embed URL դաշտ։ HTTPS հղումները կարելի է պահել Draft-ում։ Նախադիտումը՝ YouTube, Vimeo, Archive, Dailymotion, NextEmbed։" : language === "ru" ? "Отдельное поле Embed URL. HTTPS-ссылки сохраняются в Draft. Предпросмотр: YouTube, Vimeo, NextEmbed." : "Separate from Trailer URL. Draft preview supports YouTube, Vimeo, NextEmbed; this does not approve publishing or streaming rights."}</p>
-                        <button type="button" className="secondary" onClick={() => {
-                          const url = safeEmbed(values.embed_url);
-                          if (!url) { setNotice(language === "hy" ? "Նախադիտումը հասանելի է YouTube, Vimeo և NextEmbed հղումներով։" : language === "ru" ? "Введите допустимую HTTPS-ссылку YouTube или Vimeo." : "Preview supports YouTube/Vimeo/NextEmbed only."); return; }
-                          setEmbedPreview(url);
-                        }}>{language === "hy" ? "Նախադիտել Embed-ը" : language === "ru" ? "Предпросмотр Embed" : "Preview Embed"}</button>
+                        <a className="secondary" href={safeEmbed(values.embed_url) || undefined} target="_blank" rel="noopener noreferrer" onClick={e => { if (!safeEmbed(values.embed_url)) { e.preventDefault(); setNotice(language === "hy" ? "Այս հասցեի համար արտաքին դիտումը դեռ չի աջակցվում։" : language === "ru" ? "Эта ссылка пока не поддерживается." : "This URL is not currently supported."); } }}>
+                          {language === "hy" ? "Փորձարկել արտաքին հղումը" : language === "ru" ? "Открыть внешнюю ссылку" : "Test external link"}
+                        </a>
                       </div>
                       <p className="hint">
                         {t(
