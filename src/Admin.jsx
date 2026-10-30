@@ -295,6 +295,18 @@ export default function Admin() {
   async function action(name, row) {
     if (name === "edit") return edit(row);
     if (!state.current.authorized || busy) return;
+    if (name === "metadata") {
+      if (dirty) return;
+      const turningOn = !row.metadata_published;
+      const label = {hy:"Հրապարակել միայն ֆիլմի տեղեկությունները՝ առանց դիտման հղման։",ru:"Опубликовать только информацию о фильме без ссылки на просмотр?",en:"Publish movie information only, without the watch link?"}[language];
+      if (!(await confirm({title:turningOn ? label : "Remove informational listing?",text:row.title_en,raw:true}))) return;
+      await run(async () => {
+        await update(row,{metadata_published:turningOn});
+        await loadMovies();
+        setNotice(turningOn ? "Information listing published. No watch URL was exposed." : "Information listing removed.");
+      });
+      return;
+    }
     if (name === "publish" && !row.is_published && !model.ready(row)) {
       setNotice(
         "Save complete rights evidence and verify tested playback before publishing this draft.",
@@ -749,7 +761,7 @@ export default function Admin() {
                             <span
                               className={`tag ${row.is_published ? "published" : ""}`}
                             >
-                              {t(row.is_published ? "Published" : "Draft")}
+                              {row.is_published ? t("Published") : row.metadata_published ? ({hy:"Տեղեկատվությունը հրապարակված է",ru:"Информация опубликована",en:"Information published"}[language]) : t("Draft")}
                             </span>
                           </td>
                           <td>
@@ -768,6 +780,7 @@ export default function Admin() {
                                 "publish",
                                 row.is_published ? "Unpublish" : "Publish",
                               ],
+                              ...(!row.is_published ? [["metadata", row.metadata_published ? ({hy:"Հեռացնել տեղեկատվական հրապարակումը",ru:"Снять публикацию информации",en:"Remove information listing"}[language]) : ({hy:"Հրապարակել միայն տեղեկությունները",ru:"Опубликовать только информацию",en:"Publish information only"}[language])]] : []),
                               ["delete", "Delete"],
                             ].map(([name, label]) => (
                               <button
