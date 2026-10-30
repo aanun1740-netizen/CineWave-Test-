@@ -628,7 +628,7 @@ export default function App() {
                   ✦
                 </span>
                 <div>
-                  <p className="eyebrow">MOVIELAB AI</p>
+                  <p className="eyebrow">KINOLAB AI</p>
                   <h2>{t("askTitle")}</h2>
                   <p>{t("askText")}</p>
                 </div>
