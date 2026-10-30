@@ -78,3 +78,20 @@ button:hover {
 .movielab-embed-preview-panel { width:min(900px,100%); padding:18px; border:1px solid #457dbd; border-radius:15px; background:#101421; color:white; }
 .movielab-embed-preview-panel button { float:right; }
 .movielab-embed-preview-panel iframe { display:block; width:100%; aspect-ratio:16/9; border:0; margin-top:15px; background:#000; }
+
+/* KINOLAB OFFICIAL BRAND PALETTE — admin */
+:root{--accent:#D4F458;--muted:#cfc9d6;background:#20152E;color:#F7F5F0}
+body,.access{background:#20152E;color:#F7F5F0}
+aside,.panel,.stats article,.login-card,.callout{background:#20152E;color:#F7F5F0;border-color:#F7F5F044}
+aside{border-right:1px solid #F7F5F033}
+.primary{background:#D4F458!important;color:#20152E!important;box-shadow:none}
+.primary:hover{background:#D4F458!important;filter:brightness(1.05)}
+.secondary{background:#20152E;color:#F7F5F0;border:1px solid #F7F5F066}
+nav button.active{background:#D4F45822;color:#D4F458}
+nav button:hover,.eyebrow,.brand>span{color:#D4F458}
+.brand{color:#F7F5F0;min-width:160px}
+.brand small{color:#F7F5F0}
+a{color:#D4F458}
+:focus-visible{outline-color:#D4F458}
+.notice{color:#D4F458}
+input,textarea,select{accent-color:#D4F458}
