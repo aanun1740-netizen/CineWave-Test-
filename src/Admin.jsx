@@ -17,6 +17,7 @@ const empty = () =>
 export default function Admin() {
   const { language, setLanguage } = useLanguage();
   const t = (text) => table.get(text)?.[language] || text;
+  const [embedPreview, setEmbedPreview] = useState(null);
   const [session, setSession] = useState(null),
     [authorized, setAuthorized] = useState(false),
     [rows, setRows] = useState([]),
@@ -413,6 +414,23 @@ export default function Admin() {
       form.reset();
       setBusy(false);
     }
+  }
+  function safeEmbed(url) {
+    try {
+      const u = new URL(url);
+      if (u.protocol !== "https:" || u.username || u.password) return null;
+      let id = null;
+      if (["youtube.com","www.youtube.com","m.youtube.com"].includes(u.hostname)) {
+        if (u.pathname === "/watch") id = u.searchParams.get("v");
+        else if (u.pathname.startsWith("/embed/")) id = u.pathname.split("/")[2];
+      } else if (u.hostname === "youtu.be") id = u.pathname.slice(1);
+      if (id && /^[a-zA-Z0-9_-]{11}$/.test(id)) return "https://www.youtube-nocookie.com/embed/" + id;
+      if (["vimeo.com","www.vimeo.com","player.vimeo.com"].includes(u.hostname)) {
+        const match = u.pathname.match(/^\\/(?:video\\/)?([0-9]+)\\/?$/);
+        if (match) return "https://player.vimeo.com/video/" + match[1];
+      }
+    } catch {}
+    return null;
   }
   const field = (name, label, type = "text", props = {}) => (
     <label key={name}>
@@ -843,6 +861,18 @@ export default function Admin() {
                             : "Primary MP4, WebM or HLS URL",
                         "url",
                       )}
+                      <div className="embed-preview-config">
+                        <label>
+                          {language === "hy" ? "Embed URL (YouTube / Vimeo)" : language === "ru" ? "Embed URL (YouTube / Vimeo)" : "Embed URL (YouTube / Vimeo)"}
+                          <input type="url" value={values.trailer_url} onChange={e => change("trailer_url", e.target.value)} placeholder="https://www.youtube.com/watch?v=..." />
+                        </label>
+                        <p className="hint">{language === "hy" ? "Պահպանվում է Trailer URL դաշտում։ Թույլատրվում են միայն YouTube և Vimeo հղումները։ Նախադիտումը հրապարակման թույլտվություն չէ։" : language === "ru" ? "Сохраняется в поле Trailer URL. Только YouTube и Vimeo. Предпросмотр не подтверждает права на публикацию." : "Saved in the existing Trailer URL field. YouTube and Vimeo only. Preview does not grant publishing rights."}</p>
+                        <button type="button" className="secondary" onClick={() => {
+                          const url = safeEmbed(values.trailer_url);
+                          if (!url) { setNotice(language === "hy" ? "Մուտքագրիր թույլատրված YouTube կամ Vimeo HTTPS հղում։" : language === "ru" ? "Введите допустимую HTTPS-ссылку YouTube или Vimeo." : "Enter a supported YouTube or Vimeo HTTPS link."); return; }
+                          setEmbedPreview(url);
+                        }}>{language === "hy" ? "Նախադիտել Embed-ը" : language === "ru" ? "Предпросмотр Embed" : "Preview Embed"}</button>
+                      </div>
                       <p className="hint">
                         {t(
                           "HLS Auto uses the manifest's actual variants. One MP4 is one source, not multiple qualities. Add only real, separately tested renditions below.",
@@ -1054,6 +1084,15 @@ export default function Admin() {
             </button>
           </div>
         </dialog>
+      )}
+      {embedPreview && (
+        <div className="movielab-embed-preview-overlay" role="presentation" onClick={() => setEmbedPreview(null)}>
+          <section className="movielab-embed-preview-panel" role="dialog" aria-modal="true" aria-label="Embed preview" onClick={e => e.stopPropagation()}>
+            <p>{language === "hy" ? "Նախադիտումը չի հաստատում ցուցադրման իրավունքը։" : language === "ru" ? "Предпросмотр не подтверждает права на показ." : "Preview does not confirm streaming rights."}</p>
+            <button type="button" className="secondary" onClick={() => setEmbedPreview(null)}>{t("Close")}</button>
+            <iframe title="Embed preview" src={embedPreview} sandbox="allow-scripts allow-same-origin allow-presentation" referrerPolicy="strict-origin-when-cross-origin" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowFullScreen />
+          </section>
+        </div>
       )}
       {preview && (
         <dialog
