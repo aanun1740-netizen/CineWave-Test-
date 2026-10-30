@@ -308,11 +308,10 @@ export default function Admin() {
       });
       return;
     }
+    // Standard catalog publishing needs no playback rights. Streaming publication
+    // remains subject to the existing verification and database policies.
     if (name === "publish" && !row.is_published && !model.ready(row)) {
-      setNotice(
-        "Save complete rights evidence and verify tested playback before publishing this draft.",
-      );
-      return;
+      return action("metadata", row);
     }
     const ok = await confirm(
       name === "delete"
@@ -781,9 +780,14 @@ export default function Admin() {
                               ["edit", "Edit"],
                               [
                                 "publish",
-                                row.is_published ? "Unpublish" : "Publish",
+                                row.is_published
+                                  ? "Unpublish"
+                                  : row.metadata_published
+                                    ? ({hy:"Հեռացնել կատալոգից",ru:"Убрать из каталога",en:"Remove from catalog"}[language])
+                                    : model.ready(row)
+                                      ? ({hy:"Հրապարակել դիտումով",ru:"Опубликовать с просмотром",en:"Publish with playback"}[language])
+                                      : ({hy:"Հրապարակել",ru:"Опубликовать",en:"Publish"}[language]),
                               ],
-                              ...(!row.is_published ? [["metadata", row.metadata_published ? ({hy:"Հեռացնել տեղեկատվական հրապարակումը",ru:"Снять публикацию информации",en:"Remove information listing"}[language]) : ({hy:"Հրապարակել միայն տեղեկությունները",ru:"Опубликовать только информацию",en:"Publish information only"}[language])]] : []),
                               ["delete", "Delete"],
                             ].map(([name, label]) => (
                               <button
