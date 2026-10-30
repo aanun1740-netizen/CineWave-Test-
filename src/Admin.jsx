@@ -258,7 +258,9 @@ export default function Admin() {
     try {
       await operation();
     } catch (error) {
-      fail(error);
+      if (error?.message?.includes("movies_embed_url_safe")) {
+        setNotice("This embed link is allowed only as an unpublished draft reference. It cannot be published or played here.");
+      } else fail(error);
     } finally {
       setBusy(false);
       state.current.busy = false;
@@ -866,10 +868,10 @@ export default function Admin() {
                           {language === "hy" ? "Embed URL (YouTube / Vimeo)" : language === "ru" ? "Embed URL (YouTube / Vimeo)" : "Embed URL (YouTube / Vimeo)"}
                           <input type="url" value={values.embed_url} onChange={e => change("embed_url", e.target.value)} placeholder="https://www.youtube.com/watch?v=..." />
                         </label>
-                        <p className="hint">{language === "hy" ? "Առանձին Embed URL դաշտ։ Միայն YouTube և Vimeo։ Նախադիտումը հրապարակման թույլտվություն չէ։" : language === "ru" ? "Отдельное поле Embed URL. Только YouTube и Vimeo. Предпросмотр не подтверждает права на публикацию." : "Separate from Trailer URL. YouTube and Vimeo only. Preview does not grant publishing rights."}</p>
+                        <p className="hint">{language === "hy" ? "Առանձին Embed URL դաշտ։ HTTPS հղումները կարելի է պահել Draft-ում։ Նախադիտումը միայն YouTube/Vimeo-ի համար է։" : language === "ru" ? "Отдельное поле Embed URL. HTTPS-ссылки сохраняются в Draft. Предпросмотр только YouTube/Vimeo." : "Separate from Trailer URL. HTTPS links can be saved in drafts. Preview supports YouTube/Vimeo only; saving does not grant publishing rights."}</p>
                         <button type="button" className="secondary" onClick={() => {
                           const url = safeEmbed(values.embed_url);
-                          if (!url) { setNotice(language === "hy" ? "Մուտքագրիր թույլատրված YouTube կամ Vimeo HTTPS հղում։" : language === "ru" ? "Введите допустимую HTTPS-ссылку YouTube или Vimeo." : "Enter a supported YouTube or Vimeo HTTPS link."); return; }
+                          if (!url) { setNotice(language === "hy" ? "Նախադիտումը միայն YouTube/Vimeo-ի համար է։ Այլ HTTPS հղումը կարող ես պահել Draft-ում։" : language === "ru" ? "Введите допустимую HTTPS-ссылку YouTube или Vimeo." : "Preview supports only YouTube/Vimeo. This URL may still be saved as Draft."); return; }
                           setEmbedPreview(url);
                         }}>{language === "hy" ? "Նախադիտել Embed-ը" : language === "ru" ? "Предпросмотр Embed" : "Preview Embed"}</button>
                       </div>
