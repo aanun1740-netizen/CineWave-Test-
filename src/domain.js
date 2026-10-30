@@ -72,6 +72,8 @@ export function routeFromHash(hash = location.hash) {
 /** Destination for authorized third-party playback; never expose draft embed URLs. */
 export function externalWatchUrl(movie) {
   if (!movie || approvedPlayback(movie)) return null;
+  const publishedExternal = String(movie.externalWatch || "");
+  if (/^https:\/\/api\.nextembed\.ws\/embed\/(?:movie|tv)\/\d+(?:\/\d+\/\d+)?\/?$/.test(publishedExternal)) return publishedExternal;
   const official = String(movie.officialWatch || "");
   if (/^https:\/\/(?:www\.)?netflix\.com\/title\/\d+\/?$/.test(official)) return official;
   if (movie.source !== "supabase" || movie.approval?.license_verified !== true || movie.approval?.commercial_reuse_verified !== true) return null;
