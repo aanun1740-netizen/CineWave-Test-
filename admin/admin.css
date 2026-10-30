@@ -100,3 +100,11 @@ input,textarea,select{accent-color:#D4F458}
 aside .brand,.access .brand{display:flex;flex-wrap:wrap;align-items:center;gap:4px;min-width:160px}
 aside .brand small,.access .brand small{width:100%;margin:0 0 0 3px;font-size:9px;letter-spacing:2px;color:#F7F5F0}
 @media(max-width:600px){.admin-brand-logo{width:160px;min-width:160px}}
+
+/* Brand consistency for form controls, lists and status chips */
+.shell>main,.table-wrap,table,thead,tbody,tr,td,th,fieldset,.editor-fields{color:#F7F5F0}
+input:not([type=checkbox]),select,textarea{background:#20152E!important;color:#F7F5F0!important;border:1px solid #F7F5F05c!important}
+input::placeholder,textarea::placeholder{color:#F7F5F099}
+table,th,td,tr,.table-wrap,fieldset{border-color:#F7F5F02d!important}
+.tag.published,.tag.verified{color:#D4F458!important;border-color:#D4F45888!important;background:#D4F45816!important}
+button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px solid #D4F458!important}
