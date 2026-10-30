@@ -291,7 +291,7 @@ describe("React admin", () => {
     );
     expect(
       document.querySelector(".access .brand")?.textContent.replace(/\s+/g, " ").trim(),
-    ).toBe("MovieLab STUDIO");
+    ).toBe("KinoLab STUDIO");
     const user = userEvent.setup();
     await user.selectOptions(screen.getByLabelText("Language / Язык / Լեզու"), "ru");
     expect(
