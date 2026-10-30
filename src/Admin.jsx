@@ -506,7 +506,7 @@ export default function Admin() {
       {!authorized ? (
         <section className="access">
           <a href={base} className="brand">
-            Movie<span>Lab</span> <small>STUDIO</small>
+            Kino<span>Lab</span> <small>STUDIO</small>
           </a>
           <div className="login-card">
             <p className="eyebrow">{t("ADMINISTRATOR ACCESS")}</p>
