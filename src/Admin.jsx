@@ -115,7 +115,7 @@ export default function Admin() {
         );
       if (data !== true) {
         lock(
-          "Access denied. This account is not an authorized MovieLab administrator.",
+          "Access denied. This account is not an authorized KinoLab administrator.",
         );
         return;
       }
@@ -317,7 +317,7 @@ export default function Admin() {
       name === "delete"
         ? {
             title: "Permanently delete this movie?",
-            text: "This removes the record from MovieLab. It does not delete shared image assets. Type its exact title to confirm.",
+            text: "This removes the record from KinoLab. It does not delete shared image assets. Type its exact title to confirm.",
             typed: row.title_en,
           }
         : {
@@ -550,7 +550,7 @@ export default function Admin() {
                 {t("Sign out")}
               </button>
             )}
-            <a href={base}>{t("← Back to MovieLab")}</a>
+            <a href={base}>{t("← Back to KinoLab")}</a>
           </div>
           <p className="access-note">
             {t("Authorization is enforced by Supabase, not by this page.")}
@@ -586,7 +586,7 @@ export default function Admin() {
           <main>
             <header>
               <div>
-                <p className="eyebrow">{t("MOVIELAB ADMIN")}</p>
+                <p className="eyebrow">{t("KINOLAB ADMIN")}</p>
                 <h1>
                   {t(
                     {
@@ -1119,7 +1119,7 @@ export default function Admin() {
               </a>
               <button type="button" className="secondary" onClick={() => setEmbedPreview(null)}>{t("Close")}</button>
             </div>
-            <p className="hint">{language === "hy" ? "Եթե ներքևի պատուհանը դատարկ է, աղբյուրը կարող է արգելել iframe-ը կամ չաշխատել այս բրաուզերում։ Այս արգելքը MovieLab-ից հեռացնել հնարավոր չէ։" : language === "ru" ? "Если окно пустое, источник может запрещать iframe или не поддерживать этот браузер. MovieLab не может отменить ограничения другого сайта." : "If the frame is blank, the provider may block framing or the browser may reject it. MovieLab cannot override the provider's restrictions."}</p>
+            <p className="hint">{language === "hy" ? "Եթե ներքևի պատուհանը դատարկ է, աղբյուրը կարող է արգելել iframe-ը կամ չաշխատել այս բրաուզերում։ Այս արգելքը KinoLab-ից հեռացնել հնարավոր չէ։" : language === "ru" ? "Если окно пустое, источник может запрещать iframe или не поддерживать этот браузер. KinoLab не может отменить ограничения другого сайта." : "If the frame is blank, the provider may block framing or the browser may reject it. KinoLab cannot override the provider's restrictions."}</p>
             <iframe title="Embed preview" src={embedPreview} sandbox="allow-scripts allow-same-origin allow-presentation allow-forms" referrerPolicy="strict-origin-when-cross-origin" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowFullScreen />
           </section>
         </div>
