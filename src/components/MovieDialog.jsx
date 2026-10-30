@@ -101,7 +101,7 @@ export default function MovieDialog({
       <div className="dialog">
         <div className="dialog-top">
           <div>
-            <span className="eyebrow">MOVIELAB</span>
+            <span className="eyebrow">KINOLAB</span>
             <h2 id="modalTitle">
               {info.title || t(loading ? "loading" : "titleUnknown")}
             </h2>
@@ -145,7 +145,7 @@ export default function MovieDialog({
                   <a className="btn primary" href={externalWatch} target="_blank" rel="noopener noreferrer">
                     {({hy:"Դիտել ֆիլմը",ru:"Смотреть фильм",en:"Watch movie"}[language])}
                   </a>
-                  <span className="movielab-external-disclosure">{({hy:"Բացվում է արտաքին նվագարկիչում · MovieLab-ը մնում է բաց",ru:"Откроется внешний плеер · MovieLab останется открытым",en:"Opens an external player · MovieLab stays open"}[language])}</span>
+                  <span className="movielab-external-disclosure">{({hy:"Բացվում է արտաքին նվագարկիչում · KinoLab-ը մնում է բաց",ru:"Откроется внешний плеер · KinoLab останется открытым",en:"Opens an external player · KinoLab stays open"}[language])}</span>
                 </div>
               )}
               {!watch && hasDirectPlayback && (
