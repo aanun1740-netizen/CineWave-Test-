@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { localizedMovie, genreLabel, adminModel } from "../domain";
 import Player from "./Player";
 import { Artwork } from "./MovieRow";
@@ -47,7 +47,6 @@ export default function MovieDialog({
   watchable,
   onProgress,
 }) {
-  const [embedded, setEmbedded] = useState(false);
   const dialog = useRef(null),
     closer = useRef(null);
   useEffect(() => {
@@ -61,11 +60,10 @@ export default function MovieDialog({
   }, []);
   const info = movie ? localizedMovie(movie, language) : {};
   const trailerEmbed = movie && movie.source === "supabase" && movie.approval?.license_verified === true && movie.approval?.commercial_reuse_verified === true ? trustedEmbed(movie.embed) : null;
-  // NextEmbed blocks iframe use. Open its verified external URL in a new tab
-  // instead of presenting a broken embedded player.
+  // All authorized external embed references open directly in a new browser tab.
+  // Native MP4/HLS keeps the built-in player; no iframe preflight or popups.
   const hasDirectPlayback = movie ? watchable(movie) : false;
-  const externalWatch = !hasDirectPlayback && trailerEmbed && new URL(trailerEmbed).hostname === "api.nextembed.ws" ? trailerEmbed : null;
-  const internalEmbed = !hasDirectPlayback && !externalWatch ? trailerEmbed : null;
+  const externalWatch = !hasDirectPlayback ? trailerEmbed : null;
   return (
     <div
       className="modal open"
@@ -117,27 +115,16 @@ export default function MovieDialog({
           </button>
         </div>
         <div className="video-wrap">
-          {movie &&
-            (embedded && internalEmbed ? (
-              <iframe className="movielab-trusted-embed" title={info.title || "Video"} src={internalEmbed} referrerPolicy="strict-origin-when-cross-origin" sandbox="allow-scripts allow-same-origin allow-presentation" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowFullScreen />
-            ) : watch && watchable(movie) ? (
-              <Player
-                movie={movie}
-                language={language}
-                onProgress={onProgress}
-              />
-            ) : (
-              <div className="details-art">
-                <Artwork
-                  className="detail-poster"
-                  src={movie.img}
-                  alt={info.title}
-                />
-                {!watchable(movie) && (
-                  <div className="availability-note">{t("browseOnly")}</div>
-                )}
-              </div>
-            ))}
+          {movie && (watch && hasDirectPlayback ? (
+            <Player movie={movie} language={language} onProgress={onProgress} />
+          ) : (
+            <div className="details-art">
+              <Artwork className="detail-poster" src={movie.img} alt={info.title} />
+              {!hasDirectPlayback && !externalWatch && (
+                <div className="availability-note">{t("browseOnly")}</div>
+              )}
+            </div>
+          ))}
         </div>
         <div className="dialog-info">
           <div className="meta">
@@ -159,11 +146,6 @@ export default function MovieDialog({
                   </a>
                   <span className="movielab-external-disclosure">{({hy:"Բացվում է արտաքին նվագարկիչում · MovieLab-ը մնում է բաց",ru:"Откроется внешний плеер · MovieLab останется открытым",en:"Opens an external player · MovieLab stays open"}[language])}</span>
                 </div>
-              )}
-              {internalEmbed && !watch && (
-                <button className="btn secondary" type="button" onClick={() => setEmbedded(v => !v)}>
-                  {embedded ? ({hy:"Փակել նվագարկիչը",ru:"Закрыть плеер",en:"Close player"}[language]) : ({hy:"Դիտել ֆիլմը",ru:"Смотреть фильм",en:"Watch movie"}[language])}
-                </button>
               )}
               {!watch && hasDirectPlayback && (
                 <button className="btn primary" onClick={onWatch}>
