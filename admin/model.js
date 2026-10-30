@@ -12,7 +12,6 @@
   if(!out.title_en)throw new Error('An English title is required.');
   for(const name of ['trailer_url','original_source_url','license_evidence_url','license_terms_url'])if(out[name]&&!https(out[name]))throw new Error(name+' must be an HTTPS URL without credentials.');
   if(out.embed_url&&!https(out.embed_url))throw new Error('Embed URL must be an HTTPS URL.');
-  if(out.embed_url&&!/^(www\\.youtube\\.com|m\\.youtube\\.com|youtu\\.be|vimeo\\.com|www\\.vimeo\\.com|player\\.vimeo\\.com)$/.test(new URL(out.embed_url).hostname))throw new Error('Only permitted YouTube and Vimeo embeds are supported.');
   if(out.watch_url&&!media(out.watch_url))throw new Error('Use an HTTPS MP4, WebM or .m3u8 URL for playback.');
   for(const name of ['poster_path','backdrop_path'])if(out[name]&&!https(out[name])&&!/^\/?[\w-]+\.(png|jpg|jpeg|webp)$/i.test(out[name]))throw new Error('Artwork must be an HTTPS URL or an existing TMDB file path.');
   if(out.release_date&&!/^\d{4}-\d{2}-\d{2}$/.test(out.release_date))throw new Error('Use a valid ISO release date.');
