@@ -370,3 +370,23 @@ body.cinewave-site {
 @media (prefers-reduced-motion: reduce) {
   body.cinewave-site .hero-art,body.cinewave-site .hero-backdrop {transition:none;}
 }
+
+/* Clickable poster-watch controls match the previous overlay visual style. */
+.cinewave-site .poster a.play-overlay,
+.cinewave-site .poster button.play-overlay {
+  text-decoration:none;
+  cursor:pointer;
+  width:auto;
+  font-family:inherit;
+  border:0;
+}
+.cinewave-site .poster .play-overlay:focus-visible {
+  opacity:1;
+  transform:translateY(0);
+  outline:2px solid #90ceff;
+  outline-offset:2px;
+}
+@media(hover:none) {
+  .cinewave-site .poster a.play-overlay,
+  .cinewave-site .poster button.play-overlay { opacity:1;transform:none; }
+}
