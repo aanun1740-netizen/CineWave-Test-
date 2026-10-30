@@ -889,10 +889,10 @@ export default function Admin() {
                       )}
                       <div className="embed-preview-config">
                         <label>
-                          {language === "hy" ? "Embed URL (YouTube / Vimeo / Archive / Dailymotion / NextEmbed)" : language === "ru" ? "Embed URL (YouTube / Vimeo)" : "Embed URL (YouTube / Vimeo)"}
-                          <input type="url" value={values.embed_url} onChange={e => change("embed_url", e.target.value)} placeholder="https://www.youtube.com/watch?v=..." />
+                          {language === "hy" ? "Embed URL (YouTube / Vimeo / Archive / Dailymotion / NextEmbed)" : language === "ru" ? "Внешняя ссылка для просмотра (NextEmbed / YouTube / Vimeo)" : "External watch link (NextEmbed / YouTube / Vimeo)"}
+                          <input type="url" value={values.embed_url} onChange={e => change("embed_url", e.target.value)} placeholder="https://api.nextembed.ws/embed/movie/92733" />
                         </label>
-                        <p className="hint">{language === "hy" ? "Առանձին Embed URL դաշտ։ HTTPS հղումները կարելի է պահել Draft-ում։ Նախադիտումը՝ YouTube, Vimeo, Archive, Dailymotion, NextEmbed։" : language === "ru" ? "Отдельное поле Embed URL. HTTPS-ссылки сохраняются в Draft. Предпросмотр: YouTube, Vimeo, NextEmbed." : "Separate from Trailer URL. Draft preview supports YouTube, Vimeo, NextEmbed; this does not approve publishing or streaming rights."}</p>
+                        <p className="hint">{language === "hy" ? "Տեղադրիր արտաքին դիտման հղումը, պահպանիր ֆիլմը և մեկ սեղմումով փորձարկիր։ Հանրային դիտման համար անհրաժեշտ է հաստատված թույլտվություն։" : language === "ru" ? "Вставьте ссылку один раз и сохраните фильм. Кнопка ниже проверяет её в новой вкладке. Публикация просмотра требует подтверждённых прав." : "Paste the external movie link here, save the movie, and test it with one click. Public watching requires verified streaming rights."}</p>
                         <a className="secondary" href={safeEmbed(values.embed_url) || undefined} target="_blank" rel="noopener noreferrer" onClick={e => { if (!safeEmbed(values.embed_url)) { e.preventDefault(); setNotice(language === "hy" ? "Այս հասցեի համար արտաքին դիտումը դեռ չի աջակցվում։" : language === "ru" ? "Эта ссылка пока не поддерживается." : "This URL is not currently supported."); } }}>
                           {language === "hy" ? "Փորձարկել արտաքին հղումը" : language === "ru" ? "Открыть внешнюю ссылку" : "Test external link"}
                         </a>
