@@ -88,6 +88,7 @@ export default function MovieRow({
         {movies.map((movie) => {
           const info = localizedMovie(movie, language),
             available = watchable(movie),
+            official = !available && /^https:\/\/(?:www\.)?netflix\.com\/title\/\d+\/?$/.test(movie.officialWatch || "") ? movie.officialWatch : null,
             progress = playback.progressFor(movie.id);
           return (
             <article
@@ -126,10 +127,20 @@ export default function MovieRow({
                 >
                   {t(available ? "available" : "catalogOnly")}
                 </span>
-                <span className="play-overlay">
-                  <Icon name={available ? "play" : "info"} />
-                  {t(available ? "watch" : "details")}
-                </span>
+                {official ? (
+                  <a className="play-overlay" href={official} target="_blank" rel="noopener noreferrer"
+                    aria-label={`${info.title} — ${t("watch")} (Netflix)`}
+                    onClick={(e) => e.stopPropagation()}
+                    onKeyDown={(e) => e.stopPropagation()}>
+                    <Icon name="play" />
+                    {t("watch")}
+                  </a>
+                ) : (
+                  <span className="play-overlay">
+                    <Icon name={available ? "play" : "info"} />
+                    {t(available ? "watch" : "details")}
+                  </span>
+                )}
               </div>
               <div className="movie-title">
                 {info.title || t("titleUnknown")}
