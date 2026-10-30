@@ -4,6 +4,7 @@ import { adminModel as model } from "./domain";
 import { useLanguage } from "./hooks/useLanguage";
 import { adminEntries } from "./admin-translations";
 import Player from "./components/Player";
+import ArchiveImporter from "./components/ArchiveImporter";
 const table = new Map(adminEntries.map(([en, ru, hy]) => [en, { en, ru, hy }]));
 const empty = () =>
   Object.fromEntries(
@@ -564,13 +565,13 @@ export default function Admin() {
             <small>STUDIO</small>
              </a>
             <nav>
-              {["overview", "movies"].map((page) => (
+              {["overview", "movies", "archive"].map((page) => (
                 <button
                   key={page}
                   className={view === page ? "active" : ""}
                   onClick={() => leave(page)}
                 >
-                  {t(page === "overview" ? "◈ Overview" : "▤ Movie library")}
+                  {page==="archive" ? ({hy:"▤ Վերնագրերի արխիվ",ru:"▤ Архив названий",en:"▤ Title archive"}[language]) : t(page === "overview" ? "◈ Overview" : "▤ Movie library")}
                 </button>
               ))}
               <button onClick={() => edit()}>{t("＋ Add movie")}</button>
@@ -592,6 +593,7 @@ export default function Admin() {
                     {
                       overview: "Overview",
                       movies: "Movie library",
+                      archive: ({hy:"Վերնագրերի արխիվ",ru:"Архив названий",en:"Title archive"}[language]),
                       editor: editing ? "Edit movie" : "Add movie",
                     }[view],
                   )}
@@ -670,6 +672,7 @@ export default function Admin() {
                 </div>
               </section>
             )}
+            {view === "archive" && <ArchiveImporter language={language} />}
             {view === "movies" && (
               <section>
                 <div className="toolbar">
