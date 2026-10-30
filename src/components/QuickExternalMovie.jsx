@@ -31,9 +31,9 @@ export default function QuickExternalMovie({language}){
   }catch(err){setNotice(err.message||String(err))}
   finally{setBusy(false)}
  }
- return <section className="panel quick-external"><h2>{t.title}</h2><p className="hint">{t.intro}</p>
+ return <section className="panel quick-external"><h2>{t.title}</h2><p className="hint">{t.intro}</p><p className="hint">{({hy:"Ստուգում․ հղումը բացվում է արտաքին էջում, ոչ iframe-ով։ ID-ն փոխանցվում է ուղիղ URL-ով, առանց ֆիլմը ներբեռնելու։",ru:"Проверка: ссылка откроется на внешнем сайте, без iframe. ID передаётся напрямую в URL.",en:"The link opens directly on the provider site (not in an iframe). The ID stays in the original URL."}[language])}</p>
   <form onSubmit={submit}><div className="form-grid">
    {[[ "title_en",t.name,true],[ "title_ru",t.ru,false],[ "title_hy",t.hy,false],["embed",t.link,true],["poster",t.poster,false],["description",t.description,false],["holder",t.holder,true],["license",t.license,true],["proof",t.proof,true],["terms",t.terms,true]].map(([id,label,required])=><label key={id}>{label}<input name={id} required={required} type={["embed","poster","proof","terms"].includes(id)?"url":"text"} /></label>)}
-  </div><label className="check"><input name="permission" type="checkbox" required />{t.permission}</label><div className="form-actions"><button className="primary" disabled={busy} type="submit">{busy?t.saving:t.button}</button></div></form><p role="status">{notice}</p>
+  </div><label className="check"><input name="permission" type="checkbox" required />{t.permission}</label><div className="form-actions"><button className="primary" disabled={busy} type="submit">{busy?t.saving:t.button}</button><button className="secondary" type="button" onClick={()=>{const url=document.querySelector('.quick-external input[name="embed"]')?.value?.trim();if(!allowed(url)){setNotice("Enter an exact HTTPS NextEmbed link first.");return;}window.open(url,"_blank","noopener,noreferrer");}}>{({hy:"Փորձարկել դիտման հղումը",ru:"Проверить просмотр",en:"Test watch link"}[language])}</button></div></form><p role="status">{notice}</p>
  </section>
 }
