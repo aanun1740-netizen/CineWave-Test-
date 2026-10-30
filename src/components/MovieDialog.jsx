@@ -61,6 +61,10 @@ export default function MovieDialog({
   }, []);
   const info = movie ? localizedMovie(movie, language) : {};
   const trailerEmbed = movie && movie.source === "supabase" && movie.approval?.license_verified === true && movie.approval?.commercial_reuse_verified === true ? trustedEmbed(movie.embed) : null;
+  // NextEmbed blocks iframe use. Open its verified external URL in a new tab
+  // instead of presenting a broken embedded player.
+  const externalWatch = trailerEmbed && new URL(trailerEmbed).hostname === "api.nextembed.ws" ? trailerEmbed : null;
+  const internalEmbed = externalWatch ? null : trailerEmbed;
   return (
     <div
       className="modal open"
@@ -113,8 +117,8 @@ export default function MovieDialog({
         </div>
         <div className="video-wrap">
           {movie &&
-            (embedded && trailerEmbed ? (
-              <iframe className="movielab-trusted-embed" title={info.title || "Video"} src={trailerEmbed} referrerPolicy="strict-origin-when-cross-origin" sandbox="allow-scripts allow-same-origin allow-presentation" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowFullScreen />
+            (embedded && internalEmbed ? (
+              <iframe className="movielab-trusted-embed" title={info.title || "Video"} src={internalEmbed} referrerPolicy="strict-origin-when-cross-origin" sandbox="allow-scripts allow-same-origin allow-presentation" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowFullScreen />
             ) : watch && watchable(movie) ? (
               <Player
                 movie={movie}
@@ -147,7 +151,15 @@ export default function MovieDialog({
           </p>
           {movie && (
             <div className="detail-actions">
-              {trailerEmbed && !watch && (
+              {externalWatch && !watch && (
+                <div className="movielab-external-watch">
+                  <a className="btn primary" href={externalWatch} target="_blank" rel="noopener noreferrer">
+                    {({hy:"Դիտել ֆիլմը ↗",ru:"Смотреть фильм ↗",en:"Watch movie ↗"}[language])}
+                  </a>
+                  <span className="movielab-external-disclosure">{({hy:"Բացվում է արտաքին նվագարկիչում · MovieLab-ը մնում է բաց",ru:"Откроется внешний плеер · MovieLab останется открытым",en:"Opens an external player · MovieLab stays open"}[language])}</span>
+                </div>
+              )}
+              {internalEmbed && !watch && (
                 <button className="btn secondary" type="button" onClick={() => setEmbedded(v => !v)}>
                   {embedded ? ({hy:"Փակել արտաքին նվագարկիչը",ru:"Закрыть встроенное видео",en:"Close embedded video"}[language]) : ({hy:"Դիտել արտաքին տեսանյութը",ru:"Смотреть встроенное видео",en:"Watch embedded video"}[language])}
                 </button>
