@@ -95,3 +95,8 @@ a{color:#D4F458}
 :focus-visible{outline-color:#D4F458}
 .notice{color:#D4F458}
 input,textarea,select{accent-color:#D4F458}
+
+.admin-brand-logo{display:block;width:180px;max-width:100%;height:auto;min-width:160px}
+aside .brand,.access .brand{display:flex;flex-wrap:wrap;align-items:center;gap:4px;min-width:160px}
+aside .brand small,.access .brand small{width:100%;margin:0 0 0 3px;font-size:9px;letter-spacing:2px;color:#F7F5F0}
+@media(max-width:600px){.admin-brand-logo{width:160px;min-width:160px}}
