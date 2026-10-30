@@ -1,7 +1,28 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { localizedMovie, genreLabel, adminModel } from "../domain";
 import Player from "./Player";
 import { Artwork } from "./MovieRow";
+
+// Only trusted, intentionally embeddable platforms; never embed arbitrary hosts.
+function trustedEmbed(url) {
+  try {
+    const u = new URL(url);
+    if (u.protocol !== "https:" || u.username || u.password) return null;
+    let id = null;
+    if (["youtube.com", "www.youtube.com", "m.youtube.com"].includes(u.hostname)) {
+      if (u.pathname === "/watch") id = u.searchParams.get("v");
+      else if (u.pathname.startsWith("/embed/")) id = u.pathname.split("/")[2];
+    } else if (u.hostname === "youtu.be") id = u.pathname.slice(1);
+    if (id && /^[a-zA-Z0-9_-]{11}$/.test(id))
+      return "https://www.youtube-nocookie.com/embed/" + id;
+    if (u.hostname === "player.vimeo.com" || u.hostname === "vimeo.com" || u.hostname === "www.vimeo.com") {
+      const match = u.pathname.match(/^\/(?:video\/)?([0-9]+)\/?$/);
+      if (match) return "https://player.vimeo.com/video/" + match[1];
+    }
+  } catch {}
+  return null;
+}
+
 export default function MovieDialog({
   movie,
   loading,
@@ -15,6 +36,7 @@ export default function MovieDialog({
   watchable,
   onProgress,
 }) {
+  const [embedded, setEmbedded] = useState(false);
   const dialog = useRef(null),
     closer = useRef(null);
   useEffect(() => {
@@ -27,6 +49,7 @@ export default function MovieDialog({
     };
   }, []);
   const info = movie ? localizedMovie(movie, language) : {};
+  const trailerEmbed = movie ? trustedEmbed(movie.trailer) : null;
   return (
     <div
       className="modal open"
@@ -79,7 +102,9 @@ export default function MovieDialog({
         </div>
         <div className="video-wrap">
           {movie &&
-            (watch && watchable(movie) ? (
+            (embedded && trailerEmbed ? (
+              <iframe className="movielab-trusted-embed" title={info.title || "Video"} src={trailerEmbed} referrerPolicy="strict-origin-when-cross-origin" sandbox="allow-scripts allow-same-origin allow-presentation" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowFullScreen />
+            ) : watch && watchable(movie) ? (
               <Player
                 movie={movie}
                 language={language}
@@ -111,6 +136,11 @@ export default function MovieDialog({
           </p>
           {movie && (
             <div className="detail-actions">
+              {trailerEmbed && !watch && (
+                <button className="btn secondary" type="button" onClick={() => setEmbedded(v => !v)}>
+                  {embedded ? ({hy:"Փակել արտաքին նվագարկիչը",ru:"Закрыть встроенное видео",en:"Close embedded video"}[language]) : ({hy:"Դիտել արտաքին տեսանյութը",ru:"Смотреть встроенное видео",en:"Watch embedded video"}[language])}
+                </button>
+              )}
               {!watch && watchable(movie) && (
                 <button className="btn primary" onClick={onWatch}>
                   {t("watch")}
