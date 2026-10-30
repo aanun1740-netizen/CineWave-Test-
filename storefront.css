@@ -514,3 +514,12 @@ body.cinewave-site :focus-visible{outline-color:#D4F458}
 body.cinewave-site .brand{min-width:160px}
 body.cinewave-site .brand img{min-width:160px;width:180px!important;max-width:100%;height:auto!important}
 @media(max-width:600px){body.cinewave-site .hero-shade{background:linear-gradient(0deg,#20152E 0%,#20152Ec9 40%,#20152E00 92%)}body.cinewave-site .brand{min-width:160px}body.cinewave-site .brand img{width:160px!important;min-width:160px}}
+
+/* KinoLab searchable db.json title archive: only metadata, no streaming. */
+.cinewave-site .archive-title-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px}
+.cinewave-site .archive-title{display:flex;align-items:center;gap:12px;min-width:0;padding:14px;border:1px solid #F7F5F036;border-radius:10px;background:#20152E}
+.cinewave-site .archive-title-symbol{display:grid;place-items:center;flex:0 0 30px;height:30px;background:#D4F458;color:#20152E;font-weight:900;font-size:20px;border-radius:5px}
+.cinewave-site .archive-title strong{display:block;font-size:13px;line-height:1.35;color:#F7F5F0;overflow-wrap:anywhere}
+.cinewave-site .archive-title small{display:block;color:#c9c1cd;font-size:10px;margin-top:6px}
+@media(max-width:950px){.cinewave-site .archive-title-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.cinewave-site .archive-title-grid{grid-template-columns:1fr 1fr;gap:8px}.cinewave-site .archive-title{padding:10px;gap:7px}.cinewave-site .archive-title-symbol{flex-basis:24px;height:24px;font-size:17px}.cinewave-site .archive-title strong{font-size:11px}}
