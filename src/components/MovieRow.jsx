@@ -135,11 +135,13 @@ export default function MovieRow({
                     <Icon name="play" />
                     {t("watch")}
                   </a>
+                ) : available ? (
+                  <button className="play-overlay" type="button" onClick={(e) => {e.stopPropagation(); open(movie, true);}}
+                    onKeyDown={(e) => e.stopPropagation()}>
+                    <Icon name="play" />{t("watch")}
+                  </button>
                 ) : (
-                  <span className="play-overlay">
-                    <Icon name={available ? "play" : "info"} />
-                    {t(available ? "watch" : "details")}
-                  </span>
+                  <span className="play-overlay"><Icon name="info" />{t("details")}</span>
                 )}
               </div>
               <div className="movie-title">
