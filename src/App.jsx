@@ -6,6 +6,7 @@ import {
   genreLabel,
   availableGenres,
   approvedPlayback,
+  externalWatchUrl,
   filterMovies,
   routeFromHash,
   POSTER_FALLBACK,
@@ -243,6 +244,7 @@ export default function App() {
     language,
     t,
     watchable,
+    externalWatchUrl,
     open: (movie, play = false) => navigate((play ? "watch/" : "movie/") + encodeURIComponent(movie.id)),
   };
   const navigation = (mobile) => (
@@ -432,8 +434,8 @@ export default function App() {
                     t(featured ? "descriptionFallback" : "genericDescription")}
                 </p>
                 <div className="actions">
-                  {featured?.officialWatch && !watchable(featured) ? (
-                    <a className="btn primary" href={featured.officialWatch} target="_blank" rel="noopener noreferrer" aria-label={`${t("watch")} — Netflix`}>
+                  {featured && externalWatchUrl(featured) && !watchable(featured) ? (
+                    <a className="btn primary" href={externalWatchUrl(featured)} target="_blank" rel="noopener noreferrer" aria-label={`${t("watch")} — external player`}>
                       <Icon name="play" /><span>{t("watch")}</span>
                     </a>
                   ) : (
