@@ -390,3 +390,105 @@ body.cinewave-site {
   .cinewave-site .poster a.play-overlay,
   .cinewave-site .poster button.play-overlay { opacity:1;transform:none; }
 }
+
+
+/* KINOLAB — user-selected cinematic lime / midnight redesign */
+body.cinewave-site {
+  --bg:#0b0914; --panel:#171120; --muted:#aaa4b6;
+  --red:#d6ff43; --line:#ffffff20;
+  background:#0b0914;color:#f6f5fb;
+}
+body.cinewave-site .topbar{
+  background:#0d0a16f5; border-bottom:1px solid #ffffff1a;
+  height:92px; padding-inline:clamp(22px,5vw,88px);
+  backdrop-filter:blur(20px);
+}
+body.cinewave-site .brand { min-width:170px;display:flex;align-items:center; }
+body.cinewave-site .brand img { width:clamp(142px,12vw,190px)!important;height:auto!important; }
+body.cinewave-site .nav button.active,body.cinewave-site .nav button:hover,
+body.cinewave-site .mobile-nav .active {color:#d6ff43;text-shadow:none;}
+body.cinewave-site .nav button.active:after,
+body.cinewave-site .hero-pagination button.active:after,
+body.cinewave-site .progress>div { background:#d6ff43; }
+body.cinewave-site .nav button.active:after {height:2px;}
+body.cinewave-site .hero {
+  min-height:min(780px,calc(100svh - 92px));
+  background:linear-gradient(115deg,#090814,#171222 65%,#151020);
+  padding:clamp(70px,8vw,130px) clamp(28px,6vw,110px) 100px;
+  isolation:isolate;
+}
+body.cinewave-site .hero-backdrop {
+  width:100%;height:100%;right:0;top:0;opacity:.88;
+  mask-image:none;filter:saturate(.95) contrast(1.06);
+}
+body.cinewave-site .hero-shade {
+  background:linear-gradient(90deg,#0a0917 0%,#0a0917ee 25%,#0a09179e 48%,#0a091720 78%),
+             linear-gradient(0deg,#0b0914 0%,transparent 28%);
+}
+body.cinewave-site .hero-grain {
+  background:radial-gradient(circle at 76% 30%,#ecff7715,transparent 60%);
+}
+body.cinewave-site .hero-content {max-width:680px;width:58%;z-index:2;}
+body.cinewave-site .hero .eyebrow,
+body.cinewave-site .section .eyebrow {color:#d6ff43;text-shadow:none;}
+body.cinewave-site .hero .eyebrow:before {background:#d6ff43;}
+body.cinewave-site .hero h1 {
+  font-size:clamp(48px,6vw,92px);font-weight:900;letter-spacing:-.045em;
+  line-height:1.03;text-shadow:0 4px 28px #0009;
+}
+body.cinewave-site .hero-content>p {
+  color:#f0ebf5;font-size:clamp(14px,1.2vw,18px);line-height:1.65;
+  max-width:540px;text-shadow:0 2px 12px #0009;
+}
+body.cinewave-site .meta {color:#e3ddea;}
+body.cinewave-site .btn.primary,body.cinewave-site .primary {
+  color:#11110c;background:#d6ff43;border:1px solid #d6ff43;
+  box-shadow:0 9px 28px #b2e62d33;font-weight:800;
+}
+body.cinewave-site .btn.primary:hover:not(:disabled),body.cinewave-site .primary:hover:not(:disabled) {
+  color:#0c0c0b;background:#e5ff83;box-shadow:0 12px 35px #b2e62d55;
+}
+body.cinewave-site .btn.secondary,body.cinewave-site .secondary {
+  background:#110e1bba;border:1px solid #cfc8db77;color:#fff;
+}
+body.cinewave-site .btn.secondary:hover,body.cinewave-site .secondary:hover {background:#ffffff1b;}
+body.cinewave-site :focus-visible {outline-color:#d6ff43;}
+body.cinewave-site .hero-art {width:clamp(270px,23vw,380px);aspect-ratio:2/3;height:auto;right:9vw;}
+body.cinewave-site .hero-art>img {border-radius:14px;box-shadow:0 25px 90px #000c;}
+body.cinewave-site .art-stamp {display:none;}
+body.cinewave-site .hero-pagination button.active:after {background:#d6ff43;}
+body.cinewave-site .genre {background:#171120;border:1px solid #393146;color:#efebf3;}
+body.cinewave-site .genre.active {background:#d6ff431d;border-color:#d6ff43;color:#e7ff97;}
+body.cinewave-site .poster {border:1px solid #ffffff24;border-radius:10px;}
+body.cinewave-site .movie:hover .poster {border-color:#d6ff43;box-shadow:0 5px 30px #d6ff4330;}
+body.cinewave-site .play-overlay {background:#d6ff43;color:#171120;}
+body.cinewave-site .poster-badge.available {background:#d6ff43;color:#171120;}
+body.cinewave-site .section-head h2 {font-weight:850;letter-spacing:-.035em;}
+body.cinewave-site #cw-ai-button {background:#1d1928;border-color:#d6ff4380;color:#e8ffb0;}
+body.cinewave-site .mobile-nav {background:#0e0b17f5;border-top-color:#d6ff4340;}
+body.cinewave-site .search {border-color:#ffffff25;}
+@media (max-width:950px) {
+ body.cinewave-site .hero {min-height:610px;}
+ body.cinewave-site .hero-content {width:65%;}
+ body.cinewave-site .hero h1 {font-size:clamp(40px,6vw,65px);}
+}
+@media (max-width:600px) {
+ body.cinewave-site .topbar {min-height:72px;height:auto;padding:14px 18px;}
+ body.cinewave-site .brand {min-width:120px;}
+ body.cinewave-site .brand img {width:145px!important;}
+ body.cinewave-site .hero {
+   min-height:640px;padding:270px 21px 78px;align-items:flex-end;
+   background:#110d1c;
+ }
+ body.cinewave-site .hero-backdrop {opacity:.9;mask-image:none;}
+ body.cinewave-site .hero-shade {
+  background:linear-gradient(0deg,#0b0914 0%,#0b0914b8 34%,#0b091400 84%),
+             linear-gradient(90deg,#0b091438,transparent);
+ }
+ body.cinewave-site .hero-art {display:none;}
+ body.cinewave-site .hero-content {width:100%;max-width:100%;}
+ body.cinewave-site .hero h1 {font-size:clamp(39px,10vw,53px);line-height:1.04;max-width:100%;}
+ body.cinewave-site .hero-content>p {color:#f3edf5;font-size:13px;line-height:1.55;}
+ body.cinewave-site .hero-pagination {bottom:24px;left:22px;}
+ body.cinewave-site .btn.primary {color:#0d1010;}
+}
