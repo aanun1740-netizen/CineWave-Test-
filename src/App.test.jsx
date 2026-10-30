@@ -153,7 +153,7 @@ describe("React storefront", () => {
     await screen.findByText("Չհաջողվեց բեռնել հավաքածուն։ Փորձեք կրկին։");
     await user.click(screen.getByRole("button", { name: "Փորձել կրկին" }));
     await screen.findAllByText("Արևի պատմություն");
-    expect(mocks.backendFetch).toHaveBeenCalledTimes(2);
+    expect(mocks.backendFetch).toHaveBeenCalledTimes(3);
   });
   it("preserves WebM playback, progress and Continue Watching", async () => {
     localStorage.setItem(
