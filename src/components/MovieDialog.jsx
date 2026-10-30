@@ -63,7 +63,8 @@ export default function MovieDialog({
   // All authorized external embed references open directly in a new browser tab.
   // Native MP4/HLS keeps the built-in player; no iframe preflight or popups.
   const hasDirectPlayback = movie ? watchable(movie) : false;
-  const externalWatch = !hasDirectPlayback ? trailerEmbed : null;
+  const official = /^https:\/\/(?:www\.)?netflix\.com\/title\/\d+\/?$/.test(movie?.officialWatch || "") ? movie.officialWatch : null;
+  const externalWatch = !hasDirectPlayback ? (official || trailerEmbed) : null;
   return (
     <div
       className="modal open"
