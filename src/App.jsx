@@ -243,7 +243,7 @@ export default function App() {
     language,
     t,
     watchable,
-    open: (movie) => navigate("movie/" + encodeURIComponent(movie.id)),
+    open: (movie, play = false) => navigate((play ? "watch/" : "movie/") + encodeURIComponent(movie.id)),
   };
   const navigation = (mobile) => (
     <nav
@@ -432,23 +432,17 @@ export default function App() {
                     t(featured ? "descriptionFallback" : "genericDescription")}
                 </p>
                 <div className="actions">
-                  <button
-                    className="btn primary"
-                    disabled={!featured}
-                    onClick={() =>
-                      navigate(
-                        (watchable(featured) ? "watch/" : "movie/") +
-                          encodeURIComponent(featured.id),
-                      )
-                    }
-                  >
-                    <Icon
-                      name={featured && watchable(featured) ? "play" : "info"}
-                    />
-                    <span>
-                      {t(featured && watchable(featured) ? "watch" : "details")}
-                    </span>
-                  </button>
+                  {featured?.officialWatch && !watchable(featured) ? (
+                    <a className="btn primary" href={featured.officialWatch} target="_blank" rel="noopener noreferrer" aria-label={`${t("watch")} — Netflix`}>
+                      <Icon name="play" /><span>{t("watch")}</span>
+                    </a>
+                  ) : (
+                    <button className="btn primary" disabled={!featured}
+                      onClick={() => navigate((watchable(featured) ? "watch/" : "movie/") + encodeURIComponent(featured.id))}>
+                      <Icon name={featured && watchable(featured) ? "play" : "info"} />
+                      <span>{t(featured && watchable(featured) ? "watch" : "details")}</span>
+                    </button>
+                  )}
                   <button
                     className="btn secondary"
                     disabled={!featured}
