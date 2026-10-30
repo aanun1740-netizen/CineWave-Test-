@@ -506,7 +506,7 @@ export default function Admin() {
       {!authorized ? (
         <section className="access">
           <a href={base} className="brand">
-            Kino<span>Lab</span> <small>STUDIO</small>
+            <img src={`${base}assets/kinolab-logo.svg`} alt="KinoLab" className="admin-brand-logo" /> <small>STUDIO</small>
           </a>
           <div className="login-card">
             <p className="eyebrow">{t("ADMINISTRATOR ACCESS")}</p>
