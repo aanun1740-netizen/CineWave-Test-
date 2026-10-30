@@ -427,6 +427,16 @@ export default function Admin() {
         else if (u.pathname.startsWith("/embed/")) id = u.pathname.split("/")[2];
       } else if (u.hostname === "youtu.be") id = u.pathname.slice(1);
       if (id && /^[a-zA-Z0-9_-]{11}$/.test(id)) return "https://www.youtube-nocookie.com/embed/" + id;
+      if (u.hostname === "archive.org" || u.hostname === "www.archive.org") {
+        const match = u.pathname.match(/^\\/(?:details|embed)\\/([A-Za-z0-9_][A-Za-z0-9_.-]{0,119})\\/?$/);
+        if (match && !u.search && !u.hash) return "https://archive.org/embed/" + match[1];
+      }
+      if (u.hostname === "geo.dailymotion.com") {
+        const match = u.pathname.match(/^\\/player\\/([A-Za-z0-9]+)\\.html$/);
+        const video = u.searchParams.get("video");
+        if (match && video && /^[A-Za-z0-9]+$/.test(video) && u.searchParams.size === 1 && !u.hash)
+          return "https://geo.dailymotion.com/player/" + match[1] + ".html?video=" + video;
+      }
       if (u.hostname === "api.nextembed.ws" && /^\/embed\/(movie|tv)\/\d+(?:\/\d+\/\d+)?\/?$/.test(u.pathname) && !u.search && !u.hash) return u.href;
       if (["vimeo.com","www.vimeo.com","player.vimeo.com"].includes(u.hostname)) {
         const match = u.pathname.match(/^\/(?:video\/)?([0-9]+)\/?$/);
@@ -866,10 +876,10 @@ export default function Admin() {
                       )}
                       <div className="embed-preview-config">
                         <label>
-                          {language === "hy" ? "Embed URL (YouTube / Vimeo / NextEmbed)" : language === "ru" ? "Embed URL (YouTube / Vimeo)" : "Embed URL (YouTube / Vimeo)"}
+                          {language === "hy" ? "Embed URL (YouTube / Vimeo / Archive / Dailymotion / NextEmbed)" : language === "ru" ? "Embed URL (YouTube / Vimeo)" : "Embed URL (YouTube / Vimeo)"}
                           <input type="url" value={values.embed_url} onChange={e => change("embed_url", e.target.value)} placeholder="https://www.youtube.com/watch?v=..." />
                         </label>
-                        <p className="hint">{language === "hy" ? "Առանձին Embed URL դաշտ։ HTTPS հղումները կարելի է պահել Draft-ում։ Նախադիտումը՝ YouTube, Vimeo, NextEmbed։" : language === "ru" ? "Отдельное поле Embed URL. HTTPS-ссылки сохраняются в Draft. Предпросмотр: YouTube, Vimeo, NextEmbed." : "Separate from Trailer URL. Draft preview supports YouTube, Vimeo, NextEmbed; this does not approve publishing or streaming rights."}</p>
+                        <p className="hint">{language === "hy" ? "Առանձին Embed URL դաշտ։ HTTPS հղումները կարելի է պահել Draft-ում։ Նախադիտումը՝ YouTube, Vimeo, Archive, Dailymotion, NextEmbed։" : language === "ru" ? "Отдельное поле Embed URL. HTTPS-ссылки сохраняются в Draft. Предпросмотр: YouTube, Vimeo, NextEmbed." : "Separate from Trailer URL. Draft preview supports YouTube, Vimeo, NextEmbed; this does not approve publishing or streaming rights."}</p>
                         <button type="button" className="secondary" onClick={() => {
                           const url = safeEmbed(values.embed_url);
                           if (!url) { setNotice(language === "hy" ? "Նախադիտումը հասանելի է YouTube, Vimeo և NextEmbed հղումներով։" : language === "ru" ? "Введите допустимую HTTPS-ссылку YouTube или Vimeo." : "Preview supports YouTube/Vimeo/NextEmbed only."); return; }
