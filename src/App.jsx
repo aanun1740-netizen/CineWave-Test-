@@ -19,6 +19,7 @@ import MovieDialog from "./components/MovieDialog";
 import { playback } from "./components/Player";
 import { Brand, Icon, Icons } from "./components/Icons";
 import AI from "./components/AI";
+import ArchiveSearch from "./components/ArchiveSearch";
 const navs = { home: "home", movies: "movies", tv: "tv", "my-list": "list" };
 export default function App() {
   const { language, setLanguage, t } = useLanguage(),
@@ -605,6 +606,7 @@ export default function App() {
                     : null
                 }
               />
+              <ArchiveSearch query={query} language={language} />
               {home && movies.length > 0 && (
                 <MovieRow
                   {...rowProps}
