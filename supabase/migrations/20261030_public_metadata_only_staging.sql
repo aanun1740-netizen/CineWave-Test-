@@ -3,7 +3,7 @@
 BEGIN;
 ALTER TABLE public.movies ADD COLUMN IF NOT EXISTS metadata_published boolean NOT NULL DEFAULT false;
 CREATE TABLE IF NOT EXISTS public.movie_metadata_public (
-  id uuid PRIMARY KEY,
+  id bigint PRIMARY KEY,
   title_en text NOT NULL,
   title_ru text,
   title_hy text,
