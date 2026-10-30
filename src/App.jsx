@@ -446,6 +446,12 @@ export default function App() {
                       <span>{t(featured && watchable(featured) ? "watch" : "details")}</span>
                     </button>
                   )}
+                  {featured?.trailer && /^https:\/\//i.test(featured.trailer) && (
+                    <a className="btn secondary" href={featured.trailer} target="_blank" rel="noopener noreferrer">
+                      <Icon name="play" />
+                      <span>{({hy:"Թրեյլեր",ru:"Трейлер",en:"Trailer"}[language])}</span>
+                    </a>
+                  )}
                   <button
                     className="btn secondary"
                     disabled={!featured}
