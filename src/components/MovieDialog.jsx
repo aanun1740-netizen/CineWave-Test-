@@ -49,7 +49,7 @@ export default function MovieDialog({
     };
   }, []);
   const info = movie ? localizedMovie(movie, language) : {};
-  const trailerEmbed = movie ? trustedEmbed(movie.trailer) : null;
+  const trailerEmbed = movie ? trustedEmbed(movie.embed) : null;
   return (
     <div
       className="modal open"
