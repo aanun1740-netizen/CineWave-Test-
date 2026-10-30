@@ -15,6 +15,7 @@ function trustedEmbed(url) {
     } else if (u.hostname === "youtu.be") id = u.pathname.slice(1);
     if (id && /^[a-zA-Z0-9_-]{11}$/.test(id))
       return "https://www.youtube-nocookie.com/embed/" + id;
+    if (u.hostname === "api.nextembed.ws" && /^\/embed\/(movie|tv)\/\d+(?:\/\d+\/\d+)?\/?$/.test(u.pathname) && !u.search && !u.hash) return u.href;
     if (u.hostname === "player.vimeo.com" || u.hostname === "vimeo.com" || u.hostname === "www.vimeo.com") {
       const match = u.pathname.match(/^\/(?:video\/)?([0-9]+)\/?$/);
       if (match) return "https://player.vimeo.com/video/" + match[1];
@@ -49,7 +50,7 @@ export default function MovieDialog({
     };
   }, []);
   const info = movie ? localizedMovie(movie, language) : {};
-  const trailerEmbed = movie ? trustedEmbed(movie.embed) : null;
+  const trailerEmbed = movie && movie.source === "supabase" && movie.approval?.license_verified === true && movie.approval?.commercial_reuse_verified === true ? trustedEmbed(movie.embed) : null;
   return (
     <div
       className="modal open"
