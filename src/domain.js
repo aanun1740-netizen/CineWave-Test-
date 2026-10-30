@@ -68,3 +68,18 @@ export function routeFromHash(hash = location.hash) {
     ? route
     : "home";
 }
+
+/** Destination for authorized third-party playback; never expose draft embed URLs. */
+export function externalWatchUrl(movie) {
+  if (!movie || approvedPlayback(movie)) return null;
+  const official = String(movie.officialWatch || "");
+  if (/^https:\/\/(?:www\.)?netflix\.com\/title\/\d+\/?$/.test(official)) return official;
+  if (movie.source !== "supabase" || movie.approval?.license_verified !== true || movie.approval?.commercial_reuse_verified !== true) return null;
+  try {
+    const u = new URL(movie.embed);
+    if (u.protocol !== "https:" || u.username || u.password || u.hash) return null;
+    if (u.hostname === "api.nextembed.ws" && /^\/embed\/(movie|tv)\/\d+(?:\/\d+\/\d+)?\/?$/.test(u.pathname) && !u.search) return u.href;
+    if (["www.youtube.com","youtube.com","youtu.be","vimeo.com","www.vimeo.com","player.vimeo.com","archive.org","www.archive.org","geo.dailymotion.com"].includes(u.hostname)) return u.href;
+  } catch {}
+  return null;
+}
