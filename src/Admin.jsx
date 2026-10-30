@@ -5,6 +5,7 @@ import { useLanguage } from "./hooks/useLanguage";
 import { adminEntries } from "./admin-translations";
 import Player from "./components/Player";
 import ArchiveImporter from "./components/ArchiveImporter";
+import QuickExternalMovie from "./components/QuickExternalMovie";
 const table = new Map(adminEntries.map(([en, ru, hy]) => [en, { en, ru, hy }]));
 const empty = () =>
   Object.fromEntries(
@@ -564,13 +565,13 @@ export default function Admin() {
             <small>STUDIO</small>
              </a>
             <nav>
-              {["overview", "movies", "archive"].map((page) => (
+              {["overview", "movies", "external", "archive"].map((page) => (
                 <button
                   key={page}
                   className={view === page ? "active" : ""}
                   onClick={() => leave(page)}
                 >
-                  {page==="archive" ? ({hy:"▤ Վերնագրերի արխիվ",ru:"▤ Архив названий",en:"▤ Title archive"}[language]) : t(page === "overview" ? "◈ Overview" : "▤ Movie library")}
+                  {page==="external" ? ({hy:"▶ Արագ ֆիլմ ավելացնել",ru:"▶ Быстро добавить фильм",en:"▶ Quick add movie"}[language]) : page==="archive" ? ({hy:"▤ Վերնագրերի արխիվ",ru:"▤ Архив названий",en:"▤ Title archive"}[language]) : t(page === "overview" ? "◈ Overview" : "▤ Movie library")}
                 </button>
               ))}
               <button onClick={() => edit()}>{t("＋ Add movie")}</button>
@@ -593,6 +594,7 @@ export default function Admin() {
                       overview: "Overview",
                       movies: "Movie library",
                       archive: ({hy:"Վերնագրերի արխիվ",ru:"Архив названий",en:"Title archive"}[language]),
+                      external: ({hy:"Արագ ֆիլմ ավելացնել",ru:"Быстро добавить фильм",en:"Quick add movie"}[language]),
                       editor: editing ? "Edit movie" : "Add movie",
                     }[view],
                   )}
@@ -672,6 +674,7 @@ export default function Admin() {
               </section>
             )}
             {view === "archive" && <ArchiveImporter language={language} />}
+            {view === "external" && <QuickExternalMovie language={language} />}
             {view === "movies" && (
               <section>
                 <div className="toolbar">
