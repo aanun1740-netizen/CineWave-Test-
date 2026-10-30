@@ -1092,8 +1092,14 @@ export default function Admin() {
         <div className="movielab-embed-preview-overlay" role="presentation" onClick={() => setEmbedPreview(null)}>
           <section className="movielab-embed-preview-panel" role="dialog" aria-modal="true" aria-label="Embed preview" onClick={e => e.stopPropagation()}>
             <p>{language === "hy" ? "Նախադիտումը չի հաստատում ցուցադրման իրավունքը։" : language === "ru" ? "Предпросмотр не подтверждает права на показ." : "Preview does not confirm streaming rights."}</p>
-            <button type="button" className="secondary" onClick={() => setEmbedPreview(null)}>{t("Close")}</button>
-            <iframe title="Embed preview" src={embedPreview} sandbox="allow-scripts allow-same-origin allow-presentation" referrerPolicy="strict-origin-when-cross-origin" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowFullScreen />
+            <div className="movielab-embed-preview-actions">
+              <a className="secondary" href={embedPreview} target="_blank" rel="noopener noreferrer">
+                {language === "hy" ? "Ստուգել սկզբնաղբյուրը" : language === "ru" ? "Открыть источник" : "Open source"}
+              </a>
+              <button type="button" className="secondary" onClick={() => setEmbedPreview(null)}>{t("Close")}</button>
+            </div>
+            <p className="hint">{language === "hy" ? "Եթե ներքևի պատուհանը դատարկ է, աղբյուրը կարող է արգելել iframe-ը կամ չաշխատել այս բրաուզերում։ Այս արգելքը MovieLab-ից հեռացնել հնարավոր չէ։" : language === "ru" ? "Если окно пустое, источник может запрещать iframe или не поддерживать этот браузер. MovieLab не может отменить ограничения другого сайта." : "If the frame is blank, the provider may block framing or the browser may reject it. MovieLab cannot override the provider's restrictions."}</p>
+            <iframe title="Embed preview" src={embedPreview} sandbox="allow-scripts allow-same-origin allow-presentation allow-forms" referrerPolicy="strict-origin-when-cross-origin" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowFullScreen />
           </section>
         </div>
       )}
