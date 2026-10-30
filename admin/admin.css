@@ -69,3 +69,12 @@ button:hover {
   color: #b9ddff;
   background: rgba(91, 85, 185, 0.12);
 }
+
+/* Staging-only embedded provider preview; no database schema change. */
+.embed-preview-config { margin: 14px 0; padding: 14px; border: 1px solid rgba(100,170,255,.28); border-radius: 12px; background: rgba(30,45,75,.18); }
+.embed-preview-config input { display:block; width:100%; margin-top:8px; }
+.embed-preview-config .hint { margin:8px 0 12px; }
+.movielab-embed-preview-overlay { position:fixed; inset:0; z-index:9999; display:flex; align-items:center; justify-content:center; padding:20px; background:rgba(0,0,0,.86); }
+.movielab-embed-preview-panel { width:min(900px,100%); padding:18px; border:1px solid #457dbd; border-radius:15px; background:#101421; color:white; }
+.movielab-embed-preview-panel button { float:right; }
+.movielab-embed-preview-panel iframe { display:block; width:100%; aspect-ratio:16/9; border:0; margin-top:15px; background:#000; }
