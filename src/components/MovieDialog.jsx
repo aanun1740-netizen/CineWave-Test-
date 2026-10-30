@@ -63,8 +63,9 @@ export default function MovieDialog({
   const trailerEmbed = movie && movie.source === "supabase" && movie.approval?.license_verified === true && movie.approval?.commercial_reuse_verified === true ? trustedEmbed(movie.embed) : null;
   // NextEmbed blocks iframe use. Open its verified external URL in a new tab
   // instead of presenting a broken embedded player.
-  const externalWatch = trailerEmbed && new URL(trailerEmbed).hostname === "api.nextembed.ws" ? trailerEmbed : null;
-  const internalEmbed = externalWatch ? null : trailerEmbed;
+  const hasDirectPlayback = movie ? watchable(movie) : false;
+  const externalWatch = !hasDirectPlayback && trailerEmbed && new URL(trailerEmbed).hostname === "api.nextembed.ws" ? trailerEmbed : null;
+  const internalEmbed = !hasDirectPlayback && !externalWatch ? trailerEmbed : null;
   return (
     <div
       className="modal open"
@@ -154,17 +155,17 @@ export default function MovieDialog({
               {externalWatch && !watch && (
                 <div className="movielab-external-watch">
                   <a className="btn primary" href={externalWatch} target="_blank" rel="noopener noreferrer">
-                    {({hy:"Դիտել ֆիլմը ↗",ru:"Смотреть фильм ↗",en:"Watch movie ↗"}[language])}
+                    {({hy:"Դիտել ֆիլմը",ru:"Смотреть фильм",en:"Watch movie"}[language])}
                   </a>
                   <span className="movielab-external-disclosure">{({hy:"Բացվում է արտաքին նվագարկիչում · MovieLab-ը մնում է բաց",ru:"Откроется внешний плеер · MovieLab останется открытым",en:"Opens an external player · MovieLab stays open"}[language])}</span>
                 </div>
               )}
               {internalEmbed && !watch && (
                 <button className="btn secondary" type="button" onClick={() => setEmbedded(v => !v)}>
-                  {embedded ? ({hy:"Փակել արտաքին նվագարկիչը",ru:"Закрыть встроенное видео",en:"Close embedded video"}[language]) : ({hy:"Դիտել արտաքին տեսանյութը",ru:"Смотреть встроенное видео",en:"Watch embedded video"}[language])}
+                  {embedded ? ({hy:"Փակել նվագարկիչը",ru:"Закрыть плеер",en:"Close player"}[language]) : ({hy:"Դիտել ֆիլմը",ru:"Смотреть фильм",en:"Watch movie"}[language])}
                 </button>
               )}
-              {!watch && watchable(movie) && (
+              {!watch && hasDirectPlayback && (
                 <button className="btn primary" onClick={onWatch}>
                   {t("watch")}
                 </button>
