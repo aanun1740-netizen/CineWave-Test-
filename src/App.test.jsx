@@ -290,8 +290,8 @@ describe("React admin", () => {
       "Մուտքը մերժված է։ Այս հաշիվը KinoLab-ի ադմինիստրատորի իրավունքներ չունի։",
     );
     expect(
-      document.querySelector(".access .brand")?.textContent.replace(/\s+/g, " ").trim(),
-    ).toBe("KinoLab STUDIO");
+      document.querySelector(".access .brand img")?.getAttribute("alt"),
+    ).toBe("KinoLab");
     const user = userEvent.setup();
     await user.selectOptions(screen.getByLabelText("Language / Язык / Լեզու"), "ru");
     expect(
