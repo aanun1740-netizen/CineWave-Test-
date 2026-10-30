@@ -2,7 +2,10 @@
 -- Public metadata never contains media links, license documents, or private review data.
 BEGIN;
 ALTER TABLE public.movies ADD COLUMN IF NOT EXISTS metadata_published boolean NOT NULL DEFAULT false;
-CREATE TABLE IF NOT EXISTS public.movie_metadata_public (
+-- This is a derived, read-only public projection. Recreate only this table
+-- to repair an earlier incorrectly typed UUID id; source movies are untouched.
+DROP TABLE IF EXISTS public.movie_metadata_public;
+CREATE TABLE public.movie_metadata_public (
   id bigint PRIMARY KEY,
   title_en text NOT NULL,
   title_ru text,
