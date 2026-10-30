@@ -43,7 +43,7 @@
    const prior=quality.value;quality.replaceChildren();
    if(configured.length){quality.add(new Option(isHLS(movie.video)?t().auto:t().original,'original'));configured.forEach((item,index)=>quality.add(new Option(item.height+'p','source:'+index)));quality.value=selectedURL===movie.video?'original':'source:'+configured.findIndex(item=>item.url===selectedURL);quality.hidden=false;quality.disabled=false;}
    else if(isHLS(selectedURL)){quality.add(new Option(t().auto,'auto'));const seen=new Set();(hls?.levels||[]).forEach((level,index)=>{if(level.height>0&&!seen.has(level.height)){seen.add(level.height);quality.add(new Option(level.height+'p','level:'+index));}});quality.value=[...quality.options].some(option=>option.value===prior)?prior:'auto';quality.hidden=false;quality.disabled=quality.options.length===1;}
-   else quality.hidden=true;
+   else { quality.replaceChildren(); quality.add(new Option(t().original,'original')); quality.value='original'; quality.hidden=false; quality.disabled=true; }
    label(quality,t().quality);
   }
   const current=wrap.querySelector('[data-time="current"]'),duration=wrap.querySelector('[data-time="duration"]');
