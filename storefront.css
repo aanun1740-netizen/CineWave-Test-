@@ -492,3 +492,25 @@ body.cinewave-site .search {border-color:#ffffff25;}
  body.cinewave-site .hero-pagination {bottom:24px;left:22px;}
  body.cinewave-site .btn.primary {color:#0d1010;}
 }
+
+/* KINOLAB OFFICIAL BRAND PALETTE: lime #D4F458 / purple #20152E / warm white #F7F5F0 */
+body.cinewave-site{--bg:#20152E;--panel:#20152E;--red:#D4F458;--muted:#F7F5F0;--line:#F7F5F033;background:#20152E;color:#F7F5F0;}
+body.cinewave-site .topbar,body.cinewave-site .mobile-nav{background:#20152Ef5;border-color:#F7F5F030}
+body.cinewave-site .hero{background:#20152E}
+body.cinewave-site .hero-shade{background:linear-gradient(90deg,#20152E 0%,#20152Ee6 25%,#20152E88 53%,#20152E0a 85%),linear-gradient(0deg,#20152E,transparent 27%)}
+body.cinewave-site .hero-grain{background:radial-gradient(circle at 80% 35%,#D4F45818,transparent 60%)}
+body.cinewave-site .primary,body.cinewave-site .btn.primary{background:#D4F458;color:#20152E;border-color:#D4F458;box-shadow:0 8px 24px #D4F45822}
+body.cinewave-site .primary:hover:not(:disabled),body.cinewave-site .btn.primary:hover:not(:disabled){background:#D4F458;color:#20152E;filter:brightness(1.05)}
+body.cinewave-site .secondary,body.cinewave-site .btn.secondary{background:#20152Ed9;color:#F7F5F0;border:1px solid #F7F5F066}
+body.cinewave-site .genre,body.cinewave-site .search{background:#20152E;color:#F7F5F0;border-color:#F7F5F044}
+body.cinewave-site .genre.active{background:#D4F4581f;color:#D4F458;border-color:#D4F458}
+body.cinewave-site .nav button.active,body.cinewave-site .nav button:hover,body.cinewave-site .hero .eyebrow,body.cinewave-site .section .eyebrow,body.cinewave-site .mobile-nav .active{color:#D4F458}
+body.cinewave-site .hero .eyebrow:before,body.cinewave-site .nav button.active:after,body.cinewave-site .hero-pagination button.active:after,body.cinewave-site .progress>div{background:#D4F458}
+body.cinewave-site .hero h1,body.cinewave-site .hero-content>p,body.cinewave-site .section-head h2,body.cinewave-site .movie-title{color:#F7F5F0}
+body.cinewave-site .poster,body.cinewave-site .movie:hover .poster{border-color:#D4F45855}
+body.cinewave-site .play-overlay,body.cinewave-site .poster-badge.available{background:#D4F458;color:#20152E}
+body.cinewave-site #cw-ai-button{background:#20152E;color:#D4F458;border-color:#D4F458}
+body.cinewave-site :focus-visible{outline-color:#D4F458}
+body.cinewave-site .brand{min-width:160px}
+body.cinewave-site .brand img{min-width:160px;width:180px!important;max-width:100%;height:auto!important}
+@media(max-width:600px){body.cinewave-site .hero-shade{background:linear-gradient(0deg,#20152E 0%,#20152Ec9 40%,#20152E00 92%)}body.cinewave-site .brand{min-width:160px}body.cinewave-site .brand img{width:160px!important;min-width:160px}}
