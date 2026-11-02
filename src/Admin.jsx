@@ -262,7 +262,10 @@ export default function Admin() {
     } catch (error) {
       if (error?.message?.includes("movies_embed_url_safe")) {
         setNotice("This embed link is allowed only as an unpublished draft reference. It cannot be published or played here.");
-      } else fail(error);
+      } else {
+        const details = error?.message || "Unknown error";
+        setNotice("Save failed: " + details);
+      }
     } finally {
       setBusy(false);
       state.current.busy = false;
@@ -273,6 +276,11 @@ export default function Admin() {
     await run(async () => {
       const id = generation.current,
         payload = collect();
+      // External-reference movies appear in the information catalog immediately;
+      // their public Watch link is gated by the server-side permission projection.
+      if (payload.embed_url && !editing?.is_published) {
+        payload.metadata_published = true;
+      }
       let saved;
       if (editing) saved = await update(editing, payload);
       else {
