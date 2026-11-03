@@ -41,7 +41,7 @@ export function Brand({ href = "#/home" }) {
   return (
     <a className="brand" href={href} aria-label="KinoLab Home">
       <img
-        src={`${import.meta.env.BASE_URL}assets/kinolab-logo.svg`}
+        src={`${import.meta.env.BASE_URL}assets/kinolab-logo.svg?v=20261103`}
         alt="KinoLab"
         style={{
           width: "180px",
