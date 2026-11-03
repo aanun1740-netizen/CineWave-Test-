@@ -150,12 +150,27 @@ export default function App() {
       if (!metadataResponse.ok) throw Error("Metadata listing unavailable.");
       const metadataRows = await metadataResponse.json();
       if (!Array.isArray(metadataRows)) throw Error();
+      // Independently published outbound links (no embedded playback).
+      // A missing migration must not break the existing movie catalog.
+      let externalRows = [];
+      try {
+        const linkResponse = await backendFetch(
+          `${config.url}/rest/v1/kinolab_external_catalog?select=*&is_published=eq.true&order=created_at.desc`,
+          { headers: { apikey: config.key, Authorization: `Bearer ${config.key}` } },
+        );
+        if (linkResponse.ok) {
+          const linkData = await linkResponse.json();
+          if (Array.isArray(linkData)) externalRows = linkData
+            .filter(row => /^https:\\/\\/api\\.nextembed\\.ws\\/embed\\/(?:movie|tv)\\/\\d+(?:\\/\\d+\\/\\d+)?\\/?$/.test(row.external_watch_url || ""))
+            .map(row => ({ ...row, id: "external:" + row.id, watch_url:null, embed_url:null, playback_verification:null, rights_verification_status:"unverified" }));
+        }
+      } catch { /* Keep the original catalog available. */ }
       if (id === request.current) {
         const publishedIds = new Set(rows.map(row => String(row.id)));
         const metadataOnly = metadataRows
           .filter(row => !publishedIds.has(String(row.id)))
           .map(row => ({ ...row, watch_url:null, embed_url:null, trailer_url:null, playback_verification:null, rights_verification_status:"unverified" }));
-        setMovies([...rows, ...metadataOnly].map(mapCatalogMovie));
+        setMovies([...rows, ...metadataOnly, ...externalRows].map(mapCatalogMovie));
         setState("ready");
       }
     } catch {
