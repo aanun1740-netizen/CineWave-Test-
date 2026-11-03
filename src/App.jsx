@@ -161,7 +161,7 @@ export default function App() {
         if (linkResponse.ok) {
           const linkData = await linkResponse.json();
           if (Array.isArray(linkData)) externalRows = linkData
-            .filter(row => /^https:\\/\\/api\\.nextembed\\.ws\\/embed\\/(?:movie|tv)\\/\\d+(?:\\/\\d+\\/\\d+)?\\/?$/.test(row.external_watch_url || ""))
+            .filter(row => typeof row.external_watch_url === "string" && row.external_watch_url.startsWith("https://api.nextembed.ws/embed/"))
             .map(row => ({ ...row, id: "external:" + row.id, watch_url:null, embed_url:null, playback_verification:null, rights_verification_status:"unverified" }));
         }
       } catch { /* Keep the original catalog available. */ }
