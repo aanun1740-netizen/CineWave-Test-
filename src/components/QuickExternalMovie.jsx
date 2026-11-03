@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { client } from "../services/backend";
 
 const labels = {
-  hy: {heading:"Ավելացնել ֆիլմ՝ արտաքին հղումով", title:"Ֆիլմի անուն", titleRu:"Ռուսերեն անուն (ըստ ցանկության)",titleHy:"Հայերեն անուն (ըստ ցանկության)",genre:"Ժանրեր (ստորակետերով)",year:"Ամսաթիվ",day:"Օր",month:"Ամիս",yearPart:"Տարի",poster:"Նկարի HTTPS հղում",choose:"Ընտրել նկար համակարգչից",uploading:"Նկարը վերբեռնվում է…",uploaded:"Նկարը վերբեռնվեց։ Այժմ կարող ես պահպանել ֆիլմը։",preview:"Ընտրված պաստառ",description:"Նկարագրություն",url:"Դիտման արտաքին հղում",terms:"Հաստատում եմ, որ ստուգել եմ արտաքին կայքի հղումների տարածման պայմանները և այս հղումը թույլատրված է հրապարակել",submit:"Պահպանել և հրապարակել",saving:"Պահպանվում է…",success:"Ֆիլմը պահպանվեց և հրապարակվեց արտաքին հղումով։ Թարմացրու գլխավոր էջը՝ ստուգելու համար։",duplicate:"Այս արտաքին հղումով ֆիլմն արդեն գոյություն ունի։",intro:"Մուտքագրիր ֆիլմի տվյալներն ու արտաքին էջի հասցեն։ «Դիտել» կոճակը նոր ներդիրում կբացի արտաքին կայքը․ KinoLab-ը ֆիլմը չի վերահեռարձակում։"},
-  ru: {heading:"Добавить фильм с внешней ссылкой",title:"Название",titleRu:"Название по-русски (необязательно)",titleHy:"Название по-армянски (необязательно)",genre:"Жанры (через запятую)",year:"Дата выхода",day:"День",month:"Месяц",yearPart:"Год",poster:"HTTPS-ссылка на постер",choose:"Загрузить постер с компьютера",uploading:"Загрузка изображения…",uploaded:"Изображение загружено. Теперь можно сохранить фильм.",preview:"Предпросмотр постера",description:"Описание",url:"Ссылка на внешний просмотр",terms:"Подтверждаю, что проверил условия стороннего сайта и публикация этой ссылки разрешена",submit:"Сохранить и опубликовать",saving:"Сохранение…",success:"Фильм сохранён и опубликован. Обновите главную страницу.",duplicate:"Фильм с этой ссылкой уже есть.",intro:"Сохраните данные и ссылку. «Смотреть» откроет сторонний сайт в новой вкладке; KinoLab не транслирует фильм."},
-  en: {heading:"Add a movie with an external link",title:"Title",titleRu:"Russian title (optional)",titleHy:"Armenian title (optional)",genre:"Genres (comma-separated)",year:"Release date",day:"Day",month:"Month",yearPart:"Year",poster:"HTTPS poster URL",choose:"Upload poster from computer",uploading:"Uploading image…",uploaded:"Image uploaded. You can now save the movie.",preview:"Poster preview",description:"Description",url:"External watch URL",terms:"I checked the external site's linking terms and have permission to publish this link",submit:"Save and publish",saving:"Saving…",success:"Movie saved and published. Refresh the storefront to check.",duplicate:"A movie using this link already exists.",intro:"Enter movie information and the external watch URL. Watch opens the provider in a new tab; KinoLab does not host the movie."}
+  hy: {heading:"Ավելացնել ֆիլմ՝ արտաքին հղումով", title:"Ֆիլմի անուն", titleRu:"Ռուսերեն անուն (ըստ ցանկության)",titleHy:"Հայերեն անուն (ըստ ցանկության)",genre:"Ժանրեր (ստորակետերով)",year:"Ամսաթիվ",day:"Օր",month:"Ամիս",yearPart:"Տարի",poster:"Նկարի HTTPS հղում",choose:"Ընտրել նկար համակարգչից",uploading:"Նկարը վերբեռնվում է…",uploaded:"Նկարը վերբեռնվեց։ Այժմ կարող ես պահպանել ֆիլմը։",preview:"Ընտրված պաստառ",description:"Նկարագրություն",url:"Դիտման արտաքին հղում",terms:"Հաստատում եմ, որ ստուգել եմ արտաքին կայքի հղումների տարածման պայմանները և այս հղումը թույլատրված է հրապարակել",submit:"Պահպանել և հրապարակել",saving:"Պահպանվում է…",success:"Ֆիլմը պահպանվեց և հրապարակվեց արտաքին հղումով։ Թարմացրու գլխավոր էջը՝ ստուգելու համար։",duplicate:"Այս արտաքին հղումով ֆիլմն արդեն գոյություն ունի։",intro:"Մուտքագրիր ֆիլմի տվյալներն ու արտաքին էջի հասցեն։ «Դիտել» կոճակը նոր ներդիրում կբացի արտաքին կայքը․ KinoLab-ը ֆիլմը չի վերահեռարձակում։", list:"Արտաքին հղումով ավելացված ֆիլմեր", refresh:"Թարմացնել ցանկը", remove:"Ջնջել", hide:"Հեռացնել կայքից", show:"Հրապարակել", confirmDelete:"Վերջնական ջնջե՞լ այս ֆիլմը։", empty:"Արտաքին հղումով ավելացված ֆիլմեր չկան։", deleted:"Ֆիլմը ջնջվեց արտաքին կատալոգից։", hidden:"Ֆիլմը հեռացվեց հանրային կայքից։", shown:"Ֆիլմը կրկին հրապարակվեց։"},
+  ru: {heading:"Добавить фильм с внешней ссылкой",title:"Название",titleRu:"Название по-русски (необязательно)",titleHy:"Название по-армянски (необязательно)",genre:"Жанры (через запятую)",year:"Дата выхода",day:"День",month:"Месяц",yearPart:"Год",poster:"HTTPS-ссылка на постер",choose:"Загрузить постер с компьютера",uploading:"Загрузка изображения…",uploaded:"Изображение загружено. Теперь можно сохранить фильм.",preview:"Предпросмотр постера",description:"Описание",url:"Ссылка на внешний просмотр",terms:"Подтверждаю, что проверил условия стороннего сайта и публикация этой ссылки разрешена",submit:"Сохранить и опубликовать",saving:"Сохранение…",success:"Фильм сохранён и опубликован. Обновите главную страницу.",duplicate:"Фильм с этой ссылкой уже есть.",intro:"Сохраните данные и ссылку. «Смотреть» откроет сторонний сайт в новой вкладке; KinoLab не транслирует фильм.", list:"Фильмы с внешними ссылками", refresh:"Обновить список", remove:"Удалить", hide:"Снять с публикации", show:"Опубликовать", confirmDelete:"Удалить этот фильм без возможности восстановления?", empty:"Нет фильмов с внешними ссылками.", deleted:"Фильм удалён из внешнего каталога.", hidden:"Фильм снят с публикации.", shown:"Фильм опубликован."},
+  en: {heading:"Add a movie with an external link",title:"Title",titleRu:"Russian title (optional)",titleHy:"Armenian title (optional)",genre:"Genres (comma-separated)",year:"Release date",day:"Day",month:"Month",yearPart:"Year",poster:"HTTPS poster URL",choose:"Upload poster from computer",uploading:"Uploading image…",uploaded:"Image uploaded. You can now save the movie.",preview:"Poster preview",description:"Description",url:"External watch URL",terms:"I checked the external site's linking terms and have permission to publish this link",submit:"Save and publish",saving:"Saving…",success:"Movie saved and published. Refresh the storefront to check.",duplicate:"A movie using this link already exists.",intro:"Enter movie information and the external watch URL. Watch opens the provider in a new tab; KinoLab does not host the movie.", list:"External-link movies", refresh:"Refresh list", remove:"Delete", hide:"Unpublish", show:"Publish", confirmDelete:"Permanently delete this film?", empty:"No external-link movies found.", deleted:"Movie deleted from the external catalog.", hidden:"Movie removed from the public site.", shown:"Movie published."}
 };
 const allowed = url => /^https:\/\/api\.nextembed\.ws\/embed\/(movie|tv)\/\d+(?:\/\d+\/\d+)?\/?$/.test(url);
 export default function QuickExternalMovie({language}) {
@@ -12,6 +12,43 @@ export default function QuickExternalMovie({language}) {
   const [busy,setBusy]=useState(false),[notice,setNotice]=useState("");
   const [posterUrl,setPosterUrl]=useState("");
   const [uploading,setUploading]=useState(false);
+  const [externalMovies,setExternalMovies]=useState([]);
+  const [listLoading,setListLoading]=useState(false);
+  async function refreshList() {
+    setListLoading(true);
+    try {
+      const {data,error}=await client.from("kinolab_external_catalog")
+        .select("id,title_en,title_ru,title_hy,release_date,is_published,external_watch_url")
+        .order("created_at",{ascending:false}).limit(500);
+      if(error)throw error;
+      setExternalMovies(data||[]);
+    }catch(error){setNotice(error?.message||String(error));}
+    finally{setListLoading(false);}
+  }
+  useEffect(()=>{refreshList();},[]);
+  async function changeListing(row,remove) {
+    if(busy||uploading)return;
+    if(remove && !window.confirm(t.confirmDelete+"\\n"+(row.title_en||"ID "+row.id)))return;
+    setBusy(true);
+    try {
+      if(remove){
+        const {data,error}=await client.from("kinolab_external_catalog")
+          .delete().eq("id",row.id).select("id");
+        if(error)throw error;
+        if(!data?.length)throw Error("Nothing was deleted; check administrator access.");
+        setNotice(t.deleted);
+      } else {
+        const {data,error}=await client.from("kinolab_external_catalog")
+          .update({is_published:!row.is_published}).eq("id",row.id).select("id");
+        if(error)throw error;
+        if(!data?.length)throw Error("No record updated; check administrator access.");
+        setNotice(row.is_published?t.hidden:t.shown);
+      }
+      await refreshList();
+    } catch(error){setNotice(error?.message||String(error));}
+    finally{setBusy(false);}
+  }
+
   async function uploadPoster(event) {
     const input=event.currentTarget;
     const file=input.files?.[0];
@@ -71,7 +108,7 @@ export default function QuickExternalMovie({language}) {
         if(error.code==="23505") throw Error(t.duplicate);
         throw error;
       }
-      form.reset();setPosterUrl("");setNotice(t.success);
+      form.reset();setPosterUrl("");setNotice(t.success);await refreshList();
     } catch(error) {setNotice(error?.message||String(error));}
     finally {setBusy(false);}
   }
@@ -105,5 +142,21 @@ export default function QuickExternalMovie({language}) {
         <button type="button" className="secondary" onClick={()=>{const url=document.querySelector('.quick-external input[name="external_watch_url"]')?.value?.trim();if(allowed(url))window.open(url,"_blank","noopener,noreferrer");else setNotice("Enter a valid NextEmbed link first.");}}>{({hy:"Փորձարկել հղումը",ru:"Проверить ссылку",en:"Test link"}[language])}</button>
       </div>
     </form><p role="status" aria-live="polite">{notice}</p>
+    <div style={{marginTop:28,borderTop:"1px solid #ffffff22",paddingTop:20}}>
+      <div className="panel-head"><h2>{t.list} ({externalMovies.length})</h2>
+      <button type="button" className="secondary" onClick={refreshList} disabled={listLoading||busy}>{t.refresh}</button></div>
+      {externalMovies.length===0 && !listLoading && <p className="hint">{t.empty}</p>}
+      <div className="table-wrap"><table style={{minWidth:550}}><thead><tr><th>ID</th><th>{t.title}</th><th>URL</th><th>Status</th><th>Actions</th></tr></thead><tbody>
+        {externalMovies.map(row=><tr key={row.id}>
+          <td>{row.id}</td><td>{row.title_hy||row.title_ru||row.title_en}</td>
+          <td><a href={row.external_watch_url} target="_blank" rel="noopener noreferrer">{row.external_watch_url?.split("/").slice(-1)[0]}</a></td>
+          <td>{row.is_published?"Published":"Hidden"}</td>
+          <td><div className="row-actions">
+            <button className="secondary" type="button" disabled={busy} onClick={()=>changeListing(row,false)}>{row.is_published?t.hide:t.show}</button>
+            <button className="secondary" type="button" disabled={busy} onClick={()=>changeListing(row,true)}>{t.remove}</button>
+          </div></td>
+        </tr>)}
+      </tbody></table></div>
+    </div>
   </section>;
 }
