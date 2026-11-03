@@ -153,7 +153,12 @@ describe("React storefront", () => {
     await screen.findByText("Չհաջողվեց բեռնել հավաքածուն։ Փորձեք կրկին։");
     await user.click(screen.getByRole("button", { name: "Փորձել կրկին" }));
     await screen.findAllByText("Արևի պատմություն");
-    expect(mocks.backendFetch).toHaveBeenCalledTimes(3);
+    // Initial catalog load fails; retry loads published movies, metadata and external links.
+    expect(mocks.backendFetch).toHaveBeenCalledTimes(4);
+    expect(mocks.backendFetch).toHaveBeenCalledWith(
+      expect.stringContaining("/kinolab_external_catalog?"),
+      expect.any(Object),
+    );
   });
   it("preserves WebM playback, progress and Continue Watching", async () => {
     localStorage.setItem(
