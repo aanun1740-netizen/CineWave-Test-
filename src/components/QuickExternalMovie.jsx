@@ -171,7 +171,7 @@ export default function QuickExternalMovie({language}) {
       <label className="check"><input name="terms_confirmed" type="checkbox" required />{t.terms}</label>
       <div className="form-actions">
         <button type="submit" className="primary" disabled={busy||uploading}>{busy?t.saving:uploading?t.uploading:editingRow?t.saveEdit:t.submit}</button>
-        {editingRow && <button type="button" className="secondary" onClick={resetEditor} disabled={busy||uploading}>{t.cancel}</button>
+        {editingRow && <button type="button" className="secondary" onClick={resetEditor} disabled={busy||uploading}>{t.cancel}</button>}
         <button type="button" className="secondary" onClick={()=>{const url=document.querySelector('.quick-external input[name="external_watch_url"]')?.value?.trim();if(allowed(url))window.open(url,"_blank","noopener,noreferrer");else setNotice("Enter a valid NextEmbed link first.");}}>{({hy:"Փորձարկել հղումը",ru:"Проверить ссылку",en:"Test link"}[language])}</button>
       </div>
     </form><p role="status" aria-live="polite">{notice}</p>
