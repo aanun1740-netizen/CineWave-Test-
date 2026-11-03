@@ -515,7 +515,7 @@ export default function Admin() {
       {!authorized ? (
         <section className="access">
           <a href={base} className="brand">
-            <img src={`${base}assets/kinolab-logo.svg`} alt="KinoLab" className="admin-brand-logo" /> <small>STUDIO</small>
+            <img src={`${base}assets/kinolab-logo.svg?v=20261103`} alt="KinoLab" className="admin-brand-logo" /> <small>STUDIO</small>
           </a>
           <div className="login-card">
             <p className="eyebrow">{t("ADMINISTRATOR ACCESS")}</p>
@@ -569,7 +569,7 @@ export default function Admin() {
         <div className="shell">
           <aside>
             <a className="brand" href={base}>
-             <img src={`${base}assets/kinolab-logo.svg`} alt="KinoLab" className="admin-brand-logo" />
+             <img src={`${base}assets/kinolab-logo.svg?v=20261103`} alt="KinoLab" className="admin-brand-logo" />
             <small>STUDIO</small>
              </a>
             <nav>
