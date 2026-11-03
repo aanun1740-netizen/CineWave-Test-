@@ -1,1 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 272 72" role="img" aria-label="KinoLab"><path fill="#D4F458" d="M5 8h18v22L47 8h24L45 33l27 31H47L23 38v26H5z"/><path fill="#D4F458" d="M25 32 46 8h12L35 33z" opacity=".98"/><text x="80" y="51" font-family="Inter,Arial,sans-serif" font-size="39" font-weight="800" letter-spacing="-2.3" fill="#F7F5F0">KinoLab</text></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 475 120" role="img" aria-labelledby="title">
+<title id="title">KinoLab</title>
+<g fill="#D4F458">
+<path d="M10 10H48V110H10Z"/>
+<path d="M48 51L88 10H131L76 61Z"/>
+<path d="M48 69L76 61L131 110H88Z"/>
+</g>
+<text x="150" y="89" fill="#F7F5F0" font-family="Inter,Arial,Helvetica,sans-serif" font-size="76" font-weight="800" letter-spacing="-3.8">KinoLab</text>
+</svg>
