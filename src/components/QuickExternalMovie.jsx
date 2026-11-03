@@ -2,17 +2,42 @@ import { useState } from "react";
 import { client } from "../services/backend";
 
 const labels = {
-  hy: {heading:"Ավելացնել ֆիլմ՝ արտաքին հղումով", title:"Ֆիլմի անուն", titleRu:"Ռուսերեն անուն (ըստ ցանկության)",titleHy:"Հայերեն անուն (ըստ ցանկության)",genre:"Ժանրեր (ստորակետերով)",year:"Տարեթիվ",poster:"Նկարի HTTPS հղում",description:"Նկարագրություն",url:"Դիտման արտաքին հղում",terms:"Հաստատում եմ, որ ստուգել եմ արտաքին կայքի հղումների տարածման պայմանները և այս հղումը թույլատրված է հրապարակել",submit:"Պահպանել և հրապարակել",saving:"Պահպանվում է…",success:"Ֆիլմը պահպանվեց և հրապարակվեց արտաքին հղումով։ Թարմացրու գլխավոր էջը՝ ստուգելու համար։",duplicate:"Այս արտաքին հղումով ֆիլմն արդեն գոյություն ունի։",intro:"Մուտքագրիր ֆիլմի տվյալներն ու արտաքին էջի հասցեն։ «Դիտել» կոճակը նոր ներդիրում կբացի արտաքին կայքը․ KinoLab-ը ֆիլմը չի վերահեռարձակում։"},
-  ru: {heading:"Добавить фильм с внешней ссылкой",title:"Название",titleRu:"Название по-русски (необязательно)",titleHy:"Название по-армянски (необязательно)",genre:"Жанры (через запятую)",year:"Год",poster:"HTTPS-ссылка на постер",description:"Описание",url:"Ссылка на внешний просмотр",terms:"Подтверждаю, что проверил условия стороннего сайта и публикация этой ссылки разрешена",submit:"Сохранить и опубликовать",saving:"Сохранение…",success:"Фильм сохранён и опубликован. Обновите главную страницу.",duplicate:"Фильм с этой ссылкой уже есть.",intro:"Сохраните данные и ссылку. «Смотреть» откроет сторонний сайт в новой вкладке; KinoLab не транслирует фильм."},
-  en: {heading:"Add a movie with an external link",title:"Title",titleRu:"Russian title (optional)",titleHy:"Armenian title (optional)",genre:"Genres (comma-separated)",year:"Year",poster:"HTTPS poster URL",description:"Description",url:"External watch URL",terms:"I checked the external site's linking terms and have permission to publish this link",submit:"Save and publish",saving:"Saving…",success:"Movie saved and published. Refresh the storefront to check.",duplicate:"A movie using this link already exists.",intro:"Enter movie information and the external watch URL. Watch opens the provider in a new tab; KinoLab does not host the movie."}
+  hy: {heading:"Ավելացնել ֆիլմ՝ արտաքին հղումով", title:"Ֆիլմի անուն", titleRu:"Ռուսերեն անուն (ըստ ցանկության)",titleHy:"Հայերեն անուն (ըստ ցանկության)",genre:"Ժանրեր (ստորակետերով)",year:"Տարեթիվ",poster:"Նկարի HTTPS հղում",choose:"Ընտրել նկար համակարգչից",uploading:"Նկարը վերբեռնվում է…",uploaded:"Նկարը վերբեռնվեց։ Այժմ կարող ես պահպանել ֆիլմը։",preview:"Ընտրված պաստառ",description:"Նկարագրություն",url:"Դիտման արտաքին հղում",terms:"Հաստատում եմ, որ ստուգել եմ արտաքին կայքի հղումների տարածման պայմանները և այս հղումը թույլատրված է հրապարակել",submit:"Պահպանել և հրապարակել",saving:"Պահպանվում է…",success:"Ֆիլմը պահպանվեց և հրապարակվեց արտաքին հղումով։ Թարմացրու գլխավոր էջը՝ ստուգելու համար։",duplicate:"Այս արտաքին հղումով ֆիլմն արդեն գոյություն ունի։",intro:"Մուտքագրիր ֆիլմի տվյալներն ու արտաքին էջի հասցեն։ «Դիտել» կոճակը նոր ներդիրում կբացի արտաքին կայքը․ KinoLab-ը ֆիլմը չի վերահեռարձակում։"},
+  ru: {heading:"Добавить фильм с внешней ссылкой",title:"Название",titleRu:"Название по-русски (необязательно)",titleHy:"Название по-армянски (необязательно)",genre:"Жанры (через запятую)",year:"Год",poster:"HTTPS-ссылка на постер",choose:"Загрузить постер с компьютера",uploading:"Загрузка изображения…",uploaded:"Изображение загружено. Теперь можно сохранить фильм.",preview:"Предпросмотр постера",description:"Описание",url:"Ссылка на внешний просмотр",terms:"Подтверждаю, что проверил условия стороннего сайта и публикация этой ссылки разрешена",submit:"Сохранить и опубликовать",saving:"Сохранение…",success:"Фильм сохранён и опубликован. Обновите главную страницу.",duplicate:"Фильм с этой ссылкой уже есть.",intro:"Сохраните данные и ссылку. «Смотреть» откроет сторонний сайт в новой вкладке; KinoLab не транслирует фильм."},
+  en: {heading:"Add a movie with an external link",title:"Title",titleRu:"Russian title (optional)",titleHy:"Armenian title (optional)",genre:"Genres (comma-separated)",year:"Year",poster:"HTTPS poster URL",choose:"Upload poster from computer",uploading:"Uploading image…",uploaded:"Image uploaded. You can now save the movie.",preview:"Poster preview",description:"Description",url:"External watch URL",terms:"I checked the external site's linking terms and have permission to publish this link",submit:"Save and publish",saving:"Saving…",success:"Movie saved and published. Refresh the storefront to check.",duplicate:"A movie using this link already exists.",intro:"Enter movie information and the external watch URL. Watch opens the provider in a new tab; KinoLab does not host the movie."}
 };
 const allowed = url => /^https:\/\/api\.nextembed\.ws\/embed\/(movie|tv)\/\d+(?:\/\d+\/\d+)?\/?$/.test(url);
 export default function QuickExternalMovie({language}) {
   const t=labels[language] || labels.en;
   const [busy,setBusy]=useState(false),[notice,setNotice]=useState("");
+  const [posterUrl,setPosterUrl]=useState("");
+  const [uploading,setUploading]=useState(false);
+  async function uploadPoster(event) {
+    const input=event.currentTarget;
+    const file=input.files?.[0];
+    if(!file)return;
+    if(!["image/jpeg","image/png","image/webp"].includes(file.type) || file.size===0 || file.size>8*1024*1024) {
+      setNotice(({hy:"Ընտրիր JPG, PNG կամ WebP նկար՝ մինչև 8 ՄԲ։",ru:"Выберите JPG, PNG или WebP до 8 МБ.",en:"Choose a JPG, PNG or WebP image, up to 8 MB."}[language]));
+      input.value="";return;
+    }
+    setUploading(true);setNotice(t.uploading);
+    try {
+      const {data:{user},error:authError}=await client.auth.getUser();
+      if(authError || !user)throw Error("Sign in to KinoLab Studio before uploading.");
+      const extension={"image/jpeg":"jpg","image/png":"png","image/webp":"webp"}[file.type];
+      const path=user.id+"/"+crypto.randomUUID()+"."+extension;
+      const {error}=await client.storage.from("cinewave-assets").upload(path,file,{contentType:file.type,cacheControl:"3600",upsert:false});
+      if(error)throw error;
+      const {data}=client.storage.from("cinewave-assets").getPublicUrl(path);
+      if(!data?.publicUrl)throw Error("Could not obtain image URL.");
+      setPosterUrl(data.publicUrl);setNotice(t.uploaded);
+    }catch(error){setNotice(error?.message||String(error))}
+    finally{setUploading(false);input.value="";}
+  }
+
   async function submit(event) {
     event.preventDefault();
-    if(busy) return;
+    if(busy || uploading) return;
     const form=event.currentTarget;
     const v=Object.fromEntries(new FormData(form).entries());
     const url=String(v.external_watch_url||"").trim();
@@ -29,7 +54,7 @@ export default function QuickExternalMovie({language}) {
         overview_en:String(v.overview_en||"").trim()||null,
         release_date:year+"-01-01",
         genre_names:String(v.genres||"").split(",").map(x=>x.trim()).filter(Boolean),
-        poster_path:String(v.poster_path||"").trim()||null,
+        poster_path:posterUrl.trim()||null,
         external_watch_url:url,
         terms_confirmed:true,
         is_published:true
@@ -39,7 +64,7 @@ export default function QuickExternalMovie({language}) {
         if(error.code==="23505") throw Error(t.duplicate);
         throw error;
       }
-      form.reset();setNotice(t.success);
+      form.reset();setPosterUrl("");setNotice(t.success);
     } catch(error) {setNotice(error?.message||String(error));}
     finally {setBusy(false);}
   }
@@ -52,13 +77,18 @@ export default function QuickExternalMovie({language}) {
         <label>{t.titleHy}<input name="title_hy" maxLength="250"/></label>
         <label>{t.genre}<input name="genres" placeholder="Drama, Comedy"/></label>
         <label>{t.year}<input name="year" type="number" min="1888" max="2100" required/></label>
-        <label>{t.poster}<input name="poster_path" type="url" placeholder="https://..." /></label>
+        <label>{t.poster}
+          <input name="poster_path" type="url" placeholder="https://..." value={posterUrl} onChange={e=>setPosterUrl(e.target.value)}/>
+          <span>{t.choose}</span>
+          <input type="file" accept="image/jpeg,image/png,image/webp" onChange={uploadPoster} disabled={busy||uploading}/>
+          {posterUrl.startsWith("https://") && <img src={posterUrl} alt={t.preview} loading="lazy" style={{width:110,height:165,objectFit:"cover",borderRadius:8}}/>}
+        </label>
         <label>{t.description}<textarea name="overview_en" rows="3"/></label>
         <label>{t.url}<input name="external_watch_url" type="url" required placeholder="https://api.nextembed.ws/embed/movie/92733"/></label>
       </div>
       <label className="check"><input name="terms_confirmed" type="checkbox" required />{t.terms}</label>
       <div className="form-actions">
-        <button type="submit" className="primary" disabled={busy}>{busy?t.saving:t.submit}</button>
+        <button type="submit" className="primary" disabled={busy||uploading}>{busy?t.saving:uploading?t.uploading:t.submit}</button>
         <button type="button" className="secondary" onClick={()=>{const url=document.querySelector('.quick-external input[name="external_watch_url"]')?.value?.trim();if(allowed(url))window.open(url,"_blank","noopener,noreferrer");else setNotice("Enter a valid NextEmbed link first.");}}>{({hy:"Փորձարկել հղումը",ru:"Проверить ссылку",en:"Test link"}[language])}</button>
       </div>
     </form><p role="status" aria-live="polite">{notice}</p>
