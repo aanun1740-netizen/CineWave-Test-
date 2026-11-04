@@ -27,3 +27,14 @@ Never treat this test URL as the final canonical public address.
 9. Check mobile usability, canonical/hreflang handling when pages have real unique language URLs, and indexability before Search Console submission.
 
 No production website, domain or Supabase project has been modified by these notes.
+
+## Production sitemap generator is prepared (not activated)
+
+The optional script `scripts/generate-production-sitemap.cjs` generates an XML sitemap **only** after a real HTTPS production root domain is provided explicitly. It refuses GitHub Pages staging hostnames and `noindex` HTML pages, and includes absolute home/film URLs with language alternatives for complete hy/ru/en film triplets.
+
+- It is **not** called by `npm run build`, and no sitemap has been submitted to Google.
+- It requires the final production site build, public crawlable movie pages and explicit production authorization.
+- Example for the future (not a staging command): `node scripts/generate-production-sitemap.cjs https://your-real-domain.example/ ./dist`.
+- Test coverage: `tests/production-sitemap.test.cjs`, run with existing Node test suite.
+- Before running it for launch, review production page canonical tags, the intended URL structure and `robots.txt`; then verify domain ownership with Search Console. Never upload a sitemap containing staging URLs.
+
