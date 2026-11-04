@@ -62,14 +62,14 @@ async function main() {
   }
   const indexItems = [];
   for (const row of rows) {
-    if (!/^\\d+$/.test(String(row.id))) continue;
+    if (!Number.isSafeInteger(Number(row.id)) || Number(row.id) < 1) continue;
     const title = row.title_hy || row.title_en || row.title_ru;
     if (!title) continue;
     const page = "external-" + String(row.id);
-    const date = /^\\d{4}-\\d{2}-\\d{2}$/.test(row.release_date || "") ? row.release_date : "";
+    const date = typeof row.release_date === "string" && row.release_date.length === 10 && !Number.isNaN(Date.parse(row.release_date)) ? row.release_date : "";
     const description = row.overview_hy || row.overview_en || row.overview_ru || "Ֆիլմի տեղեկությունները KinoLab-ում։";
     const genres = Array.isArray(row.genre_names) ? row.genre_names.filter(x => typeof x === "string").slice(0,10) : [];
-    const poster = /^https:\/\/[^\\s<>"']+$/.test(row.poster_path || "") ? row.poster_path : null;
+    const poster = typeof row.poster_path === "string" && row.poster_path.startsWith("https://") && !/[<>"\u0027]/.test(row.poster_path) ? row.poster_path : null;
     const appRoute = base + "#/movie/" + encodeURIComponent("catalog:external:" + String(row.id));
     const body = `<article class="details">${poster ? `<img class="poster" loading="lazy" src="${escapeHtml(poster)}" alt="">` : ""}
 <h1>${escapeHtml(title)}</h1>
