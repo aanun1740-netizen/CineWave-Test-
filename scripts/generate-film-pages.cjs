@@ -81,7 +81,7 @@ ${genres.length ? `<p><strong>Ժանրեր՝</strong> ${escapeHtml(genres.join("
     const dir = path.join(out, page);
     fs.mkdirSync(dir, {recursive:true});
     fs.writeFileSync(path.join(dir, "index.html"), documentHtml(title, description, body));
-    indexItems.push(`<li><a href="${base}films/${page}/">${escapeHtml(title)}</a></li>`);
+    indexItems.push(`<li><a href="${base}films/${page}/">${escapeHtml(title)}</a> · <a href="${base}films/hy/${page}/">HY</a> · <a href="${base}films/ru/${page}/">RU</a> · <a href="${base}films/en/${page}/">EN</a></li>`);
     for (const language of ["hy", "ru", "en"]) {
       const titleLocalized = row["title_" + language] || title;
       const descriptionLocalized = row["overview_" + language] || description;
