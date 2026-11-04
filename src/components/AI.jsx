@@ -37,7 +37,11 @@ export default function AI({ open, setOpen, t, movies = [], language = "hy", onO
   const history = useRef([]);
 
   useEffect(() => {
-    if (open) input.current?.focus();
+    // On phones, auto-focusing the chat input opens the keyboard immediately.
+    // Small input fonts can also trigger iOS Safari's automatic page zoom.
+    if (open && window.matchMedia("(min-width: 701px)").matches) {
+      input.current?.focus({ preventScroll: true });
+    }
   }, [open]);
   useEffect(() => {
     if (panel.current) panel.current.scrollTop = panel.current.scrollHeight;
