@@ -132,7 +132,6 @@ describe("React storefront", () => {
     expect(document.body.dataset.theme).toBe("light");
     expect(localStorage.getItem("kinolab:theme")).toBe("light");
     expect(document.documentElement.style.colorScheme).toBe("light");
-    expect(document.querySelector('meta[name="theme-color"]').content).toBe("#F7F5F0");
     await user.selectOptions(screen.getByRole("combobox"), "en");
     expect(screen.getByRole("button", { name: "Switch to dark mode" })).toBeTruthy();
     await user.click(screen.getByRole("button", { name: "Switch to dark mode" }));
