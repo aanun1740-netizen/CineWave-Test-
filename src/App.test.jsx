@@ -122,6 +122,30 @@ describe("React storefront", () => {
       }),
     ).toBeTruthy();
   });
+  it("switches between accessible dark and light themes and remembers the choice", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    await screen.findAllByText("Արևի պատմություն");
+    expect(document.body.dataset.theme).toBe("dark");
+    const light = screen.getByRole("button", { name: "Միացնել բաց ռեժիմը" });
+    await user.click(light);
+    expect(document.body.dataset.theme).toBe("light");
+    expect(localStorage.getItem("kinolab:theme")).toBe("light");
+    expect(document.documentElement.style.colorScheme).toBe("light");
+    expect(document.querySelector('meta[name="theme-color"]').content).toBe("#F7F5F0");
+    await user.selectOptions(screen.getByRole("combobox"), "en");
+    expect(screen.getByRole("button", { name: "Switch to dark mode" })).toBeTruthy();
+    await user.click(screen.getByRole("button", { name: "Switch to dark mode" }));
+    expect(document.body.dataset.theme).toBe("dark");
+    expect(localStorage.getItem("kinolab:theme")).toBe("dark");
+  });
+  it("restores saved light mode when opening the storefront again", async () => {
+    localStorage.setItem("kinolab:theme", "light");
+    render(<App />);
+    await screen.findAllByText("Արևի պատմություն");
+    expect(document.body.dataset.theme).toBe("light");
+    expect(screen.getByRole("button", { name: "Միացնել մուգ ռեժիմը" })).toBeTruthy();
+  });
   it("saves guest My List and opens/reloads hash movie routes", async () => {
     const user = userEvent.setup();
     render(<App />);
