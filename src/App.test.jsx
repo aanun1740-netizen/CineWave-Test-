@@ -153,8 +153,9 @@ describe("React storefront", () => {
     await screen.findByText("Չհաջողվեց բեռնել հավաքածուն։ Փորձեք կրկին։");
     await user.click(screen.getByRole("button", { name: "Փորձել կրկին" }));
     await screen.findAllByText("Արևի պատմություն");
-    // Initial catalog load fails; retry loads published movies, metadata and external links.
-    expect(mocks.backendFetch).toHaveBeenCalledTimes(4);
+    // Both attempts start all three independent catalog requests concurrently.
+    // Even if the first request fails, the two other requests have already begun.
+    expect(mocks.backendFetch).toHaveBeenCalledTimes(6);
     expect(mocks.backendFetch).toHaveBeenCalledWith(
       expect.stringContaining("/kinolab_external_catalog?"),
       expect.any(Object),
