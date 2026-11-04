@@ -33,6 +33,10 @@ export default function App() {
     [heroIndex, setHeroIndex] = useState(0),
     [profile, setProfile] = useState(false),
     [ai, setAI] = useState(false),
+    [theme, setTheme] = useState(() => {
+      try { return localStorage.getItem("kinolab:theme") === "light" ? "light" : "dark"; }
+      catch { return "dark"; }
+    }),
     [toast, setToast] = useState(""),
     [, setProgress] = useState(0);
   const underlay = useRef("home"),
@@ -104,6 +108,13 @@ export default function App() {
       clearTimeout(toastTimer.current);
     };
   }, []);
+  useEffect(() => {
+    document.body.dataset.theme = theme;
+    document.documentElement.style.colorScheme = theme;
+    document.querySelector('meta[name="theme-color"]')
+      ?.setAttribute("content", theme === "light" ? "#F7F5F0" : "#20152E");
+    try { localStorage.setItem("kinolab:theme", theme); } catch {}
+  }, [theme]);
   useEffect(() => {
     // Restore the signed-in member's saved language after their profile loads.
     // The device preference is only the fallback for guests or unloaded profiles.
@@ -355,6 +366,20 @@ export default function App() {
             <option value="ru">RU</option>
             <option value="en">EN</option>
           </select>
+          <button
+            id="themeToggle"
+            type="button"
+            className="theme-toggle"
+            onClick={() => setTheme(current => current === "dark" ? "light" : "dark")}
+            aria-label={theme === "dark"
+              ? ({hy:"Միացնել բաց ռեժիմը",ru:"Включить светлую тему",en:"Switch to light mode"}[language])
+              : ({hy:"Միացնել մուգ ռեժիմը",ru:"Включить тёмную тему",en:"Switch to dark mode"}[language])}
+            title={theme === "dark"
+              ? ({hy:"Բաց ռեժիմ",ru:"Светлая тема",en:"Light mode"}[language])
+              : ({hy:"Մուգ ռեժիմ",ru:"Тёмная тема",en:"Dark mode"}[language])}
+          >
+            <Icon name={theme === "dark" ? "sun" : "moon"} />
+          </button>
           <button
             id="profileButton"
             className="avatar"
