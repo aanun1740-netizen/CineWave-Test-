@@ -39,6 +39,32 @@ export default function App() {
     profilePanel = useRef(null),
     toastTimer = useRef(null),
     request = useRef(0);
+  useEffect(() => {
+    const seo = {
+      hy: {
+        title: "KinoLab — Ֆիլմեր և սերիալներ",
+        description: "KinoLab — ֆիլմերի և սերիալների կատալոգ հայերեն, ռուսերեն և անգլերեն։ Գտեք նոր պատմություններ և պահպանեք նախընտրածները։",
+        locale: "hy_AM",
+      },
+      ru: {
+        title: "KinoLab — Фильмы и сериалы",
+        description: "KinoLab — каталог фильмов и сериалов на армянском, русском и английском языках. Находите интересные истории и сохраняйте избранное.",
+        locale: "ru_RU",
+      },
+      en: {
+        title: "KinoLab — Movies & Series",
+        description: "Discover movies and series on KinoLab in Armenian, Russian, and English. Explore stories and save your favorites.",
+        locale: "en_US",
+      },
+    }[language] || null;
+    if (!seo) return;
+    document.documentElement.lang = language;
+    document.title = seo.title;
+    document.querySelector('meta[name="description"]')?.setAttribute("content", seo.description);
+    document.querySelector('meta[property="og:title"]')?.setAttribute("content", seo.title);
+    document.querySelector('meta[property="og:description"]')?.setAttribute("content", seo.description);
+    document.querySelector('meta[property="og:locale"]')?.setAttribute("content", seo.locale);
+  }, [language]);
   const accountPage = [
     "login",
     "register",
