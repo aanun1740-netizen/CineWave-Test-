@@ -523,3 +523,62 @@ body.cinewave-site .brand img{min-width:160px;width:180px!important;max-width:10
 .cinewave-site .archive-title small{display:block;color:#c9c1cd;font-size:10px;margin-top:6px}
 @media(max-width:950px){.cinewave-site .archive-title-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:600px){.cinewave-site .archive-title-grid{grid-template-columns:1fr 1fr;gap:8px}.cinewave-site .archive-title{padding:10px;gap:7px}.cinewave-site .archive-title-symbol{flex-basis:24px;height:24px;font-size:17px}.cinewave-site .archive-title strong{font-size:11px}}
+
+
+/* KinoLab AI — compact, keyboard-safe mobile chat (2026-11-04).
+   Keep the floating window small and prevent Safari's input-focus zoom. */
+@media (max-width: 700px) {
+  body.cinewave-site #cw-ai-panel {
+    position: fixed;
+    box-sizing: border-box;
+    width: min(350px, calc(100vw - 24px));
+    max-width: calc(100vw - 24px);
+    height: min(350px, 48dvh);
+    max-height: calc(100dvh - 165px);
+    min-height: 0;
+    right: 12px;
+    left: auto;
+    bottom: calc(119px + env(safe-area-inset-bottom, 0px));
+    top: auto;
+    border-radius: 14px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  body.cinewave-site #cw-ai-head {
+    flex: 0 0 auto;
+    padding: 10px 12px;
+  }
+  body.cinewave-site #cw-ai-head h2 { font-size: 15px; }
+  body.cinewave-site #cw-ai-messages {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 9px 11px;
+  }
+  body.cinewave-site #cw-ai-form {
+    flex: 0 0 auto;
+    padding: 9px 10px;
+  }
+  body.cinewave-site #cw-ai-input {
+    font-size: 16px;
+    min-height: 42px;
+  }
+  body.cinewave-site #cw-ai-send {
+    min-width: 42px;
+    min-height: 42px;
+  }
+  body.cinewave-site .cw-ai-msg {
+    padding: 9px 10px;
+    font-size: 12px;
+    line-height: 1.5;
+  }
+}
+@media (max-width: 700px) and (max-height: 460px) {
+  body.cinewave-site #cw-ai-panel {
+    bottom: 12px;
+    height: min(260px, calc(100dvh - 24px));
+    max-height: calc(100dvh - 24px);
+  }
+}
