@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { backendFetch, config, base } from "./services/backend";
 import {
   mapCatalogMovie,
@@ -108,7 +108,7 @@ export default function App() {
       clearTimeout(toastTimer.current);
     };
   }, []);
-  useEffect(() => {
+  useLayoutEffect(() => {
     document.body.dataset.theme = theme;
     document.documentElement.style.colorScheme = theme;
     document.querySelector('meta[name="theme-color"]')
