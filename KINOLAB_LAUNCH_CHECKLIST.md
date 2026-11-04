@@ -6,6 +6,9 @@ Scope: `aanun1740-netizen/CineWave-Test-` only. Do not change the production Cin
 - [ ] GitHub Actions `.github/workflows/pages.yml` build succeeds: npm test, npm run build and npm run test:e2e.
 - [ ] Publish is explicitly approved via workflow_dispatch on main, with publish=true, matching confirm_repository, and exact full latest approved SHA.
 - [ ] Desktop and mobile storefront load without runtime errors.
+- [ ] Dark / Light toggle changes colors and KinoLab logo correctly on desktop and mobile.
+- [ ] Chosen theme persists after refresh, and works in all 3 UI languages.
+- [ ] The movie dialog, account screens and KinoLab AI remain readable in Light mode.
 - [ ] Studio admin login works and an authorized admin can save a test catalog listing.
 - [ ] Catalog listing appears in public storefront in Armenian, Russian and English.
 - [ ] Poster, title, summary, genres and trailer (when configured) render correctly.
