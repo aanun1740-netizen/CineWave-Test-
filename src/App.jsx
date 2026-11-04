@@ -156,41 +156,39 @@ export default function App() {
     const id = ++request.current;
     setState("loading");
     try {
-      const response = await backendFetch(
+      const headers = { apikey: config.key, Authorization: `Bearer ${config.key}` };
+      // Start independent catalog reads together instead of waiting for each
+      // network round trip. External links remain an optional source.
+      const moviesRequest = backendFetch(
         `${config.url}/rest/v1/movies?select=*&is_published=eq.true&order=release_date.desc`,
-        {
-          headers: {
-            apikey: config.key,
-            Authorization: `Bearer ${config.key}`,
-          },
-        },
+        { headers },
       );
-      if (!response.ok) throw Error();
-      const rows = await response.json();
-      if (!Array.isArray(rows)) throw Error();
-      // The metadata-only table contains no video URLs or rights documents.
-      const metadataResponse = await backendFetch(
+      const metadataRequest = backendFetch(
         `${config.url}/rest/v1/movie_metadata_public?select=*&order=release_date.desc`,
-        { headers: { apikey: config.key, Authorization: `Bearer ${config.key}` } },
+        { headers },
       );
+      const externalRequest = backendFetch(
+        `${config.url}/rest/v1/kinolab_external_catalog?select=*&is_published=eq.true&order=created_at.desc`,
+        { headers },
+      ).then(async response => {
+        if (!response.ok) return [];
+        const data = await response.json();
+        return Array.isArray(data)
+          ? data.filter(row => typeof row.external_watch_url === "string" &&
+              row.external_watch_url.startsWith("https://api.nextembed.ws/embed/"))
+            .map(row => ({ ...row, id: "external:" + row.id, watch_url:null, embed_url:null,
+              playback_verification:null, rights_verification_status:"unverified" }))
+          : [];
+      }).catch(() => []);
+      const [response, metadataResponse, externalRows] = await Promise.all([
+        moviesRequest, metadataRequest, externalRequest,
+      ]);
+      if (!response.ok) throw Error("Movie listing unavailable.");
       if (!metadataResponse.ok) throw Error("Metadata listing unavailable.");
-      const metadataRows = await metadataResponse.json();
-      if (!Array.isArray(metadataRows)) throw Error();
-      // Independently published outbound links (no embedded playback).
-      // A missing migration must not break the existing movie catalog.
-      let externalRows = [];
-      try {
-        const linkResponse = await backendFetch(
-          `${config.url}/rest/v1/kinolab_external_catalog?select=*&is_published=eq.true&order=created_at.desc`,
-          { headers: { apikey: config.key, Authorization: `Bearer ${config.key}` } },
-        );
-        if (linkResponse.ok) {
-          const linkData = await linkResponse.json();
-          if (Array.isArray(linkData)) externalRows = linkData
-            .filter(row => typeof row.external_watch_url === "string" && row.external_watch_url.startsWith("https://api.nextembed.ws/embed/"))
-            .map(row => ({ ...row, id: "external:" + row.id, watch_url:null, embed_url:null, playback_verification:null, rights_verification_status:"unverified" }));
-        }
-      } catch { /* Keep the original catalog available. */ }
+      const [rows, metadataRows] = await Promise.all([
+        response.json(), metadataResponse.json(),
+      ]);
+      if (!Array.isArray(rows) || !Array.isArray(metadataRows)) throw Error("Invalid catalog.");
       if (id === request.current) {
         const publishedIds = new Set(rows.map(row => String(row.id)));
         const metadataOnly = metadataRows
@@ -453,6 +451,8 @@ export default function App() {
                   className="hero-backdrop"
                   src={featured.backdrop || featured.img}
                   alt=""
+                  decoding="async"
+                  fetchPriority="high"
                   onError={(e) => (e.currentTarget.hidden = true)}
                 />
               )}
