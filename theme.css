@@ -320,13 +320,13 @@ body.cinewave-site[data-theme="light"] .hero {
   border-bottom: 1px solid #20152E22;
 }
 body.cinewave-site[data-theme="light"] .hero-backdrop {
-  opacity: .34;
-  filter: saturate(.75) contrast(.95);
-  mask-image: linear-gradient(to right, transparent 2%, #000 75%);
+  opacity: .72;
+  filter: saturate(.95) contrast(1.05);
+  mask-image: linear-gradient(to right, transparent 0%, #000 70%);
 }
 body.cinewave-site[data-theme="light"] .hero-shade {
-  background: linear-gradient(90deg, #F7F5F0 0%, #F7F5F0ed 31%, #F7F5F0b8 55%, #F7F5F01c 100%),
-              linear-gradient(0deg, #F7F5F0 0%, transparent 37%);
+  background: linear-gradient(90deg, #F7F5F0 0%, #F7F5F0ed 28%, #F7F5F09c 51%, #F7F5F005 100%),
+              linear-gradient(0deg, #F7F5F0 0%, transparent 27%);
 }
 body.cinewave-site[data-theme="light"] .hero-grain {
   background: radial-gradient(circle at 75% 38%, #D4F45827, transparent 54%);
@@ -505,11 +505,19 @@ body.cinewave-site[data-theme="light"] footer {
     background: #F1EEE8;
   }
   body.cinewave-site[data-theme="light"] .hero-backdrop {
-    opacity: .28;
-    mask-image: linear-gradient(to bottom, #000 0%, transparent 94%);
+    opacity: .94;
+    filter: saturate(1.02) contrast(1.08);
+    mask-image: none;
   }
   body.cinewave-site[data-theme="light"] .hero-shade {
-    background: linear-gradient(0deg, #F7F5F0 0%, #F7F5F0e8 33%, #F7F5F06b 72%, #F7F5F01d 100%);
+    /* Keep the upper portrait clear, fade only where buttons and copy sit. */
+    background: linear-gradient(to top,
+      #F7F5F0 0%,
+      #F7F5F0 15%,
+      #F7F5F0f2 29%,
+      #F7F5F0a6 43%,
+      #F7F5F026 60%,
+      #F7F5F000 76%);
   }
   body.cinewave-site[data-theme="light"] .hero h1,
   body.cinewave-site[data-theme="light"] .hero-content>p {
