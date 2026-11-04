@@ -7,12 +7,13 @@ const { verifyPagesBuild } = require("../scripts/check-pages-build.cjs");
 function fixture(t) {
   const root = mkdtempSync(path.join(os.tmpdir(), "cinewave-test-pages-"));
   t.after(() => rmSync(root, { recursive: true, force: true }));
-  for (const name of ["assets", "admin", "data"])
+  for (const name of ["assets", "admin", "data", "films"])
     mkdirSync(path.join(root, name));
   const html =
     '<html lang="hy"><script src="/CineWave-Test-/assets/app.js"></script></html>';
   for (const page of ["index.html", "admin/index.html"])
     writeFileSync(path.join(root, page), html);
+  writeFileSync(path.join(root, "films/index.html"), '<html><meta name="robots" content="noindex,nofollow,noarchive"></html>');
   writeFileSync(
     path.join(root, "assets/app.js"),
     'const backend="https://zayssiouqexwdicudalc.supabase.co";',
