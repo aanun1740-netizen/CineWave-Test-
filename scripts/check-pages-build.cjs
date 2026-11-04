@@ -29,6 +29,10 @@ function verifyPagesBuild(root = path.resolve(__dirname, "..", "dist")) {
       );
     }
   }
+  const filmIndex = path.join(root, "films", "index.html");
+  assert.ok(existsSync(filmIndex), "Generated public film index is missing");
+  const filmIndexHtml = readFileSync(filmIndex, "utf8");
+  assert.match(filmIndexHtml, /noindex,nofollow,noarchive/, "Staging film pages must remain noindex");
   for (const asset of [
     "assets/poster-fallback.svg",
     "data/playback-films.json",
