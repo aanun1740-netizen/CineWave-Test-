@@ -2,7 +2,6 @@
 // Invoke explicitly after launch approval, with a verified live HTTPS domain.
 const fs = require("node:fs");
 const path = require("node:path");
-const { pathToFileURL } = require("node:url");
 
 function xml(value) {
   return String(value).replace(/[&<>"\x27]/g, ch => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "\x27":"&apos;" })[ch]);
