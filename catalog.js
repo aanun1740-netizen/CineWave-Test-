@@ -113,7 +113,7 @@ function mapCatalogMovie(row) {
         Number.isInteger(item.episode) && item.episode>0 &&
         typeof item.url==='string' &&
         /^https:\/\/api\.nextembed\.ws\/embed\/tv\/\d+\/\d+\/\d+\/?$/.test(item.url) &&
-        item.url.endsWith('/'+item.season+'/'+item.episode))
+        item.url.replace(/\/$/,'').endsWith('/'+item.season+'/'+item.episode))
         .sort((a,b)=>a.season-b.season||a.episode-b.episode)
     : [];
   const titles = {en:cleanText(row.title_en),ru:cleanText(row.title_ru),hy:cleanText(row.title_hy)};
