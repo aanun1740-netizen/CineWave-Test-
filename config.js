@@ -1,6 +1,8 @@
 window.CINEWAVE_CONFIG = Object.freeze({
   url: "https://zayssiouqexwdicudalc.supabase.co",
-  key: "sb_publishable_jnNJZVXtRFzWakYL5u4aug_kaVcu85B"
+  key: "sb_publishable_jnNJZVXtRFzWakYL5u4aug_kaVcu85B",
+  // Enable only after owner applies staging metrics SQL and approves privacy notice.
+  analyticsEnabled: false
 });
 
 // Fail closed before SDK creation or direct backend requests.
