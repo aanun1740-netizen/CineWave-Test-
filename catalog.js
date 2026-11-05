@@ -105,13 +105,24 @@ function verifiedRenditions(row) {
  return Array.isArray(proof.renditions)?proof.renditions:[];
 }
 function mapCatalogMovie(row) {
+  // Episode links are admin-published metadata, not permission to embed media.
+  // Verify each external destination before rendering it as a public link.
+  const episodes=Array.isArray(row.episode_links) && row.media_type==='tv'
+    ? row.episode_links.filter(item =>
+        item && Number.isInteger(item.season) && item.season>0 &&
+        Number.isInteger(item.episode) && item.episode>0 &&
+        typeof item.url==='string' &&
+        /^https:\/\/api\.nextembed\.ws\/embed\/tv\/\d+\/\d+\/\d+\/?$/.test(item.url) &&
+        item.url.endsWith('/'+item.season+'/'+item.episode))
+        .sort((a,b)=>a.season-b.season||a.episode-b.episode)
+    : [];
   const titles = {en:cleanText(row.title_en),ru:cleanText(row.title_ru),hy:cleanText(row.title_hy)};
   const genres = movieGenres(row);
   const date = cleanText(row.release_date);
   return {id:'catalog:' + String(row.id ?? row.tmdb_id),source:'supabase',titles,
     descriptions:{en:cleanText(row.overview_en),ru:cleanText(row.overview_ru),hy:cleanText(row.overview_hy)},
     title:titles.en || titles.ru || titles.hy || '',desc:'',year:/^\d{4}-\d{2}-\d{2}$/.test(date) ? Number(date.slice(0,4)) : null,
-    genres,genre:genres[0] || '',kind:row.media_type==='tv'?'TV Show':'Movie',mediaType:row.media_type==='tv'?'tv':'movie',trailer:cleanText(row.trailer_url),officialWatch:cleanText(row.official_watch_url),externalWatch:cleanText(row.external_watch_url),embed:cleanText(row.embed_url),rating:row.rating != null ? String(row.rating) : '',duration:'',
+    genres,genre:genres[0] || '',kind:row.media_type==='tv'?'TV Show':'Movie',mediaType:row.media_type==='tv'?'tv':'movie',episodes,trailer:cleanText(row.trailer_url),officialWatch:cleanText(row.official_watch_url),externalWatch:cleanText(row.external_watch_url),embed:cleanText(row.embed_url),rating:row.rating != null ? String(row.rating) : '',duration:'',
     img:posterURL(row.poster_path),backdrop:backdropURL(row.backdrop_path),approvalRequired:Object.prototype.hasOwnProperty.call(row,'rights_verification_status'),approval:row.playback_verification||null,renditions:verifiedRenditions(row),video:cleanText(row.watch_url),progress:globalThis.CineWavePlayer?.progressFor('catalog:'+String(row.id ?? row.tmdb_id))||0};
 }
 
