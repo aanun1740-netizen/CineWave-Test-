@@ -27,6 +27,7 @@ The current application is purpose-built for staging:
 ## Phase A — choose and verify domain (no purchase yet)
 
 1. Decide preferred final domain spelling and top-level domain (.com, .tv or another extension).
+   **Naming finding (public web check, 2026-11-05):** a Georgian-language film/TV website already uses the **KinoLab** name at https://kinolab.cc/ (also reported at kinolab.net). This is a possible branding/confusion risk, not proof of trademark infringement. Verify trademarks and brand rights before buying a domain; a different suffix alone does not establish distinct branding.
 2. Check live registrar availability, annual renewal price, transfer fees, WHOIS/privacy and trademark conflicts before purchase. No availability or price is assumed.
 3. Record the intended canonical URL (`https://www.<chosen-domain>/` or `https://<chosen-domain>/`).
 4. Keep the staging URL intact and `noindex` whether or not a domain is registered.
