@@ -1,6 +1,6 @@
--- KinoLab staging. Enable administrator-curated outbound HTTP/HTTPS links.
--- No iframe playback is authorized by this change. No change to RLS or admin rights.
--- This also brings the optional fields into sync if an earlier migration was skipped.
+-- KinoLab-Test only. Admins can add any normal web URL for outbound FILM playback.
+-- TV season/episode support remains restricted to the existing NextEmbed format.
+-- Existing records, RLS, rights acknowledgment and unique URL stay untouched.
 BEGIN;
 
 ALTER TABLE public.kinolab_external_catalog
@@ -11,21 +11,22 @@ ALTER TABLE public.kinolab_external_catalog
   ADD COLUMN IF NOT EXISTS episode_links jsonb NOT NULL DEFAULT '[]'::jsonb;
 
 DO $$
-DECLARE
-  restriction record;
+DECLARE restriction record;
 BEGIN
-  -- Remove ONLY the former provider-specific CHECK constraints on watch URL.
-  -- Keep every RLS policy, terms check and unique-link constraint intact.
+  -- Drop only watch URL checks on this single column, not TV shape/RLS checks.
   FOR restriction IN
-    SELECT conname
-    FROM pg_constraint
-    WHERE conrelid = 'public.kinolab_external_catalog'::regclass
-      AND contype = 'c'
-      AND pg_get_constraintdef(oid) LIKE '%external_watch_url%'
+    SELECT c.conname
+    FROM pg_constraint c
+    JOIN pg_attribute a
+      ON a.attrelid = c.conrelid AND a.attname = 'external_watch_url'
+    WHERE c.conrelid = 'public.kinolab_external_catalog'::regclass
+      AND c.contype = 'c'
+      AND c.conkey = ARRAY[a.attnum]::smallint[]
       AND (
-        conname = 'kinolab_external_watch_url_allowed'
-        OR pg_get_constraintdef(oid) ILIKE '%nextembed%'
-        OR pg_get_constraintdef(oid) ILIKE '%variyt%'
+        c.conname = 'kinolab_external_watch_url_allowed'
+        OR c.conname = 'kinolab_external_watch_web_url'
+        OR pg_get_constraintdef(c.oid) ILIKE '%nextembed%'
+        OR pg_get_constraintdef(c.oid) ILIKE '%variyt%'
       )
   LOOP
     EXECUTE format(
@@ -34,20 +35,21 @@ BEGIN
     );
   END LOOP;
 
-  IF NOT EXISTS (
-    SELECT 1 FROM pg_constraint
-    WHERE conrelid = 'public.kinolab_external_catalog'::regclass
-      AND conname = 'kinolab_external_watch_web_url'
-  ) THEN
-    ALTER TABLE public.kinolab_external_catalog
-      ADD CONSTRAINT kinolab_external_watch_web_url
-      CHECK (
-        length(external_watch_url) <= 2048
-        AND external_watch_url ~* '^https?://[^[:space:]@/?#]+([/?#][^[:space:]]*)?$'
-        AND external_watch_url !~ '[[:cntrl:][:space:]]'
-      );
-  END IF;
+  ALTER TABLE public.kinolab_external_catalog
+    ADD CONSTRAINT kinolab_external_watch_web_url
+    CHECK (
+      length(external_watch_url) <= 2048
+      AND external_watch_url !~ '[[:cntrl:][:space:]]'
+      AND (
+        (media_type = 'movie'
+          AND external_watch_url ~* '^https?://[^[:space:]@/?#]+([/?#][^[:space:]]*)?$')
+        OR
+        (media_type = 'tv'
+          AND external_watch_url ~ '^https://api[.]nextembed[.]ws/embed/tv/[0-9]+(/[0-9]+/[0-9]+)?/?$')
+      )
+    );
 END
 $$;
+
 NOTIFY pgrst, 'reload schema';
 COMMIT;
