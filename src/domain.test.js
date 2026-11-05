@@ -36,6 +36,27 @@ describe("migrated domain contracts", () => {
         .length,
     ).toBe(1);
   });
+  it("finds films by Armenian, Russian, and English descriptions across UI languages", () => {
+    const rows = [
+      mapCatalogMovie({
+        id: 33,
+        title_en: "Quiet River",
+        title_hy: "Հանգիստ գետ",
+        title_ru: "Тихая река",
+        overview_en: "A journey through mysterious forests",
+        overview_ru: "История о далёкой планете",
+        overview_hy: "Պատմություն Արարատ լեռան մասին",
+        genre_names: ["Adventure"],
+      }),
+    ];
+    for (const [query, language] of [
+      ["mysterious", "hy"], ["ПЛАНЕТЕ", "en"], ["Արարատ", "ru"],
+    ]) {
+      expect(filterMovies(rows, { query, language }).map(movie => movie.id))
+        .toEqual(["catalog:33"]);
+    }
+    expect(filterMovies(rows, { query: "unrelated", language: "hy" })).toEqual([]);
+  });
   it.each(["mp4", "webm", "m3u8"])(
     "accepts %s only with matching playback evidence",
     (extension) => {
