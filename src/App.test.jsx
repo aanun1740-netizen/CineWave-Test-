@@ -122,6 +122,17 @@ describe("React storefront", () => {
       }),
     ).toBeTruthy();
   });
+  it("links the privacy and aggregate-measurement notice in all three UI languages", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    await screen.findAllByText("Արևի պատմություն");
+    const link = screen.getByRole("link", { name: "Գաղտնիություն և այցելությունների հաշվառում" });
+    expect(link.getAttribute("href")).toBe("/CineWave-Test-/privacy.html");
+    await user.selectOptions(screen.getByRole("combobox"), "ru");
+    expect(screen.getByRole("link", { name: "Конфиденциальность и статистика" })).toBeTruthy();
+    await user.selectOptions(screen.getByRole("combobox"), "en");
+    expect(screen.getByRole("link", { name: "Privacy & usage analytics" })).toBeTruthy();
+  });
   it("shows a published movie with any normal external website link, without an embedded player", async () => {
     const watchUrl="https://films.example.org/play/88585";
     const row={
