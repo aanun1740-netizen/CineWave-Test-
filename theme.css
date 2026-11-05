@@ -320,16 +320,24 @@ body.cinewave-site[data-theme="light"] .hero {
   border-bottom: 1px solid #20152E22;
 }
 body.cinewave-site[data-theme="light"] .hero-backdrop {
-  opacity: .72;
-  filter: saturate(.95) contrast(1.05);
-  mask-image: linear-gradient(to right, transparent 0%, #000 70%);
+  opacity: 1;
+  filter: saturate(1.06) contrast(1.1);
+  /* Hide only the part directly behind the left-hand text. Keep the
+     actors on the right fully visible, including their original colors. */
+  mask-image: linear-gradient(to right, transparent 0%, transparent 22%, #000 58%, #000 100%);
 }
 body.cinewave-site[data-theme="light"] .hero-shade {
-  background: linear-gradient(90deg, #F7F5F0 0%, #F7F5F0ed 28%, #F7F5F09c 51%, #F7F5F005 100%),
-              linear-gradient(0deg, #F7F5F0 0%, transparent 27%);
+  /* Warm-white reading area on the left only; no milky layer over
+     the full film image on the right. */
+  background: linear-gradient(to right,
+    #F7F5F0 0%,
+    #F7F5F0f5 24%,
+    #F7F5F0aa 40%,
+    #F7F5F02b 57%,
+    transparent 73%);
 }
 body.cinewave-site[data-theme="light"] .hero-grain {
-  background: radial-gradient(circle at 75% 38%, #D4F45827, transparent 54%);
+  background: transparent;
 }
 body.cinewave-site[data-theme="light"] .hero h1,
 body.cinewave-site[data-theme="light"] .hero-content>p {
@@ -505,19 +513,19 @@ body.cinewave-site[data-theme="light"] footer {
     background: #F1EEE8;
   }
   body.cinewave-site[data-theme="light"] .hero-backdrop {
-    opacity: .94;
-    filter: saturate(1.02) contrast(1.08);
+    opacity: 1;
+    filter: saturate(1.05) contrast(1.1);
     mask-image: none;
   }
   body.cinewave-site[data-theme="light"] .hero-shade {
-    /* Keep the upper portrait clear, fade only where buttons and copy sit. */
+    /* On phones show the cast clearly above the text. Only the bottom
+       of the picture fades into the off-white controls/copy area. */
     background: linear-gradient(to top,
       #F7F5F0 0%,
-      #F7F5F0 15%,
-      #F7F5F0f2 29%,
-      #F7F5F0a6 43%,
-      #F7F5F026 60%,
-      #F7F5F000 76%);
+      #F7F5F0fa 17%,
+      #F7F5F0e8 28%,
+      #F7F5F08a 39%,
+      #F7F5F000 59%);
   }
   body.cinewave-site[data-theme="light"] .hero h1,
   body.cinewave-site[data-theme="light"] .hero-content>p {
