@@ -122,8 +122,8 @@ describe("React storefront", () => {
       }),
     ).toBeTruthy();
   });
-  it("shows a published Variyt movie as an outbound link without an embedded player", async () => {
-    const watchUrl="https://api.variyt.ws/embed/movie/88585";
+  it("shows a published movie with any normal external website link, without an embedded player", async () => {
+    const watchUrl="https://films.example.org/play/88585";
     const row={
       id:88,
       title_en:"External Movie",
