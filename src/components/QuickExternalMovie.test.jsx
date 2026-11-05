@@ -76,6 +76,19 @@ describe("Quick add external movie release year", () => {
     expect(mocks.savedPayload.overview_hy).toBe("Նկարագրությունը հայերեն");
   });
 
+  it("saves a Variyt outbound movie link while keeping film metadata and terms", async () => {
+    render(<QuickExternalMovie language="hy" />);
+    const form=document.querySelector(".quick-external form");
+    fireEvent.change(form.elements.namedItem("title_en"), {target:{value:"Crime 101"}});
+    fireEvent.change(form.elements.namedItem("year"), {target:{value:"2026"}});
+    fireEvent.change(form.elements.namedItem("external_watch_url"), {target:{value:"https://api.variyt.ws/embed/movie/88585"}});
+    form.elements.namedItem("terms_confirmed").checked=true;
+    fireEvent.submit(form);
+    await waitFor(()=>expect(mocks.savedPayload?.external_watch_url).toBe("https://api.variyt.ws/embed/movie/88585"));
+    expect(mocks.savedPayload.media_type).toBe("movie");
+    expect(mocks.savedPayload.terms_confirmed).toBe(true);
+    expect(mocks.savedPayload.is_published).toBe(true);
+  });
   it("adds one TV series with season and episode URLs instead of separate movie cards", async () => {
     render(<QuickExternalMovie language="en" />);
     const form=document.querySelector(".quick-external form");
