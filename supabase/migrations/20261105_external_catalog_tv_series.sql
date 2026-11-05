@@ -1,5 +1,6 @@
 -- KinoLab staging: catalog TV series and ordered external episode references.
--- Existing rows remain unchanged, even if legacy records used TV links.\n-- Existing RLS admin-only write policies are unchanged.
+-- Existing rows remain unchanged, even if legacy records used TV links.
+-- Existing RLS admin-only write policies are unchanged.
 BEGIN;
 ALTER TABLE public.kinolab_external_catalog
   ADD COLUMN IF NOT EXISTS media_type text NOT NULL DEFAULT 'movie';
