@@ -95,7 +95,8 @@ export default function App() {
     if (match) {
       try {
         const key = decodeURIComponent(match[2]);
-        recordMetric(match[1] === "movie" ? "film_open" : "watch_click", key, language);
+        // A deep-linked /watch route is not proof of an actual button click.
+        if (match[1] === "movie") recordMetric("film_open", key, language);
       } catch { /* Invalid hash: do not send any metrics. */ }
     }
   }, [mayCount, route, language]);
@@ -313,7 +314,10 @@ export default function App() {
     watchable,
     externalWatchUrl,
     onOutbound: (movie) => { if (mayCount) recordMetric("watch_click", movie.id, language); },
-    open: (movie, play = false) => navigate((play ? "watch/" : "movie/") + encodeURIComponent(movie.id)),
+    open: (movie, play = false) => {
+      if (play && mayCount) recordMetric("watch_click", movie.id, language);
+      navigate((play ? "watch/" : "movie/") + encodeURIComponent(movie.id));
+    },
   };
   const navigation = (mobile) => (
     <nav
@@ -525,7 +529,10 @@ export default function App() {
                     </a>
                   ) : (
                     <button className="btn primary" disabled={!featured}
-                      onClick={() => navigate((watchable(featured) ? "watch/" : "movie/") + encodeURIComponent(featured.id))}>
+                      onClick={() => {
+                        if (watchable(featured) && mayCount) recordMetric("watch_click", featured.id, language);
+                        navigate((watchable(featured) ? "watch/" : "movie/") + encodeURIComponent(featured.id));
+                      }}>
                       <Icon name={featured && watchable(featured) ? "play" : "info"} />
                       <span>{t(featured && watchable(featured) ? "watch" : "details")}</span>
                     </button>
@@ -736,6 +743,9 @@ export default function App() {
         <Brand />
         <p>{t("footer")}</p>
         <span>© KinoLab</span>
+        <a href={`${base}privacy.html`} className="privacy-link">
+          {({hy:"Գաղտնիություն և այցելությունների հաշվառում",ru:"Конфиденциальность и статистика",en:"Privacy & usage analytics"}[language])}
+        </a>
       </footer>
       {navigation(true)}
       {modal && (
@@ -746,7 +756,10 @@ export default function App() {
           language={language}
           t={t}
           close={() => navigate(underlay.current, true)}
-          onWatch={() => navigate("watch/" + encodeURIComponent(current.id))}
+          onWatch={() => {
+            if (current && mayCount) recordMetric("watch_click", current.id, language);
+            navigate("watch/" + encodeURIComponent(current.id));
+          }}
           toggle={toggle}
           saved={Boolean(current && account.list.has(current.id))}
           watchable={watchable}
