@@ -76,6 +76,38 @@ describe("Quick add external movie release year", () => {
     expect(mocks.savedPayload.overview_hy).toBe("Նկարագրությունը հայերեն");
   });
 
+  it("adds one TV series with season and episode URLs instead of separate movie cards", async () => {
+    render(<QuickExternalMovie language="en" />);
+    const form=document.querySelector(".quick-external form");
+    fireEvent.change(form.elements.namedItem("media_type"), {target:{value:"tv"}});
+    expect(screen.getByRole("combobox", {name:"Content type"}).value).toBe("tv");
+    fireEvent.change(form.elements.namedItem("title_en"), {target:{value:"Example series"}});
+    fireEvent.change(form.elements.namedItem("year"), {target:{value:"2026"}});
+    fireEvent.change(form.elements.namedItem("external_watch_url"), {target:{value:"https://api.nextembed.ws/embed/tv/12345/1/1"}});
+    fireEvent.change(form.elements.namedItem("episode_urls"), {target:{value:"https://api.nextembed.ws/embed/tv/12345/1/2\nhttps://api.nextembed.ws/embed/tv/12345/2/1"}});
+    form.elements.namedItem("terms_confirmed").checked=true;
+    fireEvent.submit(form);
+    await waitFor(()=>expect(mocks.savedPayload?.media_type).toBe("tv"));
+    expect(mocks.savedPayload.episode_links).toEqual([
+      {season:1,episode:1,url:"https://api.nextembed.ws/embed/tv/12345/1/1"},
+      {season:1,episode:2,url:"https://api.nextembed.ws/embed/tv/12345/1/2"},
+      {season:2,episode:1,url:"https://api.nextembed.ws/embed/tv/12345/2/1"},
+    ]);
+    expect(mocks.savedPayload.release_date).toBe("2026-01-01");
+  });
+  it("rejects mixing episodes from two different TV series", async () => {
+    render(<QuickExternalMovie language="hy" />);
+    const form=document.querySelector(".quick-external form");
+    fireEvent.change(form.elements.namedItem("media_type"), {target:{value:"tv"}});
+    fireEvent.change(form.elements.namedItem("title_en"), {target:{value:"Example series"}});
+    fireEvent.change(form.elements.namedItem("year"), {target:{value:"2026"}});
+    fireEvent.change(form.elements.namedItem("external_watch_url"), {target:{value:"https://api.nextembed.ws/embed/tv/12345/1/1"}});
+    fireEvent.change(form.elements.namedItem("episode_urls"), {target:{value:"https://api.nextembed.ws/embed/tv/67890/1/2"}});
+    form.elements.namedItem("terms_confirmed").checked=true;
+    fireEvent.submit(form);
+    expect(mocks.savedPayload).toBeNull();
+    expect(screen.getByText(/Սերիաների հղումները պետք է լինեն/)).toBeTruthy();
+  });
   it("keeps a pre-existing full date when editing without changing its year", async () => {
     mocks.rows = [{
       id: 1,
