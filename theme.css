@@ -551,3 +551,62 @@ body.cinewave-site[data-theme="light"] footer {
 @media (prefers-reduced-motion: reduce) {
   body.cinewave-site[data-theme="light"] .movie { transition: none; }
 }
+
+/* External TV series: season/episode links in the existing movie dialog. */
+body.cinewave-site .series-episode-section {
+  margin: 18px 0 8px;
+  padding: 16px;
+  background: #271c34;
+  border: 1px solid #f7f5f02f;
+  border-radius: 12px;
+}
+body.cinewave-site .series-episode-section h3 {
+  font-size: 16px;
+  margin: 0 0 12px;
+  color: #f7f5f0;
+}
+body.cinewave-site .series-episode-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 9px;
+}
+body.cinewave-site .series-episode-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 43px;
+  padding: 10px;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 700;
+  border: 1px solid #d4f45886;
+  border-radius: 8px;
+  background: #20152e;
+  color: #f7f5f0;
+}
+body.cinewave-site .series-episode-link:hover,
+body.cinewave-site .series-episode-link:focus-visible {
+  background: #d4f458;
+  color: #20152e;
+}
+body.cinewave-site[data-theme="light"] .series-episode-section {
+  background: #f1eee8;
+  border-color: #20152e2c;
+}
+body.cinewave-site[data-theme="light"] .series-episode-section h3 {
+  color: #20152e;
+}
+body.cinewave-site[data-theme="light"] .series-episode-link {
+  background: #f7f5f0;
+  color: #20152e;
+  border-color: #20152e3e;
+}
+body.cinewave-site[data-theme="light"] .series-episode-link:hover,
+body.cinewave-site[data-theme="light"] .series-episode-link:focus-visible {
+  background: #d4f458;
+  border-color: #89a22c;
+}
+@media (max-width: 600px) {
+  body.cinewave-site .series-episode-section {padding: 12px;}
+  body.cinewave-site .series-episode-grid {grid-template-columns: repeat(2,minmax(0,1fr));}
+}
