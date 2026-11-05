@@ -45,6 +45,7 @@ describe("Quick add external movie release year", () => {
     expect(screen.getByRole("spinbutton", { name: "Release year" })).toBeTruthy();
     expect(document.querySelector('input[name="day"]')).toBeNull();
     expect(document.querySelector('input[name="month"]')).toBeNull();
+    expect(screen.getByRole("textbox", { name: "Trailer link (YouTube or Vimeo, optional)" })).toBeTruthy();
     rerender(<QuickExternalMovie language="hy" />);
     expect(screen.getByRole("spinbutton", { name: "Թողարկման տարեթիվ" })).toBeTruthy();
     rerender(<QuickExternalMovie language="ru" />);
@@ -60,6 +61,7 @@ describe("Quick add external movie release year", () => {
       genre_names: ["Thriller"],
       overview_en: "A story",
       poster_path: null,
+      trailer_url: "https://youtu.be/abcdefghijk",
       external_watch_url: "https://api.nextembed.ws/embed/movie/92733",
       release_date: "2026-11-05",
       terms_confirmed: true,
@@ -72,5 +74,25 @@ describe("Quick add external movie release year", () => {
     expect(screen.getByRole("spinbutton", { name: "Release year" }).value).toBe("2026");
     fireEvent.submit(screen.getByRole("button", { name: "Save changes" }).closest("form"));
     await waitFor(() => expect(mocks.savedPayload?.release_date).toBe("2026-11-05"));
+    expect(mocks.savedPayload.trailer_url).toBe("https://youtu.be/abcdefghijk");
+  });
+
+  it("stores a valid YouTube trailer link and shows an error for an unrelated host", async () => {
+    render(<QuickExternalMovie language="en" />);
+    const fields = document.querySelector(".quick-external form");
+    fireEvent.change(fields.elements.namedItem("title_en"), { target: { value: "Film" } });
+    fireEvent.change(fields.elements.namedItem("external_watch_url"), { target: { value: "https://api.nextembed.ws/embed/movie/92733" } });
+    fireEvent.change(fields.elements.namedItem("year"), { target: { value: "2026" } });
+    fields.elements.namedItem("terms_confirmed").checked = true;
+
+    fireEvent.change(fields.elements.namedItem("trailer_url"), { target: { value: "https://example.com/other" } });
+    fireEvent.submit(fields);
+    expect(mocks.savedPayload).toBeNull();
+    expect(screen.getByText("Use a valid HTTPS YouTube or Vimeo trailer link.")).toBeTruthy();
+
+    fireEvent.change(fields.elements.namedItem("trailer_url"), { target: { value: "https://www.youtube.com/watch?v=abcdefghijk" } });
+    fireEvent.submit(fields);
+    await waitFor(() => expect(mocks.savedPayload?.trailer_url).toBe("https://www.youtube.com/watch?v=abcdefghijk"));
+    expect(mocks.savedPayload.release_date).toBe("2026-01-01");
   });
 });
