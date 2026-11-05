@@ -149,6 +149,40 @@ describe("React storefront", () => {
     expect(dialogTrailer.getAttribute("href")).toBe(trailer);
     expect(dialogTrailer.getAttribute("target")).toBe("_blank");
   });
+  it("lists external TV series in TV Shows and shows season episode links", async () => {
+    const episode1="https://api.nextembed.ws/embed/tv/12345/1/1";
+    const episode2="https://api.nextembed.ws/embed/tv/12345/1/2";
+    const series={
+      id: 77,
+      title_en: "Test TV Show",
+      title_hy: "Փորձնական սերիալ",
+      release_date: "2026-01-01",
+      media_type: "tv",
+      is_published: true,
+      genre_names: ["Drama"],
+      external_watch_url: episode1,
+      episode_links: [
+        {season:1,episode:1,url:episode1},
+        {season:1,episode:2,url:episode2},
+      ],
+    };
+    mocks.backendFetch.mockImplementation(async (url)=>({
+      ok:true,
+      json:async()=>String(url).includes("kinolab_external_catalog")?[series]:[],
+    }));
+    const user=userEvent.setup();
+    render(<App />);
+    await waitFor(()=>expect(document.querySelector('[data-id="catalog:external:77"]')).toBeTruthy());
+    await user.click(within(screen.getByRole("navigation", {name:"Գլխավոր նավարկում"})).getByText("Սերիալներ"));
+    const catalog=document.getElementById("catalogSection");
+    expect(within(catalog).getByText("Փորձնական սերիալ")).toBeTruthy();
+    await user.click(catalog.querySelector('[data-id="catalog:external:77"]'));
+    const dialog=await screen.findByRole("dialog", {name:"Փորձնական սերիալ"});
+    const links=within(dialog).getAllByRole("link");
+    expect(links.some(link=>link.getAttribute("href")===episode1)).toBe(true);
+    expect(links.some(link=>link.getAttribute("href")===episode2)).toBe(true);
+    expect(within(dialog).getByText("Սեզոններ և սերիաներ")).toBeTruthy();
+  });
   it("switches between accessible dark and light themes and remembers the choice", async () => {
     const user = userEvent.setup();
     render(<App />);
