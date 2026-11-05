@@ -2,9 +2,9 @@
 
 ## State
 
-**Prepared in staging source, OFF by default.** No events are currently sent by this implementation because `config.js` contains `analyticsEnabled: false`. No production repository/Supabase project/domain was modified.
+**Enabled in staging source, NOT deployed by this commit.** The owner reported that the migration succeeded and both 5-field and 3-field SQL permission checks returned true. `config.js` now contains `analyticsEnabled: true`, but actual visitor counting starts only after a separately approved staging-only GitHub Pages publish. Production repository/Supabase/domain remain unchanged.
 
-The owner approved the **analytics development phase**. Actual data collection starts only after applying the SQL in the **staging** database, reviewing visitors' privacy notice, switching the staging flag on in a separately reviewed commit, and explicitly publishing staging.
+The owner approved the **analytics development phase**. SQL is applied in the **staging** database; visitor notice is now available at `/CineWave-Test-/privacy.html` once deployed, and the staging flag is enabled in source. Actual data collection requires successful build-only CI, an approved staging publish and verification of the administrator-only dashboard. A live non-admin RPC denial test is still recommended.
 
 ## What counts and what it doesn't
 
@@ -46,9 +46,9 @@ SELECT
 
 All five values should read `true`. To test that a **non-admin authenticated** user can't read the metrics, call the public `kinolab_get_metrics` RPC with a non-admin session; it should be denied. Using SQL Editor as postgres is not a substitute for an admin/non-admin API test.
 
-## 3. Activation (separate explicit owner approval)
+## 3. Activation (separate explicit staging publication approval)
 
-After step 1, privacy notice review, and passing tests, switch `config.js` staging `analyticsEnabled` to `true` **only in this repo** and manually publish the exact new staging commit SHA through `.github/workflows/pages.yml`.
+After owner-confirmed SQL checks, the staging-only flag has been switched on in the repo and the trilingual privacy notice was created. **Run build-only CI again for the updated source**, review the result, and manually publish the exact HEAD SHA through `.github/workflows/pages.yml` **only after the owner explicitly approves staging publication**.
 
 The `Analytics` tab in the KinoLab-Test Studio will then show counts. Admin visits are excluded in the storefront app after session/admin resolution. If the SQL has not been applied, dashboard shows a setup/error message and no events are collected.
 
@@ -86,9 +86,9 @@ This SQL affects **only** the staging metrics table, not film data. No automatic
 
 ## Release gates
 
-1. Apply staging SQL.
-2. Verify anon cannot read, non-admin cannot read, and admin can read.
-3. Verify storefront still works with analytics disabled.
-4. Approve privacy notice and switch to staging-only enablement.
-5. Execute build-only GitHub workflow, then ask owner for staging-only publish approval.
+1. Owner completed staging SQL and direct database privilege checks (5 true + 3 true); **live non-admin RPC denial and admin RPC success are still to be verified after publication**.
+2. Staging flag is enabled in source and privacy notice included, but not live until a separately approved staging deploy.
+3. Execute build-only GitHub workflow for the newest HEAD SHA and inspect job results.
+4. Owner explicitly approves **staging-only** publication and dispatches the SHA-gated staging deploy.
+5. Verify both an admin can view aggregates and a non-admin cannot read the analytics RPC, then generate a few clicks and press Refresh.
 6. Never change production or domain without a separate explicit authorization.
