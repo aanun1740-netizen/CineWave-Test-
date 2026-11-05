@@ -143,7 +143,7 @@ describe("React storefront", () => {
     const heroTrailer = await screen.findByRole("link", { name: "Թրեյլեր" });
     expect(heroTrailer.getAttribute("href")).toBe(trailer);
     expect(heroTrailer.getAttribute("target")).toBe("_blank");
-    await user.click(document.querySelector('[data-id="external:55"]'));
+    await user.click(document.querySelector('[data-id="catalog:external:55"]'));
     const dialog = await screen.findByRole("dialog", { name: "Թրեյլերի փորձարկում" });
     const dialogTrailer = within(dialog).getByRole("link", { name: "Դիտել թրեյլերը" });
     expect(dialogTrailer.getAttribute("href")).toBe(trailer);
