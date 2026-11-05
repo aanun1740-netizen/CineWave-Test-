@@ -40,8 +40,17 @@ export default function MovieRow({
   };
   useEffect(() => {
     update();
+    // Phone rotation and responsive layout can change the scrollable card
+    // width without a new catalog request. Keep arrow states in sync.
+    const observer = typeof ResizeObserver === "function"
+      ? new ResizeObserver(update)
+      : null;
+    if (observer && row.current) observer.observe(row.current);
     window.addEventListener("resize", update);
-    return () => window.removeEventListener("resize", update);
+    return () => {
+      observer?.disconnect();
+      window.removeEventListener("resize", update);
+    };
   }, [movies]);
   const scroll = (direction) =>
     row.current?.scrollBy({
