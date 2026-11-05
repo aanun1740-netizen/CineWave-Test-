@@ -122,6 +122,33 @@ describe("React storefront", () => {
       }),
     ).toBeTruthy();
   });
+  it("shows a published Variyt movie as an outbound link without an embedded player", async () => {
+    const watchUrl="https://api.variyt.ws/embed/movie/88585";
+    const row={
+      id:88,
+      title_en:"External Movie",
+      title_hy:"Արտաքին ֆիլմ",
+      release_date:"2026-01-01",
+      genre_names:["Thriller"],
+      media_type:"movie",
+      is_published:true,
+      external_watch_url:watchUrl,
+    };
+    mocks.backendFetch.mockImplementation(async url=>({
+      ok:true,
+      json:async()=>String(url).includes("kinolab_external_catalog") ? [row] : [],
+    }));
+    const user=userEvent.setup();
+    render(<App />);
+    await waitFor(()=>expect(document.querySelector('[data-id="catalog:external:88"]')).toBeTruthy());
+    await user.click(document.querySelector('[data-id="catalog:external:88"]'));
+    const dialog=await screen.findByRole("dialog",{name:"Արտաքին ֆիլմ"});
+    const link=within(dialog).getByRole("link",{name:"Դիտել ֆիլմը"});
+    expect(link.getAttribute("href")).toBe(watchUrl);
+    expect(link.getAttribute("target")).toBe("_blank");
+    expect(link.getAttribute("rel")).toContain("noopener");
+    expect(dialog.querySelector("iframe")).toBeNull();
+  });
   it("shows an external movie trailer in the hero and movie details", async () => {
     const trailer = "https://www.youtube.com/watch?v=abcdefghijk";
     const movie = {
