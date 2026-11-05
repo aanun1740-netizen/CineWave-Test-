@@ -1,8 +1,9 @@
 window.CINEWAVE_CONFIG = Object.freeze({
   url: "https://zayssiouqexwdicudalc.supabase.co",
   key: "sb_publishable_jnNJZVXtRFzWakYL5u4aug_kaVcu85B",
-  // Enable only after owner applies staging metrics SQL and approves privacy notice.
-  analyticsEnabled: false
+  // Staging only: aggregate counter enabled after owner SQL permission checks.
+  // Never copy this configuration into the main production KinoLab site.
+  analyticsEnabled: true
 });
 
 // Fail closed before SDK creation or direct backend requests.
