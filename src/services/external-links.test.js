@@ -23,7 +23,7 @@ describe("KinoLab outbound web links", () => {
     "file:///etc/passwd",
     "ftp://example.com/film",
     "https://user:pass@example.com/video",
-    "https://example.com/film\\nmalicious",
+    "https://example.com/film\nmalicious",
     "",
     null,
   ])("rejects unsafe or malformed outbound links: %s", (url) => {
