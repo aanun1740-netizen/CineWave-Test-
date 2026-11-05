@@ -122,6 +122,33 @@ describe("React storefront", () => {
       }),
     ).toBeTruthy();
   });
+  it("shows an external movie trailer in the hero and movie details", async () => {
+    const trailer = "https://www.youtube.com/watch?v=abcdefghijk";
+    const movie = {
+      id: 55,
+      title_en: "Trailer Test Film",
+      title_hy: "Թրեյլերի փորձարկում",
+      release_date: "2026-01-01",
+      genre_names: ["Drama"],
+      is_published: true,
+      external_watch_url: "https://api.nextembed.ws/embed/movie/92733",
+      trailer_url: trailer,
+    };
+    mocks.backendFetch.mockImplementation(async (url) => ({
+      ok: true,
+      json: async () => String(url).includes("kinolab_external_catalog") ? [movie] : [],
+    }));
+    const user = userEvent.setup();
+    render(<App />);
+    const heroTrailer = await screen.findByRole("link", { name: "Թրեյլեր" });
+    expect(heroTrailer.getAttribute("href")).toBe(trailer);
+    expect(heroTrailer.getAttribute("target")).toBe("_blank");
+    await user.click(document.querySelector('[data-id="external:55"]'));
+    const dialog = await screen.findByRole("dialog", { name: "Թրեյլերի փորձարկում" });
+    const dialogTrailer = within(dialog).getByRole("link", { name: "Դիտել թրեյլերը" });
+    expect(dialogTrailer.getAttribute("href")).toBe(trailer);
+    expect(dialogTrailer.getAttribute("target")).toBe("_blank");
+  });
   it("switches between accessible dark and light themes and remembers the choice", async () => {
     const user = userEvent.setup();
     render(<App />);
