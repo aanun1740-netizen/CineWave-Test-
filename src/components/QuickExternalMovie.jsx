@@ -2,11 +2,27 @@ import { useEffect, useRef, useState } from "react";
 import { client } from "../services/backend";
 
 const labels = {
-  hy: {heading:"Ավելացնել ֆիլմ՝ արտաքին հղումով", title:"Ֆիլմի անուն", titleRu:"Ռուսերեն անուն (ըստ ցանկության)",titleHy:"Հայերեն անուն (ըստ ցանկության)",genre:"Ժանրեր (ստորակետերով)",year:"Թողարկման տարեթիվ",poster:"Նկարի HTTPS հղում",choose:"Ընտրել նկար համակարգչից",uploading:"Նկարը վերբեռնվում է…",uploaded:"Նկարը վերբեռնվեց։ Այժմ կարող ես պահպանել ֆիլմը։",preview:"Ընտրված պաստառ",description:"Նկարագրություն",url:"Դիտման արտաքին հղում",terms:"Հաստատում եմ, որ ստուգել եմ արտաքին կայքի հղումների տարածման պայմանները և այս հղումը թույլատրված է հրապարակել",submit:"Պահպանել և հրապարակել",saving:"Պահպանվում է…",success:"Ֆիլմը պահպանվեց և հրապարակվեց արտաքին հղումով։ Թարմացրու գլխավոր էջը՝ ստուգելու համար։",duplicate:"Այս արտաքին հղումով ֆիլմն արդեն գոյություն ունի։",intro:"Մուտքագրիր ֆիլմի տվյալներն ու արտաքին էջի հասցեն։ «Դիտել» կոճակը նոր ներդիրում կբացի արտաքին կայքը․ KinoLab-ը ֆիլմը չի վերահեռարձակում։", list:"Արտաքին հղումով ավելացված ֆիլմեր", refresh:"Թարմացնել ցանկը", remove:"Ջնջել", hide:"Հեռացնել կայքից", show:"Հրապարակել", confirmDelete:"Վերջնական ջնջե՞լ այս ֆիլմը։", empty:"Արտաքին հղումով ավելացված ֆիլմեր չկան։", deleted:"Ֆիլմը ջնջվեց արտաքին կատալոգից։", hidden:"Ֆիլմը հեռացվեց հանրային կայքից։", shown:"Ֆիլմը կրկին հրապարակվեց։",edit:"Խմբագրել",cancel:"Չեղարկել",saveEdit:"Պահպանել փոփոխությունները",updated:"Ֆիլմի փոփոխությունները պահպանվեցին։",editing:"Խմբագրվում է՝ "},
-  ru: {heading:"Добавить фильм с внешней ссылкой",title:"Название",titleRu:"Название по-русски (необязательно)",titleHy:"Название по-армянски (необязательно)",genre:"Жанры (через запятую)",year:"Год выпуска",poster:"HTTPS-ссылка на постер",choose:"Загрузить постер с компьютера",uploading:"Загрузка изображения…",uploaded:"Изображение загружено. Теперь можно сохранить фильм.",preview:"Предпросмотр постера",description:"Описание",url:"Ссылка на внешний просмотр",terms:"Подтверждаю, что проверил условия стороннего сайта и публикация этой ссылки разрешена",submit:"Сохранить и опубликовать",saving:"Сохранение…",success:"Фильм сохранён и опубликован. Обновите главную страницу.",duplicate:"Фильм с этой ссылкой уже есть.",intro:"Сохраните данные и ссылку. «Смотреть» откроет сторонний сайт в новой вкладке; KinoLab не транслирует фильм.", list:"Фильмы с внешними ссылками", refresh:"Обновить список", remove:"Удалить", hide:"Снять с публикации", show:"Опубликовать", confirmDelete:"Удалить этот фильм без возможности восстановления?", empty:"Нет фильмов с внешними ссылками.", deleted:"Фильм удалён из внешнего каталога.", hidden:"Фильм снят с публикации.", shown:"Фильм опубликован.",edit:"Редактировать",cancel:"Отмена",saveEdit:"Сохранить изменения",updated:"Изменения фильма сохранены.",editing:"Редактирование: "},
-  en: {heading:"Add a movie with an external link",title:"Title",titleRu:"Russian title (optional)",titleHy:"Armenian title (optional)",genre:"Genres (comma-separated)",year:"Release year",poster:"HTTPS poster URL",choose:"Upload poster from computer",uploading:"Uploading image…",uploaded:"Image uploaded. You can now save the movie.",preview:"Poster preview",description:"Description",url:"External watch URL",terms:"I checked the external site's linking terms and have permission to publish this link",submit:"Save and publish",saving:"Saving…",success:"Movie saved and published. Refresh the storefront to check.",duplicate:"A movie using this link already exists.",intro:"Enter movie information and the external watch URL. Watch opens the provider in a new tab; KinoLab does not host the movie.", list:"External-link movies", refresh:"Refresh list", remove:"Delete", hide:"Unpublish", show:"Publish", confirmDelete:"Permanently delete this film?", empty:"No external-link movies found.", deleted:"Movie deleted from the external catalog.", hidden:"Movie removed from the public site.", shown:"Movie published.",edit:"Edit",cancel:"Cancel",saveEdit:"Save changes",updated:"Movie changes saved.",editing:"Editing: "}
+  hy: {heading:"Ավելացնել ֆիլմ՝ արտաքին հղումով", title:"Ֆիլմի անուն", titleRu:"Ռուսերեն անուն (ըստ ցանկության)",titleHy:"Հայերեն անուն (ըստ ցանկության)",genre:"Ժանրեր (ստորակետերով)",year:"Թողարկման տարեթիվ",trailer:"Թրեյլերի հղում (YouTube կամ Vimeo, ըստ ցանկության)",poster:"Նկարի HTTPS հղում",choose:"Ընտրել նկար համակարգչից",uploading:"Նկարը վերբեռնվում է…",uploaded:"Նկարը վերբեռնվեց։ Այժմ կարող ես պահպանել ֆիլմը։",preview:"Ընտրված պաստառ",description:"Նկարագրություն",url:"Դիտման արտաքին հղում",terms:"Հաստատում եմ, որ ստուգել եմ արտաքին կայքի հղումների տարածման պայմանները և այս հղումը թույլատրված է հրապարակել",submit:"Պահպանել և հրապարակել",saving:"Պահպանվում է…",success:"Ֆիլմը պահպանվեց և հրապարակվեց արտաքին հղումով։ Թարմացրու գլխավոր էջը՝ ստուգելու համար։",duplicate:"Այս արտաքին հղումով ֆիլմն արդեն գոյություն ունի։",intro:"Մուտքագրիր ֆիլմի տվյալներն ու արտաքին էջի հասցեն։ «Դիտել» կոճակը նոր ներդիրում կբացի արտաքին կայքը․ KinoLab-ը ֆիլմը չի վերահեռարձակում։", list:"Արտաքին հղումով ավելացված ֆիլմեր", refresh:"Թարմացնել ցանկը", remove:"Ջնջել", hide:"Հեռացնել կայքից", show:"Հրապարակել", confirmDelete:"Վերջնական ջնջե՞լ այս ֆիլմը։", empty:"Արտաքին հղումով ավելացված ֆիլմեր չկան։", deleted:"Ֆիլմը ջնջվեց արտաքին կատալոգից։", hidden:"Ֆիլմը հեռացվեց հանրային կայքից։", shown:"Ֆիլմը կրկին հրապարակվեց։",edit:"Խմբագրել",cancel:"Չեղարկել",saveEdit:"Պահպանել փոփոխությունները",updated:"Ֆիլմի փոփոխությունները պահպանվեցին։",editing:"Խմբագրվում է՝ "},
+  ru: {heading:"Добавить фильм с внешней ссылкой",title:"Название",titleRu:"Название по-русски (необязательно)",titleHy:"Название по-армянски (необязательно)",genre:"Жанры (через запятую)",year:"Год выпуска",trailer:"Ссылка на трейлер (YouTube или Vimeo, необязательно)",poster:"HTTPS-ссылка на постер",choose:"Загрузить постер с компьютера",uploading:"Загрузка изображения…",uploaded:"Изображение загружено. Теперь можно сохранить фильм.",preview:"Предпросмотр постера",description:"Описание",url:"Ссылка на внешний просмотр",terms:"Подтверждаю, что проверил условия стороннего сайта и публикация этой ссылки разрешена",submit:"Сохранить и опубликовать",saving:"Сохранение…",success:"Фильм сохранён и опубликован. Обновите главную страницу.",duplicate:"Фильм с этой ссылкой уже есть.",intro:"Сохраните данные и ссылку. «Смотреть» откроет сторонний сайт в новой вкладке; KinoLab не транслирует фильм.", list:"Фильмы с внешними ссылками", refresh:"Обновить список", remove:"Удалить", hide:"Снять с публикации", show:"Опубликовать", confirmDelete:"Удалить этот фильм без возможности восстановления?", empty:"Нет фильмов с внешними ссылками.", deleted:"Фильм удалён из внешнего каталога.", hidden:"Фильм снят с публикации.", shown:"Фильм опубликован.",edit:"Редактировать",cancel:"Отмена",saveEdit:"Сохранить изменения",updated:"Изменения фильма сохранены.",editing:"Редактирование: "},
+  en: {heading:"Add a movie with an external link",title:"Title",titleRu:"Russian title (optional)",titleHy:"Armenian title (optional)",genre:"Genres (comma-separated)",year:"Release year",trailer:"Trailer link (YouTube or Vimeo, optional)",poster:"HTTPS poster URL",choose:"Upload poster from computer",uploading:"Uploading image…",uploaded:"Image uploaded. You can now save the movie.",preview:"Poster preview",description:"Description",url:"External watch URL",terms:"I checked the external site's linking terms and have permission to publish this link",submit:"Save and publish",saving:"Saving…",success:"Movie saved and published. Refresh the storefront to check.",duplicate:"A movie using this link already exists.",intro:"Enter movie information and the external watch URL. Watch opens the provider in a new tab; KinoLab does not host the movie.", list:"External-link movies", refresh:"Refresh list", remove:"Delete", hide:"Unpublish", show:"Publish", confirmDelete:"Permanently delete this film?", empty:"No external-link movies found.", deleted:"Movie deleted from the external catalog.", hidden:"Movie removed from the public site.", shown:"Movie published.",edit:"Edit",cancel:"Cancel",saveEdit:"Save changes",updated:"Movie changes saved.",editing:"Editing: "}
 };
 const allowed = url => /^https:\/\/api\.nextembed\.ws\/embed\/(movie|tv)\/\d+(?:\/\d+\/\d+)?\/?$/.test(url);
+// Trailers only link to recognized video platforms; they open in a new tab.
+function allowedTrailer(raw) {
+  try {
+    const u=new URL(raw);
+    if(u.protocol!=="https:" || u.username || u.password || u.port) return false;
+    if(["youtube.com","www.youtube.com","m.youtube.com"].includes(u.hostname)) {
+      if(u.pathname==="/watch") return /^[A-Za-z0-9_-]{11}$/.test(u.searchParams.get("v")||"");
+      return /^\/(?:embed|shorts|live)\/[A-Za-z0-9_-]{11}\/?$/.test(u.pathname);
+    }
+    if(u.hostname==="youtu.be") return /^\/[A-Za-z0-9_-]{11}\/?$/.test(u.pathname);
+    if(["vimeo.com","www.vimeo.com","player.vimeo.com"].includes(u.hostname))
+      return /^\/(?:video\/)?[0-9]+\/?$/.test(u.pathname);
+  } catch {}
+  return false;
+}
+
 export default function QuickExternalMovie({language}) {
   const t=labels[language] || labels.en;
   const [busy,setBusy]=useState(false),[notice,setNotice]=useState("");
@@ -37,7 +53,7 @@ export default function QuickExternalMovie({language}) {
     if(busy||uploading)return;
     const form=formRef.current;
     if(!form)return;
-    for(const name of ["title_en","title_ru","title_hy","overview_en","external_watch_url"]) {
+    for(const name of ["title_en","title_ru","title_hy","overview_en","external_watch_url","trailer_url"]) {
       form.elements.namedItem(name).value = row[name] || "";
     }
     form.elements.namedItem("genres").value=Array.isArray(row.genre_names)?row.genre_names.join(", "):"";
@@ -102,6 +118,10 @@ export default function QuickExternalMovie({language}) {
     const form=event.currentTarget;
     const v=Object.fromEntries(new FormData(form).entries());
     const url=String(v.external_watch_url||"").trim();
+    const trailer=String(v.trailer_url||"").trim();
+    if(trailer && !allowedTrailer(trailer)) {
+      setNotice(({hy:"Թրեյլերի համար օգտագործիր YouTube-ի կամ Vimeo-ի ճիշտ HTTPS հղում։",ru:"Для трейлера укажите корректную HTTPS-ссылку YouTube или Vimeo.",en:"Use a valid HTTPS YouTube or Vimeo trailer link."}[language]));return;
+    }
     if(!allowed(url)){setNotice("Use a direct HTTPS NextEmbed movie/TV URL, e.g. https://api.nextembed.ws/embed/movie/92733");return;}
     if(!form.elements.terms_confirmed.checked){setNotice(t.terms);return;}
     const year=Number(v.year);
@@ -122,6 +142,7 @@ export default function QuickExternalMovie({language}) {
         release_date:date,
         genre_names:String(v.genres||"").split(",").map(x=>x.trim()).filter(Boolean),
         poster_path:posterUrl.trim()||null,
+        trailer_url:trailer||null,
         external_watch_url:url,
         terms_confirmed:true,
         is_published:editingRow ? editingRow.is_published : true
@@ -160,6 +181,7 @@ export default function QuickExternalMovie({language}) {
         </label>
         <label>{t.description}<textarea name="overview_en" rows="3"/></label>
         <label>{t.url}<input name="external_watch_url" type="url" required placeholder="https://api.nextembed.ws/embed/movie/92733"/></label>
+        <label>{t.trailer}<input name="trailer_url" type="url" maxLength="2048" placeholder="https://www.youtube.com/watch?v=..."/></label>
       </div>
       <label className="check"><input name="terms_confirmed" type="checkbox" required />{t.terms}</label>
       <div className="form-actions">
