@@ -23,6 +23,7 @@ export default function MovieRow({
   t,
   watchable,
   externalWatchUrl,
+  onOutbound,
   open,
   actions,
   results = false,
@@ -140,7 +141,7 @@ export default function MovieRow({
                 {official ? (
                   <a className="play-overlay" href={official} target="_blank" rel="noopener noreferrer"
                     aria-label={`${info.title} — ${t("watch")} (external player)`}
-                    onClick={(e) => e.stopPropagation()}
+                    onClick={(e) => { e.stopPropagation(); onOutbound?.(movie); }}
                     onKeyDown={(e) => e.stopPropagation()}>
                     <Icon name="play" />
                     {t("watch")}
