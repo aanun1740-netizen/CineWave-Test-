@@ -1,5 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { backendFetch, config, base } from "./services/backend";
+import { allowedExternalWatch } from "./services/external-links";
 import {
   mapCatalogMovie,
   localizedMovie,
@@ -185,8 +186,7 @@ export default function App() {
         if (!response.ok) return [];
         const data = await response.json();
         return Array.isArray(data)
-          ? data.filter(row => typeof row.external_watch_url === "string" &&
-              row.external_watch_url.startsWith("https://api.nextembed.ws/embed/"))
+          ? data.filter(row => allowedExternalWatch(row.external_watch_url))
             .map(row => ({ ...row, id: "external:" + row.id, watch_url:null, embed_url:null,
               playback_verification:null, rights_verification_status:"unverified" }))
           : [];
