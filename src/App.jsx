@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { backendFetch, config, base } from "./services/backend";
 import { allowedExternalWatch } from "./services/external-links";
 import {
@@ -222,14 +222,15 @@ export default function App() {
       abort.abort();
     };
   }, []);
-  const watchable = (movie) => approvedPlayback(movie, proofs);
-  const choices = [...movies]
+  const watchable = useCallback((movie) => approvedPlayback(movie, proofs), [proofs]);
+  // Search and unrelated UI updates should not re-sort the entire catalog.
+  const choices = useMemo(() => [...movies]
     .sort(
       (a, b) =>
         Number(watchable(b)) - Number(watchable(a)) ||
         Number(b.img !== POSTER_FALLBACK) - Number(a.img !== POSTER_FALLBACK),
     )
-    .slice(0, 5);
+    .slice(0, 5), [movies, watchable]);
   // Rotate featured movies every six seconds; preserve manual dot selection.
   useEffect(() => {
     if (choices.length < 2 || route !== "home" || query || genre !== "All") return;
@@ -238,20 +239,20 @@ export default function App() {
   }, [choices.length, route, query, genre]);
   const featured = choices[heroIndex % Math.max(choices.length, 1)],
     info = featured ? localizedMovie(featured, language) : null;
-  const filtered = filterMovies(movies, {
+  const filtered = useMemo(() => filterMovies(movies, {
     query,
     genre,
     route: listing,
     list: account.list,
     language,
-  });
+  }), [movies, query, genre, listing, account.list, language]);
   let movieId = "";
   try {
     movieId = decodeURIComponent(route.split("/").slice(1).join("/"));
   } catch {}
   const current = movies.find((movie) => movie.id === movieId),
     home = listing === "home" && !query && genre === "All";
-  const available = movies.filter(watchable),
+  const available = useMemo(() => movies.filter(watchable), [movies, watchable]),
     continuing = available.filter((movie) => {
       const p = playback.progressFor(movie.id);
       return p > 0 && p < 99;
