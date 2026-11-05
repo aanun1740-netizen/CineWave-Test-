@@ -11,6 +11,7 @@ describe("outbound watch URL restrictions", () => {
     expect(allowedExternalMovie("https://api.nextembed.ws/embed/movie/92733")).toBe(true);
     expect(allowedExternalWatch("https://api.variyt.ws/embed/movie/88585")).toBe(true);
     expect(allowedExternalWatch("https://api.nextembed.ws/embed/tv/1399/1/2")).toBe(true);
+    expect(allowedExternalWatch("https://api.nextembed.ws/embed/tv/1399")).toBe(true);
   });
   it("keeps TV episodes limited to NextEmbed until separately verified", () => {
     expect(allowedExternalEpisode("https://api.nextembed.ws/embed/tv/1399/1/2")).toBe(true);
