@@ -52,6 +52,30 @@ describe("Quick add external movie release year", () => {
     expect(screen.getByRole("spinbutton", { name: "Год выпуска" })).toBeTruthy();
   });
 
+  it("saves English, Russian, and Armenian descriptions independently", async () => {
+    const { rerender } = render(<QuickExternalMovie language="en" />);
+    expect(screen.getByRole("textbox", { name: "English description (EN)" })).toBeTruthy();
+    expect(screen.getByRole("textbox", { name: "Russian description (RU)" })).toBeTruthy();
+    expect(screen.getByRole("textbox", { name: "Armenian description (HY)" })).toBeTruthy();
+    rerender(<QuickExternalMovie language="hy" />);
+    expect(screen.getByRole("textbox", { name: "Նկարագրություն՝ հայերեն (HY)" })).toBeTruthy();
+
+    const form = document.querySelector(".quick-external form");
+    const fill = (name, value) =>
+      fireEvent.change(form.elements.namedItem(name), { target: { value } });
+    fill("title_en", "Film");
+    fill("overview_en", "An English description");
+    fill("overview_ru", "Описание на русском");
+    fill("overview_hy", "Նկարագրությունը հայերեն");
+    fill("year", "2026");
+    fill("external_watch_url", "https://api.nextembed.ws/embed/movie/92733");
+    form.elements.namedItem("terms_confirmed").checked = true;
+    fireEvent.submit(form);
+    await waitFor(() => expect(mocks.savedPayload?.overview_en).toBe("An English description"));
+    expect(mocks.savedPayload.overview_ru).toBe("Описание на русском");
+    expect(mocks.savedPayload.overview_hy).toBe("Նկարագրությունը հայերեն");
+  });
+
   it("keeps a pre-existing full date when editing without changing its year", async () => {
     mocks.rows = [{
       id: 1,
@@ -60,6 +84,8 @@ describe("Quick add external movie release year", () => {
       title_hy: "Կենդանիներ",
       genre_names: ["Thriller"],
       overview_en: "A story",
+      overview_ru: "История",
+      overview_hy: "Պատմություն",
       poster_path: null,
       trailer_url: "https://youtu.be/abcdefghijk",
       external_watch_url: "https://api.nextembed.ws/embed/movie/92733",
@@ -72,9 +98,13 @@ describe("Quick add external movie release year", () => {
     await screen.findByRole("button", { name: "Edit" });
     await user.click(screen.getByRole("button", { name: "Edit" }));
     expect(screen.getByRole("spinbutton", { name: "Release year" }).value).toBe("2026");
+    expect(document.querySelector('textarea[name="overview_ru"]').value).toBe("История");
+    expect(document.querySelector('textarea[name="overview_hy"]').value).toBe("Պատմություն");
     fireEvent.submit(screen.getByRole("button", { name: "Save changes" }).closest("form"));
     await waitFor(() => expect(mocks.savedPayload?.release_date).toBe("2026-11-05"));
     expect(mocks.savedPayload.trailer_url).toBe("https://youtu.be/abcdefghijk");
+    expect(mocks.savedPayload.overview_ru).toBe("История");
+    expect(mocks.savedPayload.overview_hy).toBe("Պատմություն");
   });
 
   it("stores a valid YouTube trailer link and shows an error for an unrelated host", async () => {
