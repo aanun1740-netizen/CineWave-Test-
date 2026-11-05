@@ -138,6 +138,22 @@ export default function MovieDialog({
             {info.desc ||
               t(movie ? "descriptionFallback" : loading ? "loading" : "empty")}
           </p>
+          {movie?.kind === "TV Show" && movie.episodes?.length > 0 && !watch && (
+            <section className="series-episode-section" aria-label={({hy:"Սերիաներ",ru:"Серии",en:"Episodes"}[language])}>
+              <h3>{({hy:"Սեզոններ և սերիաներ",ru:"Сезоны и серии",en:"Seasons & episodes"}[language])}</h3>
+              <div className="series-episode-grid">
+                {movie.episodes.map(item=>(
+                  <a key={item.season+":"+item.episode}
+                    href={item.url} target="_blank" rel="noopener noreferrer"
+                    className="series-episode-link">
+                    {({hy:"Սեզոն",ru:"Сезон",en:"Season"}[language])} {item.season}
+                    {" · "}
+                    {({hy:"Սերիա",ru:"Серия",en:"Episode"}[language])} {item.episode}
+                  </a>
+                ))}
+              </div>
+            </section>
+          )}
           {movie && (
             <div className="detail-actions">
               {externalWatch && !watch && (
