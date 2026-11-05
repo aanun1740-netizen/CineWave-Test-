@@ -12,6 +12,7 @@ Scope: `aanun1740-netizen/CineWave-Test-` only. Do not change the production Cin
 - [ ] Studio admin login works and an authorized admin can save a test catalog listing.
 - [ ] Catalog listing appears in public storefront in Armenian, Russian and English.
 - [ ] Poster, title, summary, genres and trailer (when configured) render correctly.
+- [ ] External-link movie trailers save from Quick add, survive edits, and open as YouTube/Vimeo links in the public hero and detail dialog after the staging trailer migration is applied.
 - [ ] Existing authorized MP4/HLS player plays and quality selector reflects *actual* available streams.
 - [ ] External provider links are saved as references; public Watch is shown only when the source terms/rights permit publication and backend publication projection exposes external_watch_url.
 - [ ] Opening permitted external links uses a new tab; KinoLab remains open.
