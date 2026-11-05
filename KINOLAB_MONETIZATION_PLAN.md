@@ -18,6 +18,7 @@ Decision confirmed by owner on 2026-11-05. **Planning only. Staging repo exclusi
 - Disclose external destination and sponsorship/affiliate relationships without misleading users.
 
 **Stage 2 — measurement before monetization**
+- Owner approved preparing analytics on KinoLab-Test. The aggregate counter, secured SQL migration and trilingual Studio dashboard are now staged but tracking is intentionally **off** (`config.js`: `analyticsEnabled: false`) until the owner runs the staging migration, verifies permissions and approves privacy notice. See `KINOLAB_ANALYTICS_SETUP.md`.
 - Choose a privacy-aware analytics provider and configure it first **only after** owner approval. Don't quietly add third-party scripts, cookies, or user identifiers.
 - Define a baseline: page views, unique visitors, search behavior using non-sensitive aggregate data, outbound Watch clicks, language, country where lawfully available, mobile/desktop.
 - Explain any consent requirements before adding advertising or tracking cookies. Avoid collecting personal search queries unnecessarily.
@@ -42,4 +43,4 @@ Decision confirmed by owner on 2026-11-05. **Planning only. Staging repo exclusi
 
 ## Next executable decision
 
-Owner chooses how to measure *aggregate visits* in **KinoLab-Test**. Select the analytics product and privacy settings, then implement and test tracking on staging only after approval.
+Owner runs the existing staging-only SQL migration documented in `KINOLAB_ANALYTICS_SETUP.md`; then verify the admin reader and anonymous denials before activating the **staging-only** counter in a separately approved release.
