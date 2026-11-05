@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { client } from "../services/backend";
+import { client, config } from "../services/backend";
 
 const words = {
   hy: {
@@ -45,6 +45,10 @@ export default function AnalyticsDashboard({ language }) {
   const [titles, setTitles] = useState({});
 
   useEffect(() => {
+    if (config.analyticsEnabled !== true) {
+      setStatus("disabled");
+      return;
+    }
     let active = true;
     setStatus("loading");
     async function load() {
@@ -109,7 +113,7 @@ export default function AnalyticsDashboard({ language }) {
         <button className="secondary" onClick={() => setVersion(x => x+1)}>{t.refresh}</button>
       </div>
     </div>
-    {status !== "ready" ? <p role="status">{status === "loading" ? t.loading : status === "missing" ? t.missing : status === "error" ? "Metrics unavailable / Վիճակագրությունն անհասանելի է" : ""}</p> : <>
+    {status !== "ready" ? <p role="status">{status === "loading" ? t.loading : ["missing", "disabled"].includes(status) ? t.missing : status === "error" ? "Metrics unavailable / Վիճակագրությունն անհասանելի է" : ""}</p> : <>
       <div className="stats">
         {[[t.views,total("page_view")],[t.opens,total("film_open")],[t.clicks,total("watch_click")]].map(([label,count]) =>
           <article key={label}><span>{label}</span><strong>{number(count)}</strong></article>)}
