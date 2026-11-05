@@ -21,6 +21,7 @@ import { playback } from "./components/Player";
 import { Brand, Icon, Icons } from "./components/Icons";
 import AI from "./components/AI";
 import ArchiveSearch from "./components/ArchiveSearch";
+import { recordMetric } from "./services/analytics";
 const navs = { home: "home", movies: "movies", tv: "tv", "my-list": "list" };
 export default function App() {
   const { language, setLanguage, t } = useLanguage(),
@@ -43,7 +44,9 @@ export default function App() {
   const underlay = useRef("home"),
     profilePanel = useRef(null),
     toastTimer = useRef(null),
-    request = useRef(0);
+    request = useRef(0),
+    countedPageLoad = useRef(false),
+    lastTrackedRoute = useRef(null);
   useEffect(() => {
     const seo = {
       hy: {
@@ -79,6 +82,23 @@ export default function App() {
   ].includes(route);
   const modal = /^(movie|watch)\//.test(route);
   const listing = route in navs ? route : underlay.current;
+  const mayCount = account.ready && (!account.session || account.cloudReady) && !account.admin;
+  useEffect(() => {
+    if (!mayCount) return;
+    if (!countedPageLoad.current) {
+      countedPageLoad.current = true;
+      recordMetric("page_view", "", language);
+    }
+    if (lastTrackedRoute.current === route) return;
+    lastTrackedRoute.current = route;
+    const match = /^(movie|watch)\/(.+)$/.exec(route);
+    if (match) {
+      try {
+        const key = decodeURIComponent(match[2]);
+        recordMetric(match[1] === "movie" ? "film_open" : "watch_click", key, language);
+      } catch { /* Invalid hash: do not send any metrics. */ }
+    }
+  }, [mayCount, route, language]);
   function navigate(next, replace = false) {
     if (next in navs) {
       underlay.current = next;
@@ -292,6 +312,7 @@ export default function App() {
     t,
     watchable,
     externalWatchUrl,
+    onOutbound: (movie) => { if (mayCount) recordMetric("watch_click", movie.id, language); },
     open: (movie, play = false) => navigate((play ? "watch/" : "movie/") + encodeURIComponent(movie.id)),
   };
   const navigation = (mobile) => (
@@ -498,7 +519,8 @@ export default function App() {
                 </p>
                 <div className="actions">
                   {featured && externalWatchUrl(featured) && !watchable(featured) ? (
-                    <a className="btn primary" href={externalWatchUrl(featured)} target="_blank" rel="noopener noreferrer" aria-label={`${t("watch")} — external player`}>
+                    <a className="btn primary" href={externalWatchUrl(featured)} target="_blank" rel="noopener noreferrer" aria-label={`${t("watch")} — external player`}
+                      onClick={() => { if (mayCount) recordMetric("watch_click", featured.id, language); }}> 
                       <Icon name="play" /><span>{t("watch")}</span>
                     </a>
                   ) : (
@@ -728,6 +750,7 @@ export default function App() {
           toggle={toggle}
           saved={Boolean(current && account.list.has(current.id))}
           watchable={watchable}
+          onOutbound={(movie) => { if (mayCount) recordMetric("watch_click", movie.id, language); }}
           onProgress={() => setProgress((value) => value + 1)}
         />
       )}
