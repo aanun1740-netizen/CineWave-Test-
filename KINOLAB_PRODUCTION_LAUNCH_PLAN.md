@@ -24,6 +24,12 @@ The current application is purpose-built for staging:
 
 **Never simply change these constants in the staging repository.** A dedicated, approved production configuration and build/deploy process must be prepared separately.
 
+## Brand decision (owner-confirmed, 2026-11-05)
+
+- **Keep the product name KinoLab**, including the existing KinoLab logo and public-facing brand.
+- This is a naming decision only. **No domain has been selected or purchased** and no production website is authorized for changes.
+- Check domain availability, pricing, and relevant trademark/brand rights before choosing a domain. Existing similar film site name usage is a possible confusion risk, not a verified legal finding.
+
 ## Phase A — choose and verify domain (no purchase yet)
 
 1. Decide preferred final domain spelling and top-level domain (.com, .tv or another extension).
