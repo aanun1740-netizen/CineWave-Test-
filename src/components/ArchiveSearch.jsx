@@ -9,6 +9,7 @@ export default function ArchiveSearch({query,language}) {
  }[language]||{};
  useEffect(()=>{
   let active=true;
+  const controller=new AbortController();
   const term=query?.trim()||"";
   if(term.length<2){setItems([]);setState("idle");return;}
   setState("loading");
@@ -16,13 +17,13 @@ export default function ArchiveSearch({query,language}) {
    try {
     const safe=term.replace(/[%*_,()]/g," ").trim().slice(0,100);
     const url=`${config.url}/rest/v1/kinolab_title_archive?select=source_id,title_ru&title_ru=ilike.*${encodeURIComponent(safe)}*&order=title_ru.asc&limit=40`;
-    const response=await backendFetch(url,{headers:{apikey:config.key,Authorization:`Bearer ${config.key}`}});
+    const response=await backendFetch(url,{headers:{apikey:config.key,Authorization:`Bearer ${config.key}`},signal:controller.signal});
     if(!response.ok) throw Error();
     const data=await response.json();
     if(active){setItems(Array.isArray(data)?data:[]);setState("ready");}
    }catch{if(active){setItems([]);setState("error");}}
   },350);
-  return()=>{active=false;clearTimeout(timeout);};
+  return()=>{active=false;clearTimeout(timeout);controller.abort();};
  },[query]);
  if(!query?.trim()||query.trim().length<2)return null;
  return <section className="section archive-search-section" aria-label={labels.heading}>
