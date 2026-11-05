@@ -610,3 +610,18 @@ body.cinewave-site[data-theme="light"] .series-episode-link:focus-visible {
   body.cinewave-site .series-episode-section {padding: 12px;}
   body.cinewave-site .series-episode-grid {grid-template-columns: repeat(2,minmax(0,1fr));}
 }
+
+/* Staging analytics disclosure: visible and keyboard-accessible in both themes. */
+body.cinewave-site footer .privacy-link {
+  display: inline-block;
+  color: #d4f458;
+  font-size: .82rem;
+  line-height: 1.5;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+body.cinewave-site footer .privacy-link:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+body.cinewave-site[data-theme="light"] footer .privacy-link { color: #536b1b; }
