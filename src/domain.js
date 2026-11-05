@@ -26,15 +26,17 @@ export function filterMovies(
     language = "hy",
   } = {},
 ) {
-  const q = query.trim().toLocaleLowerCase();
+  const normalize = (value) => String(value ?? "").normalize("NFC").toLocaleLowerCase();
+  const q = normalize(query.trim());
   return movies.filter(
     (movie) =>
       (genre === "All" || movie.genres.includes(genre)) &&
       (!q ||
         [
-          ...Object.values(movie.titles),
+          ...Object.values(movie.titles || {}),
+          ...Object.values(movie.descriptions || {}),
           ...movie.genres.flatMap((g) => [g, genreLabel(g, language)]),
-        ].some((text) => String(text).toLocaleLowerCase().includes(q))) &&
+        ].some((text) => normalize(text).includes(q))) &&
       (route !== "my-list" || list.has(movie.id)) &&
       (route !== "movies" || movie.kind === "Movie") &&
       (route !== "tv" || movie.kind === "TV Show"),
