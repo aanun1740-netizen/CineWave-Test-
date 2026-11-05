@@ -236,9 +236,9 @@ export default function QuickExternalMovie({language}) {
       <div className="panel-head"><h2>{t.list} ({externalMovies.length})</h2>
       <button type="button" className="secondary" onClick={refreshList} disabled={listLoading||busy}>{t.refresh}</button></div>
       {externalMovies.length===0 && !listLoading && <p className="hint">{t.empty}</p>}
-      <div className="table-wrap"><table style={{minWidth:550}}><thead><tr><th>ID</th><th>{t.title}</th><th>URL</th><th>Status</th><th>Actions</th></tr></thead><tbody>
+      <div className="table-wrap"><table style={{minWidth:550}}><thead><tr><th>ID</th><th>{t.title}</th><th>{t.type}</th><th>URL</th><th>Status</th><th>Actions</th></tr></thead><tbody>
         {externalMovies.map(row=><tr key={row.id}>
-          <td>{row.id}</td><td>{row.title_hy||row.title_ru||row.title_en}</td>
+          <td>{row.id}</td><td>{row.title_hy||row.title_ru||row.title_en}</td><td>{row.media_type==="tv"?t.series:t.movie}</td>
           <td><a href={row.external_watch_url} target="_blank" rel="noopener noreferrer">{row.external_watch_url?.split("/").slice(-1)[0]}</a></td>
           <td>{row.is_published?"Published":"Hidden"}</td>
           <td><div className="row-actions">
