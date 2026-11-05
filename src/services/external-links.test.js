@@ -1,36 +1,32 @@
 import { describe, expect, it } from "vitest";
-import {
-  allowedExternalEpisode,
-  allowedExternalMovie,
-  allowedExternalWatch,
-} from "./external-links";
+import { allowedExternalEpisode, allowedExternalMovie, allowedExternalWatch } from "./external-links";
 
-describe("outbound watch URL restrictions", () => {
-  it("accepts only the named NextEmbed and Variyt movie formats", () => {
-    expect(allowedExternalMovie("https://api.variyt.ws/embed/movie/88585")).toBe(true);
-    expect(allowedExternalMovie("https://api.nextembed.ws/embed/movie/92733")).toBe(true);
-    expect(allowedExternalWatch("https://api.variyt.ws/embed/movie/88585")).toBe(true);
-    expect(allowedExternalWatch("https://api.nextembed.ws/embed/tv/1399/1/2")).toBe(true);
-    expect(allowedExternalWatch("https://api.nextembed.ws/embed/tv/1399")).toBe(true);
+describe("KinoLab outbound web links", () => {
+  it.each([
+    "https://api.variyt.ws/embed/movie/88585",
+    "https://api.nextembed.ws/embed/movie/92733",
+    "https://example.com/watch/film?id=123",
+    "http://example.org/cinema/my-movie",
+    "https://www.youtube.com/watch?v=abcdefghijk",
+  ])("accepts ordinary movie website URLs: %s", (url) => {
+    expect(allowedExternalMovie(url)).toBe(true);
+    expect(allowedExternalWatch(url)).toBe(true);
   });
-  it("keeps TV episodes limited to NextEmbed until separately verified", () => {
+  it("keeps the existing NextEmbed-only episode helper", () => {
     expect(allowedExternalEpisode("https://api.nextembed.ws/embed/tv/1399/1/2")).toBe(true);
     expect(allowedExternalEpisode("https://api.variyt.ws/embed/tv/1399/1/2")).toBe(false);
+    expect(allowedExternalEpisode("https://example.com/tv/episode")).toBe(false);
   });
   it.each([
-    "http://api.variyt.ws/embed/movie/88585",
-    "https://api.variyt.ws.evil.example/embed/movie/88585",
-    "https://user@api.variyt.ws/embed/movie/88585",
-    "https://api.variyt.ws/embed/movie/88585?redirect=https://evil.example",
-    "https://api.variyt.ws/embed/movie/88585#fragment",
-    "https://api.variyt.ws:443/embed/movie/88585",
-    "https://api.variyt.ws/embed/tv/88585/1/1",
-    "https://api.variyt.ws/other/movie/88585",
-    "https://api.variyt.ws/embed/movie/not-a-number",
     "javascript:alert(1)",
+    "data:text/html,<script>alert(1)</script>",
+    "file:///etc/passwd",
+    "ftp://example.com/film",
+    "https://user:pass@example.com/video",
+    "https://example.com/film\\nmalicious",
     "",
     null,
-  ])("rejects unsupported or tampered URLs: %s", (url) => {
+  ])("rejects unsafe or malformed outbound links: %s", (url) => {
     expect(allowedExternalWatch(url)).toBe(false);
   });
 });
