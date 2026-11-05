@@ -1,4 +1,5 @@
 import "../catalog.js";
+import { allowedExternalWatch } from "./services/external-links";
 import "../availability.js";
 import "../model.js";
 export const POSTER_FALLBACK = `${import.meta.env.BASE_URL}assets/poster-fallback.svg`;
@@ -73,7 +74,7 @@ export function routeFromHash(hash = location.hash) {
 export function externalWatchUrl(movie) {
   if (!movie || approvedPlayback(movie)) return null;
   const publishedExternal = String(movie.externalWatch || "");
-  if (/^https:\/\/api\.nextembed\.ws\/embed\/(?:movie|tv)\/\d+(?:\/\d+\/\d+)?\/?$/.test(publishedExternal)) return publishedExternal;
+  if (allowedExternalWatch(publishedExternal)) return publishedExternal;
   const official = String(movie.officialWatch || "");
   if (/^https:\/\/(?:www\.)?netflix\.com\/title\/\d+\/?$/.test(official)) return official;
   if (movie.source !== "supabase" || movie.approval?.license_verified !== true || movie.approval?.commercial_reuse_verified !== true) return null;
