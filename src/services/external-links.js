@@ -13,4 +13,5 @@ export function allowedExternalWatch(raw) {
 }
 
 export const allowedExternalMovie = allowedExternalWatch;
-export const allowedExternalEpisode = allowedExternalWatch;
+export const allowedExternalEpisode = (url) =>
+  typeof url === "string" && /^https:\/\/api\.nextembed\.ws\/embed\/tv\/\d+\/[1-9]\d*\/[1-9]\d*\/?$/.test(url);
