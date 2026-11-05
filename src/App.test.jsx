@@ -257,15 +257,31 @@ describe("React storefront", () => {
     await user.click(within(dialog).getByRole("button", { name: "Փակել" }));
     expect(location.hash).toBe("#/my-list");
   });
-  it("renders recoverable catalog errors and retries safely", async () => {
-    mocks.backendFetch.mockRejectedValueOnce(Error("offline"));
+  it("shows external films even when the legacy movie or metadata API is unavailable", async () => {
+    const row = {
+      id: 99, title_en: "Public Film", title_hy: "Հանրային ֆիլմ",
+      genre_names: ["Drama"], media_type: "movie",
+      external_watch_url: "https://example.com/film/99", is_published: true,
+    };
+    mocks.backendFetch.mockImplementation(async (url) => {
+      if (String(url).includes("kinolab_external_catalog"))
+        return { ok: true, json: async () => [row] };
+      throw Error("temporarily unavailable");
+    });
+    render(<App />);
+    await waitFor(() =>
+      expect(document.querySelector('[data-id="catalog:external:99"]')).toBeTruthy());
+    expect(screen.queryByText("Չհաջողվեց բեռնել հավաքածուն։ Փորձեք կրկին։")).toBeNull();
+  });
+
+  it("renders recoverable catalog errors only when all sources fail and retries safely", async () => {
+    mocks.backendFetch.mockRejectedValue(Error("offline"));
     const user = userEvent.setup();
     render(<App />);
     await screen.findByText("Չհաջողվեց բեռնել հավաքածուն։ Փորձեք կրկին։");
+    mocks.backendFetch.mockResolvedValue({ ok: true, json: async () => films });
     await user.click(screen.getByRole("button", { name: "Փորձել կրկին" }));
     await screen.findAllByText("Արևի պատմություն");
-    // Both attempts start all three independent catalog requests concurrently.
-    // Even if the first request fails, the two other requests have already begun.
     expect(mocks.backendFetch).toHaveBeenCalledTimes(6);
     expect(mocks.backendFetch).toHaveBeenCalledWith(
       expect.stringContaining("/kinolab_external_catalog?"),
