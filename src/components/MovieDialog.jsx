@@ -42,6 +42,7 @@ export default function MovieDialog({
   t,
   close,
   onWatch,
+  onOutbound,
   toggle,
   saved,
   watchable,
@@ -145,7 +146,8 @@ export default function MovieDialog({
                 {movie.episodes.map(item=>(
                   <a key={item.season+":"+item.episode}
                     href={item.url} target="_blank" rel="noopener noreferrer"
-                    className="series-episode-link">
+                    className="series-episode-link"
+                    onClick={() => onOutbound?.(movie)}>
                     {({hy:"Սեզոն",ru:"Сезон",en:"Season"}[language])} {item.season}
                     {" · "}
                     {({hy:"Սերիա",ru:"Серия",en:"Episode"}[language])} {item.episode}
@@ -158,7 +160,8 @@ export default function MovieDialog({
             <div className="detail-actions">
               {externalWatch && !watch && (
                 <div className="movielab-external-watch">
-                  <a className="btn primary" href={externalWatch} target="_blank" rel="noopener noreferrer">
+                  <a className="btn primary" href={externalWatch} target="_blank" rel="noopener noreferrer"
+                    onClick={() => onOutbound?.(movie)}>
                     {({hy:"Դիտել ֆիլմը",ru:"Смотреть фильм",en:"Watch movie"}[language])}
                   </a>
                   <span className="movielab-external-disclosure">{({hy:"Բացվում է արտաքին նվագարկիչում · KinoLab-ը մնում է բաց",ru:"Откроется внешний плеер · KinoLab останется открытым",en:"Opens an external player · KinoLab stays open"}[language])}</span>
