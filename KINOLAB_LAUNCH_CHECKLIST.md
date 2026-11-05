@@ -2,6 +2,12 @@
 
 Scope: `aanun1740-netizen/CineWave-Test-` only. Do not change the production CineWave repository or Supabase project during staging verification.
 
+## Before production promotion (domain not yet purchased)
+- [ ] Run the read-only SQL checks in `supabase/audits/staging_prelaunch_readonly.sql` and review counts/security flags.
+- [ ] Export local CSV backups of the staging external catalog and legacy movies table; separately retain Storage poster/image bytes.
+- [ ] Follow `KINOLAB_PRELAUNCH_HANDOFF.md` for the safe staging-to-production sequence.
+- [ ] Do not change the production repo/database or remove staging `noindex` without separate approval.
+
 ## Deployment gates (all required)
 - [ ] GitHub Actions `.github/workflows/pages.yml` build succeeds: npm test, npm run build and npm run test:e2e.
 - [ ] Publish is explicitly approved via workflow_dispatch on main, with publish=true, matching confirm_repository, and exact full latest approved SHA.
