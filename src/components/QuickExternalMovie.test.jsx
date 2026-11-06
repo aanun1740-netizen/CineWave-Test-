@@ -5,6 +5,7 @@ import userEvent from "@testing-library/user-event";
 const mocks = vi.hoisted(() => ({
   rows: [],
   savedPayload: null,
+  duplicate: false,
 }));
 vi.mock("../services/backend", () => ({
   client: {
@@ -12,6 +13,12 @@ vi.mock("../services/backend", () => ({
       select: () => ({
         order: () => ({
           limit: async () => ({ data: mocks.rows, error: null }),
+        }),
+        eq: () => ({
+          maybeSingle: async () => ({
+            data: mocks.rows.find(row => row.external_watch_url === mocks.savedPayload?.external_watch_url) || null,
+            error: null,
+          }),
         }),
       }),
       update: (payload) => {
@@ -25,7 +32,9 @@ vi.mock("../services/backend", () => ({
       insert: (payload) => {
         mocks.savedPayload = payload;
         return {
-          select: async () => ({ data: [{ id: 2 }], error: null }),
+          select: async () => mocks.duplicate
+            ? ({ data: null, error: { code:"23505", message:"duplicate key" } })
+            : ({ data: [{ id: 2 }], error: null }),
         };
       },
     }),
@@ -36,6 +45,7 @@ import QuickExternalMovie from "./QuickExternalMovie";
 beforeEach(() => {
   mocks.rows = [];
   mocks.savedPayload = null;
+  mocks.duplicate = false;
   Element.prototype.scrollIntoView = vi.fn();
 });
 
@@ -121,6 +131,31 @@ describe("Quick add external movie release year", () => {
     expect(mocks.savedPayload).toBeNull();
     expect(screen.getByText(/Սերիաների հղումները պետք է լինեն/)).toBeTruthy();
   });
+  it("identifies an existing movie on duplicate URL and only edits on explicit action", async () => {
+    mocks.duplicate = true;
+    mocks.rows = [{
+      id: 78, title_en:"Previous film", title_ru:"Существующий фильм",
+      release_date:"2017-01-01", genre_names:["Action"], media_type:"movie",
+      is_published:true, terms_confirmed:true,
+      external_watch_url:"https://api.embess.ws/embed/movie/78",
+    }];
+    const user = userEvent.setup();
+    render(<QuickExternalMovie language="en" />);
+    const form = document.querySelector(".quick-external form");
+    fireEvent.change(form.elements.namedItem("title_en"), {target:{value:"Guardians of the Galaxy Vol. 2"}});
+    fireEvent.change(form.elements.namedItem("year"), {target:{value:"2017"}});
+    fireEvent.change(form.elements.namedItem("external_watch_url"), {target:{value:"https://api.embess.ws/embed/movie/78"}});
+    form.elements.namedItem("terms_confirmed").checked = true;
+    fireEvent.submit(form);
+    await screen.findByText("A movie using this link already exists.");
+    expect(screen.getByText(/This link belongs to an existing entry:/)).toBeTruthy();
+    expect(screen.getByRole("button", {name:"Edit existing film"})).toBeTruthy();
+    expect(form.elements.namedItem("title_en").value).toBe("Guardians of the Galaxy Vol. 2");
+    await user.click(screen.getByRole("button", {name:"Edit existing film"}));
+    expect(form.elements.namedItem("title_en").value).toBe("Previous film");
+    expect(screen.getByRole("button", {name:"Save changes"})).toBeTruthy();
+  });
+
   it("keeps a pre-existing full date when editing without changing its year", async () => {
     mocks.rows = [{
       id: 1,
