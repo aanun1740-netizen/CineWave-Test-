@@ -32,6 +32,7 @@ export default function QuickExternalMovie({language}) {
   const [externalMovies,setExternalMovies]=useState([]);
   const [listLoading,setListLoading]=useState(false);
   const [editingRow,setEditingRow]=useState(null);
+  const [duplicateRow,setDuplicateRow]=useState(null);
   const [mediaType,setMediaType]=useState("movie");
   const formRef=useRef(null);
   async function refreshList() {
@@ -50,6 +51,7 @@ export default function QuickExternalMovie({language}) {
     formRef.current?.reset();
     setPosterUrl("");
     setEditingRow(null);
+    setDuplicateRow(null);
     setMediaType("movie");
   }
   function beginEdit(row) {
@@ -68,6 +70,7 @@ export default function QuickExternalMovie({language}) {
     setMediaType(type);
     form.elements.namedItem("episode_urls").value=Array.isArray(row.episode_links) ? row.episode_links.map(item=>item.url).filter(url=>url && url!==row.external_watch_url).join("\n") : "";
     setPosterUrl(row.poster_path||"");
+    setDuplicateRow(null);
     setEditingRow({id:row.id,is_published:row.is_published,release_date:row.release_date});
     setNotice("");
     form.scrollIntoView({behavior:"smooth",block:"start"});
@@ -159,7 +162,7 @@ export default function QuickExternalMovie({language}) {
     // storage placeholder; editing an unchanged year preserves the old date.
     const original=editingRow?.release_date||"";
     const date=original.startsWith(String(year)+"-") ? original : year+"-01-01";
-    setBusy(true);setNotice(t.saving);
+    setBusy(true);setDuplicateRow(null);setNotice(t.saving);
     try {
       const payload={
         title_en:String(v.title_en||"").trim(),
@@ -182,6 +185,15 @@ export default function QuickExternalMovie({language}) {
         ? await client.from("kinolab_external_catalog").update(payload).eq("id",editingRow.id).select("id")
         : await client.from("kinolab_external_catalog").insert(payload).select("id");
       if(result.error) {
+        if(result.error.code==="23505" && !editingRow) {
+          // The link is unique. Never overwrite another film automatically:
+          // a user may have entered a different film with an already-used URL.
+          const { data: existing, error: lookupError } = await client
+            .from("kinolab_external_catalog").select("*")
+            .eq("external_watch_url", url).maybeSingle();
+          if(!lookupError && existing) setDuplicateRow(existing);
+          throw Error(t.duplicate);
+        }
         if(result.error.code==="23505") throw Error(t.duplicate);
         throw result.error;
       }
@@ -196,6 +208,14 @@ export default function QuickExternalMovie({language}) {
     <h2>{t.heading}</h2><p className="hint">{t.intro}</p>
     {editingRow && <p className="hint" role="status">{t.editing} ID {editingRow.id}</p>}
     {notice && <p className="hint" role="alert" aria-live="polite" style={{color:"#f4b77e",padding:"10px 0"}}>{notice}</p>}
+    {duplicateRow && !editingRow && <div className="panel" role="status" style={{padding:14,marginBottom:12}}>
+      <strong>{({hy:"Այս հղումն արդեն օգտագործվում է՝",ru:"Эта ссылка уже используется:",en:"This link belongs to an existing entry:"}[language])}</strong>
+      <p>{duplicateRow.title_en || duplicateRow.title_ru || duplicateRow.title_hy} (ID {duplicateRow.id})</p>
+      <p className="hint">{({hy:"Ստուգիր՝ սա նույն ֆիլմն է՞։ Եթե այլ ֆիլմ է, ուղղիր դիտման հղումը։ Եթե նույնն է, խմբագրիր եղած գրառումը՝ կրկնօրինակ չստեղծելով։",ru:"Проверьте, тот ли это фильм. Для другого фильма исправьте ссылку. Для того же фильма отредактируйте существующую запись.",en:"Check whether this is the same film. If not, correct the Watch URL. If yes, edit the existing record instead of creating a duplicate."}[language])}</p>
+      <button className="secondary" type="button" disabled={busy||uploading} onClick={()=>beginEdit(duplicateRow)}>
+        {({hy:"Բացել գոյություն ունեցող ֆիլմը խմբագրման համար",ru:"Редактировать существующий фильм",en:"Edit existing film"}[language])}
+      </button>
+    </div>}
     <form ref={formRef} onSubmit={submit} onInvalidCapture={(e)=>{const name=e.target.closest("label")?.innerText?.trim()||e.target.name||"field";setNotice(({hy:"Լրացրու կամ ուղղիր պարտադիր դաշտը՝ ",ru:"Заполните или исправьте поле: ",en:"Complete or correct this field: "}[language])+name.slice(0,85));}}>
       <div className="form-grid">
         <label>{t.type}
