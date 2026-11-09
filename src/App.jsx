@@ -557,6 +557,13 @@ export default function App() {
           </>
         ) : (
           <>
+            {account.ready && !account.session && (
+              <div className="guest-film-status" aria-live="polite">
+                <span>{({hy:"Անվճար ֆիլմերի ընտրություն",ru:"Бесплатные фильмы",en:"Free film choices"}[language])}:</span>
+                <strong>{guestFilms.length} / {FREE_GUEST_FILMS}</strong>
+                <span>{({hy:"Ամբողջ կատալոգը բաց է․ գրանցումն անվճար է",ru:"Каталог доступен всем · регистрация бесплатная",en:"Browse every title · registration is free"}[language])}</span>
+              </div>
+            )}
             <section className="hero" aria-labelledby="heroTitle">
               {featured && (
                 <img
