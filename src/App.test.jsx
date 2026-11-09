@@ -174,6 +174,43 @@ describe("React storefront", () => {
     expect(location.hash).toBe("#/register");
   });
 
+  it("blocks a sixth film from its detail view while keeping the title readable", async () => {
+    localStorage.setItem("kinolab:guest-films-v1",JSON.stringify([
+      "catalog:external:1","catalog:external:2","catalog:external:3",
+      "catalog:external:4","catalog:external:5",
+    ]));
+    const film={
+      id:6, title_en:"Sixth movie",title_hy:"Վեցերորդ ֆիլմ",
+      genre_names:["Drama"],release_date:"2026-01-01",
+      is_published:true,media_type:"movie",
+      external_watch_url:"https://films.example.org/watch/6",
+    };
+    mocks.backendFetch.mockImplementation(async url=>({
+      ok:true,json:async()=>String(url).includes("kinolab_external_catalog")?[film]:[],
+    }));
+    render(<App />);
+    await waitFor(()=>expect(document.querySelector('[data-id="catalog:external:6"]')).toBeTruthy());
+    fireEvent.click(document.querySelector('[data-id="catalog:external:6"]'));
+    const details=await screen.findByRole("dialog",{name:"Վեցերորդ ֆիլմ"});
+    expect(within(details).getByText("Վեցերորդ ֆիլմ")).toBeTruthy();
+    expect(within(details).queryByRole("link",{name:"Դիտել ֆիլմը"})).toBeNull();
+    fireEvent.click(within(details).getByRole("button",{name:"Դիտել ֆիլմը"}));
+    expect(screen.getByRole("dialog",{name:"Քո 5 անվճար ֆիլմերն օգտագործված են"})).toBeTruthy();
+    expect(JSON.parse(localStorage.getItem("kinolab:guest-films-v1"))).toHaveLength(5);
+  });
+
+  it("does not start direct internal video playback through a pasted hash after five guest films", async () => {
+    localStorage.setItem("kinolab:guest-films-v1",JSON.stringify([
+      "catalog:external:1","catalog:external:2","catalog:external:3",
+      "catalog:external:4","catalog:external:5",
+    ]));
+    history.replaceState(null,"","#/watch/catalog%3A1");
+    render(<App />);
+    expect(await screen.findByRole("dialog",{name:"Քո 5 անվճար ֆիլմերն օգտագործված են"})).toBeTruthy();
+    expect(location.hash).not.toContain("#/watch/");
+    expect(document.querySelector(".modal video")).toBeNull();
+  });
+
   it("does not apply the guest limit to signed-in members", async () => {
     localStorage.setItem("kinolab:guest-films-v1",JSON.stringify([
       "catalog:external:11","catalog:external:12","catalog:external:13",
