@@ -169,7 +169,7 @@ export default function MovieDialog({
             <div className="detail-actions">
               {externalWatch && !watch && (
                 <div className="movielab-external-watch">
-                  guestLocked?.(movie) ? (
+                  {guestLocked?.(movie) ? (
                     <button className="btn primary" type="button" onClick={() => onOutbound?.(null,movie)}>
                       {({hy:"Դիտել ֆիլմը",ru:"Смотреть фильм",en:"Watch movie"}[language])}
                     </button>
@@ -178,7 +178,7 @@ export default function MovieDialog({
                       onClick={(e) => onOutbound?.(e,movie)}>
                       {({hy:"Դիտել ֆիլմը",ru:"Смотреть фильм",en:"Watch movie"}[language])}
                     </a>
-                  )
+                  )}
                   <span className="movielab-external-disclosure">{({hy:"Բացվում է արտաքին նվագարկիչում · KinoLab-ը մնում է բաց",ru:"Откроется внешний плеер · KinoLab останется открытым",en:"Opens an external player · KinoLab stays open"}[language])}</span>
                 </div>
               )}
