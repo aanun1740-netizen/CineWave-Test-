@@ -23,6 +23,7 @@ export default function MovieRow({
   t,
   watchable,
   externalWatchUrl,
+  guestLocked,
   onOutbound,
   open,
   actions,
@@ -139,13 +140,21 @@ export default function MovieRow({
                   {t(available ? "available" : "catalogOnly")}
                 </span>
                 {official ? (
-                  <a className="play-overlay" href={official} target="_blank" rel="noopener noreferrer"
-                    aria-label={`${info.title} — ${t("watch")} (external player)`}
-                    onClick={(e) => { e.stopPropagation(); onOutbound?.(movie); }}
-                    onKeyDown={(e) => e.stopPropagation()}>
-                    <Icon name="play" />
-                    {t("watch")}
-                  </a>
+                  guestLocked?.(movie) ? (
+                    <button className="play-overlay" type="button"
+                      aria-label={`${info.title} — ${t("watch")} (sign in)`}
+                      onClick={(e) => { e.stopPropagation(); onOutbound?.(null, movie); }}
+                      onKeyDown={(e) => e.stopPropagation()}>
+                      <Icon name="play" />{t("watch")}
+                    </button>
+                  ) : (
+                    <a className="play-overlay" href={official} target="_blank" rel="noopener noreferrer"
+                      aria-label={`${info.title} — ${t("watch")} (external player)`}
+                      onClick={(e) => { e.stopPropagation(); onOutbound?.(e, movie); }}
+                      onKeyDown={(e) => e.stopPropagation()}>
+                      <Icon name="play" />{t("watch")}
+                    </a>
+                  )
                 ) : available ? (
                   <button className="play-overlay" type="button" onClick={(e) => {e.stopPropagation(); open(movie, true);}}
                     onKeyDown={(e) => e.stopPropagation()}>
