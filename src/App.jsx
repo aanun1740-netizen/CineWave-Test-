@@ -22,6 +22,8 @@ import { Brand, Icon, Icons } from "./components/Icons";
 import AI from "./components/AI";
 import ArchiveSearch from "./components/ArchiveSearch";
 import { recordMetric } from "./services/analytics";
+import { FREE_GUEST_FILMS, GUEST_FILMS_KEY, readGuestFilms, attemptGuestFilm, saveGuestFilms } from "./guest-watch";
+import GuestSignupPrompt from "./components/GuestSignupPrompt";
 const navs = { home: "home", movies: "movies", tv: "tv", "my-list": "list" };
 export default function App() {
   const { language, setLanguage, t } = useLanguage(),
@@ -40,6 +42,8 @@ export default function App() {
       catch { return "dark"; }
     }),
     [toast, setToast] = useState(""),
+    [guestFilms, setGuestFilms] = useState(readGuestFilms),
+    [guestPrompt, setGuestPrompt] = useState(false),
     [, setProgress] = useState(0);
   const underlay = useRef("home"),
     profilePanel = useRef(null),
@@ -83,6 +87,17 @@ export default function App() {
   const modal = /^(movie|watch)\//.test(route);
   const listing = route in navs ? route : underlay.current;
   const mayCount = account.ready && (!account.session || account.cloudReady) && !account.admin;
+  useEffect(() => {
+    const sync = (event) => {
+      if (!event || event.key === GUEST_FILMS_KEY) setGuestFilms(readGuestFilms());
+    };
+    window.addEventListener("storage", sync);
+    return () => window.removeEventListener("storage", sync);
+  }, []);
+  useEffect(() => {
+    // Once signed in, the guest registration prompt is no longer relevant.
+    if (account.session) setGuestPrompt(false);
+  }, [account.session]);
   useEffect(() => {
     if (!mayCount) return;
     if (!countedPageLoad.current) {
@@ -308,15 +323,59 @@ export default function App() {
     history.replaceState(null, "", "#/movies");
     setRoute("movies");
   }
+  // This is a voluntary registration prompt, not access control to the
+  // public catalog. External provider URLs and their behavior stay unchanged.
+  function guestLocked(movie) {
+    if (account.session) return false;
+    return !account.ready || (
+      !guestFilms.includes(movie?.id) && guestFilms.length >= FREE_GUEST_FILMS
+    );
+  }
+  function allowWatch(movie) {
+    if (!movie || !account.ready) {
+      notice(({hy:"Խնդրում ենք սպասել, մինչև ստուգվի հաշվի կարգավիճակը։",ru:"Подождите, пока проверяется аккаунт.",en:"Please wait while your account is checked."}[language]));
+      return false;
+    }
+    if (account.session) return true;
+    // Read storage on each click as well as on the storage event, so that
+    // two tabs sharing a browser do not accidentally issue a sixth choice.
+    const stored = readGuestFilms();
+    const seen = stored.length >= guestFilms.length ? stored : guestFilms;
+    const result = attemptGuestFilm(movie.id, seen);
+    setGuestFilms(result.films);
+    if (!result.allowed) {
+      setGuestPrompt(true);
+      // Avoid two simultaneous modal dialogs if the Watch button is inside
+      // the film details panel.
+      if (modal) navigate(underlay.current, true);
+      return false;
+    }
+    saveGuestFilms(result.films);
+    return true;
+  }
+  function openWatch(movie, route = false) {
+    if (!allowWatch(movie)) return false;
+    if (mayCount) recordMetric("watch_click", movie.id, language);
+    if (route) navigate("watch/" + encodeURIComponent(movie.id));
+    return true;
+  }
+  function outboundClick(event, movie) {
+    if (!openWatch(movie)) {
+      event?.preventDefault();
+      return false;
+    }
+    return true;
+  }
   const rowProps = {
     language,
     t,
     watchable,
     externalWatchUrl,
-    onOutbound: (movie) => { if (mayCount) recordMetric("watch_click", movie.id, language); },
+    guestLocked,
+    onOutbound: outboundClick,
     open: (movie, play = false) => {
-      if (play && mayCount) recordMetric("watch_click", movie.id, language);
-      navigate((play ? "watch/" : "movie/") + encodeURIComponent(movie.id));
+      if (play) openWatch(movie, true);
+      else navigate("movie/" + encodeURIComponent(movie.id));
     },
   };
   const navigation = (mobile) => (
@@ -523,15 +582,23 @@ export default function App() {
                 </p>
                 <div className="actions">
                   {featured && externalWatchUrl(featured) && !watchable(featured) ? (
-                    <a className="btn primary" href={externalWatchUrl(featured)} target="_blank" rel="noopener noreferrer" aria-label={`${t("watch")} — external player`}
-                      onClick={() => { if (mayCount) recordMetric("watch_click", featured.id, language); }}> 
-                      <Icon name="play" /><span>{t("watch")}</span>
-                    </a>
+                    guestLocked(featured) ? (
+                      <button type="button" className="btn primary"
+                        aria-label={`${t("watch")} — registration`}
+                        onClick={() => outboundClick(null, featured)}>
+                        <Icon name="play" /><span>{t("watch")}</span>
+                      </button>
+                    ) : (
+                      <a className="btn primary" href={externalWatchUrl(featured)} target="_blank" rel="noopener noreferrer"
+                        aria-label={`${t("watch")} — external player`} onClick={(e) => outboundClick(e, featured)}>
+                        <Icon name="play" /><span>{t("watch")}</span>
+                      </a>
+                    )
                   ) : (
                     <button className="btn primary" disabled={!featured}
                       onClick={() => {
-                        if (watchable(featured) && mayCount) recordMetric("watch_click", featured.id, language);
-                        navigate((watchable(featured) ? "watch/" : "movie/") + encodeURIComponent(featured.id));
+                        if (watchable(featured)) openWatch(featured, true);
+                        else navigate("movie/" + encodeURIComponent(featured.id));
                       }}>
                       <Icon name={featured && watchable(featured) ? "play" : "info"} />
                       <span>{t(featured && watchable(featured) ? "watch" : "details")}</span>
@@ -756,17 +823,19 @@ export default function App() {
           language={language}
           t={t}
           close={() => navigate(underlay.current, true)}
-          onWatch={() => {
-            if (current && mayCount) recordMetric("watch_click", current.id, language);
-            navigate("watch/" + encodeURIComponent(current.id));
-          }}
+          onWatch={() => openWatch(current, true)}
           toggle={toggle}
           saved={Boolean(current && account.list.has(current.id))}
           watchable={watchable}
-          onOutbound={(movie) => { if (mayCount) recordMetric("watch_click", movie.id, language); }}
+          guestLocked={guestLocked}
+          onOutbound={outboundClick}
           onProgress={() => setProgress((value) => value + 1)}
         />
       )}
+      {guestPrompt && <GuestSignupPrompt language={language}
+        onClose={() => setGuestPrompt(false)}
+        onRegister={() => { setGuestPrompt(false); navigate("register"); }}
+        onLogin={() => { setGuestPrompt(false); navigate("login"); }} />}
       <div className="toast" role="status" aria-live="polite">
         {toast}
       </div>
