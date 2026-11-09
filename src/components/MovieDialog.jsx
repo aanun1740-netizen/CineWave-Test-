@@ -43,6 +43,7 @@ export default function MovieDialog({
   close,
   onWatch,
   onOutbound,
+  guestLocked,
   toggle,
   saved,
   watchable,
@@ -144,14 +145,22 @@ export default function MovieDialog({
               <h3>{({hy:"Սեզոններ և սերիաներ",ru:"Сезоны и серии",en:"Seasons & episodes"}[language])}</h3>
               <div className="series-episode-grid">
                 {movie.episodes.map(item=>(
-                  <a key={item.season+":"+item.episode}
-                    href={item.url} target="_blank" rel="noopener noreferrer"
-                    className="series-episode-link"
-                    onClick={() => onOutbound?.(movie)}>
-                    {({hy:"Սեզոն",ru:"Сезон",en:"Season"}[language])} {item.season}
-                    {" · "}
-                    {({hy:"Սերիա",ru:"Серия",en:"Episode"}[language])} {item.episode}
-                  </a>
+                  guestLocked?.(movie) ? (
+                    <button key={item.season+":"+item.episode} type="button" className="series-episode-link"
+                      onClick={() => onOutbound?.(null,movie)}>
+                      {({hy:"Սեզոն",ru:"Сезон",en:"Season"}[language])} {item.season}
+                      {" · "}
+                      {({hy:"Սերիա",ru:"Серия",en:"Episode"}[language])} {item.episode}
+                    </button>
+                  ) : (
+                    <a key={item.season+":"+item.episode}
+                      href={item.url} target="_blank" rel="noopener noreferrer"
+                      className="series-episode-link" onClick={(e) => onOutbound?.(e,movie)}>
+                      {({hy:"Սեզոն",ru:"Сезон",en:"Season"}[language])} {item.season}
+                      {" · "}
+                      {({hy:"Սերիա",ru:"Серия",en:"Episode"}[language])} {item.episode}
+                    </a>
+                  )
                 ))}
               </div>
             </section>
@@ -160,10 +169,16 @@ export default function MovieDialog({
             <div className="detail-actions">
               {externalWatch && !watch && (
                 <div className="movielab-external-watch">
-                  <a className="btn primary" href={externalWatch} target="_blank" rel="noopener noreferrer"
-                    onClick={() => onOutbound?.(movie)}>
-                    {({hy:"Դիտել ֆիլմը",ru:"Смотреть фильм",en:"Watch movie"}[language])}
-                  </a>
+                  guestLocked?.(movie) ? (
+                    <button className="btn primary" type="button" onClick={() => onOutbound?.(null,movie)}>
+                      {({hy:"Դիտել ֆիլմը",ru:"Смотреть фильм",en:"Watch movie"}[language])}
+                    </button>
+                  ) : (
+                    <a className="btn primary" href={externalWatch} target="_blank" rel="noopener noreferrer"
+                      onClick={(e) => onOutbound?.(e,movie)}>
+                      {({hy:"Դիտել ֆիլմը",ru:"Смотреть фильм",en:"Watch movie"}[language])}
+                    </a>
+                  )
                   <span className="movielab-external-disclosure">{({hy:"Բացվում է արտաքին նվագարկիչում · KinoLab-ը մնում է բաց",ru:"Откроется внешний плеер · KinoLab останется открытым",en:"Opens an external player · KinoLab stays open"}[language])}</span>
                 </div>
               )}
