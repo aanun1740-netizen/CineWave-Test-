@@ -133,6 +133,78 @@ describe("React storefront", () => {
     await user.selectOptions(screen.getByRole("combobox"), "en");
     expect(screen.getByRole("link", { name: "Privacy & usage analytics" })).toBeTruthy();
   });
+  it("allows exactly five distinct external films for guests and prompts on a sixth", async () => {
+    const movies = Array.from({length:6},(_,index)=>({
+      id:index+1,
+      title_en:"Guest film "+(index+1),
+      title_hy:"Հյուրի ֆիլմ "+(index+1),
+      media_type:"movie",
+      genre_names:["Drama"],
+      release_date:"2026-01-01",
+      is_published:true,
+      external_watch_url:"https://films.example.org/watch/"+(index+1),
+    }));
+    mocks.backendFetch.mockImplementation(async url=>({
+      ok:true,
+      json:async()=>String(url).includes("kinolab_external_catalog") ? movies : [],
+    }));
+    render(<App />);
+    await waitFor(()=>expect(document.querySelector('[data-id="catalog:external:1"] a.play-overlay')).toBeTruthy());
+    for(let i=1;i<=5;i++){
+      const card=document.querySelector(`[data-id="catalog:external:${i}"]`);
+      const link=card.querySelector("a.play-overlay");
+      expect(link?.getAttribute("href")).toBe("https://films.example.org/watch/"+i);
+      fireEvent.click(link);
+      expect(JSON.parse(localStorage.getItem("kinolab:guest-films-v1"))).toHaveLength(i);
+    }
+    expect(document.querySelector('[data-id="catalog:external:6"] a.play-overlay')).toBeNull();
+    const blocked=document.querySelector('[data-id="catalog:external:6"] button.play-overlay');
+    expect(blocked).toBeTruthy();
+    fireEvent.click(blocked);
+    expect(screen.getByRole("dialog",{name:"Քո 5 անվճար ֆիլմերն օգտագործված են"})).toBeTruthy();
+    expect(JSON.parse(localStorage.getItem("kinolab:guest-films-v1"))).toHaveLength(5);
+    fireEvent.click(screen.getByRole("button",{name:"Շարունակել ուսումնասիրել կատալոգը"}));
+    // A previously selected film remains free to reopen.
+    const first=document.querySelector('[data-id="catalog:external:1"] a.play-overlay');
+    expect(first).toBeTruthy();
+    fireEvent.click(first);
+    expect(JSON.parse(localStorage.getItem("kinolab:guest-films-v1"))).toHaveLength(5);
+    fireEvent.click(blocked);
+    fireEvent.click(screen.getByRole("button",{name:"Գրանցվել անվճար"}));
+    expect(location.hash).toBe("#/register");
+  });
+
+  it("does not apply the guest limit to signed-in members", async () => {
+    localStorage.setItem("kinolab:guest-films-v1",JSON.stringify([
+      "catalog:external:11","catalog:external:12","catalog:external:13",
+      "catalog:external:14","catalog:external:15",
+    ]));
+    mocks.getSession.mockResolvedValue({data:{session:{
+      user:{id:"member-1",email:"member@example.invalid"},access_token:"stub"
+    }},error:null});
+    const profileQuery={
+      select:vi.fn(()=>profileQuery),
+      eq:vi.fn(()=>profileQuery),
+      maybeSingle:vi.fn(async()=>({data:{preferred_language:"hy"},error:null})),
+    };
+    const listQuery={
+      select:vi.fn(()=>listQuery),
+      eq:vi.fn(async()=>({data:[],error:null})),
+    };
+    mocks.from.mockImplementation(table => table==="profiles"?profileQuery:listQuery);
+    const film={id:16,title_en:"Sixth film",title_hy:"Վեցերորդ ֆիլմը",
+      external_watch_url:"https://films.example.org/watch/16",media_type:"movie",
+      is_published:true,genre_names:["Drama"],release_date:"2026-01-01"};
+    mocks.backendFetch.mockImplementation(async url=>({
+      ok:true,json:async()=>String(url).includes("kinolab_external_catalog")?[film]:[],
+    }));
+    render(<App />);
+    await waitFor(()=>expect(document.querySelector('[data-id="catalog:external:16"] a.play-overlay')).toBeTruthy());
+    fireEvent.click(document.querySelector('[data-id="catalog:external:16"] a.play-overlay'));
+    expect(screen.queryByRole("dialog",{name:"Քո 5 անվճար ֆիլմերն օգտագործված են"})).toBeNull();
+    expect(JSON.parse(localStorage.getItem("kinolab:guest-films-v1"))).toHaveLength(5);
+  });
+
   it("shows a published movie with any normal external website link, without an embedded player", async () => {
     const watchUrl="https://films.example.org/play/88585";
     const row={
