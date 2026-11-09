@@ -4,7 +4,7 @@ import { FREE_GUEST_FILMS } from "../guest-watch";
 const words = {
   hy: {
     headline: "Շարունակիր դիտել KinoLab-ում 🎬",
-    desc: "Քո 5 անվճար ֆիլմերի սահմանաչափը լրացել է։ Գրանցվիր անվճար և շարունակիր դիտել։",
+    desc: "Քո 5 անվճար ֆիլմերի սահմանաչափը լրացել է։ Գրանցվիր անվճար, շարունակիր դիտել և օգտվիր KinoLab AI-ից։",
     action: "Գրանցվել անվճար", login: "Արդեն ունե՞ս հաշիվ։ Մուտք գործիր",
     dismiss: "Շարունակել ուսումնասիրել կատալոգը",
     note: "Ֆիլմերի նկարագրությունները, որոնումը և թրեյլերները մնում են հասանելի առանց գրանցվելու։",
@@ -12,7 +12,7 @@ const words = {
   },
   ru: {
     headline: "Продолжай смотреть на KinoLab 🎬",
-    desc: "Лимит 5 бесплатных фильмов исчерпан. Зарегистрируйся бесплатно и продолжай смотреть.",
+    desc: "Лимит 5 бесплатных фильмов исчерпан. Зарегистрируйся бесплатно, продолжай смотреть и пользуйся KinoLab AI.",
     action: "Зарегистрироваться бесплатно", login: "Уже есть аккаунт? Войти",
     dismiss: "Продолжить изучать каталог",
     note: "Каталог, описания, поиск и трейлеры доступны без регистрации.",
@@ -20,7 +20,7 @@ const words = {
   },
   en: {
     headline: "Keep watching on KinoLab 🎬",
-    desc: "You've reached your 5 free movie limit. Sign up for free to keep watching.",
+    desc: "You've reached your 5 free movie limit. Sign up for free to keep watching and use KinoLab AI.",
     action: "Create a free account", login: "Already have an account? Sign in",
     dismiss: "Keep browsing the catalog",
     note: "You can still browse titles, descriptions, search and trailers without an account.",
