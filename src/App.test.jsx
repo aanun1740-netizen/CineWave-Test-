@@ -161,7 +161,7 @@ describe("React storefront", () => {
     const blocked=document.querySelector('[data-id="catalog:external:6"] button.play-overlay');
     expect(blocked).toBeTruthy();
     fireEvent.click(blocked);
-    expect(screen.getByRole("dialog",{name:"Քո 5 անվճար ֆիլմերն օգտագործված են"})).toBeTruthy();
+    expect(screen.getByRole("dialog",{name:"5 անվճար ֆիլմի սահմանաչափը լրացել է"})).toBeTruthy();
     expect(JSON.parse(localStorage.getItem("kinolab:guest-films-v1"))).toHaveLength(5);
     fireEvent.click(screen.getByRole("button",{name:"Շարունակել ուսումնասիրել կատալոգը"}));
     // A previously selected film remains free to reopen.
@@ -195,7 +195,7 @@ describe("React storefront", () => {
     expect(within(details).getByText("Վեցերորդ ֆիլմ")).toBeTruthy();
     expect(within(details).queryByRole("link",{name:"Դիտել ֆիլմը"})).toBeNull();
     fireEvent.click(within(details).getByRole("button",{name:"Դիտել ֆիլմը"}));
-    expect(screen.getByRole("dialog",{name:"Քո 5 անվճար ֆիլմերն օգտագործված են"})).toBeTruthy();
+    expect(screen.getByRole("dialog",{name:"5 անվճար ֆիլմի սահմանաչափը լրացել է"})).toBeTruthy();
     expect(JSON.parse(localStorage.getItem("kinolab:guest-films-v1"))).toHaveLength(5);
   });
 
@@ -206,7 +206,7 @@ describe("React storefront", () => {
     ]));
     history.replaceState(null,"","#/watch/catalog%3A1");
     render(<App />);
-    expect(await screen.findByRole("dialog",{name:"Քո 5 անվճար ֆիլմերն օգտագործված են"})).toBeTruthy();
+    expect(await screen.findByRole("dialog",{name:"5 անվճար ֆիլմի սահմանաչափը լրացել է"})).toBeTruthy();
     expect(location.hash).not.toContain("#/watch/");
     expect(document.querySelector(".modal video")).toBeNull();
   });
@@ -238,7 +238,7 @@ describe("React storefront", () => {
     render(<App />);
     await waitFor(()=>expect(document.querySelector('[data-id="catalog:external:16"] a.play-overlay')).toBeTruthy());
     fireEvent.click(document.querySelector('[data-id="catalog:external:16"] a.play-overlay'));
-    expect(screen.queryByRole("dialog",{name:"Քո 5 անվճար ֆիլմերն օգտագործված են"})).toBeNull();
+    expect(screen.queryByRole("dialog",{name:"5 անվճար ֆիլմի սահմանաչափը լրացել է"})).toBeNull();
     expect(JSON.parse(localStorage.getItem("kinolab:guest-films-v1"))).toHaveLength(5);
   });
 
