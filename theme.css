@@ -625,3 +625,86 @@ body.cinewave-site footer .privacy-link:focus-visible {
   outline-offset: 3px;
 }
 body.cinewave-site[data-theme="light"] footer .privacy-link { color: #536b1b; }
+
+/* KinoLab-Test guest registration invitation, shown after 5 distinct films. */
+body.cinewave-site .guest-gate-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 5000;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: rgba(12, 7, 20, .82);
+  overflow: auto;
+}
+body.cinewave-site .guest-gate-dialog {
+  position: relative;
+  width: min(100%, 510px);
+  max-height: calc(100dvh - 36px);
+  overflow-y: auto;
+  padding: clamp(24px, 5vw, 42px);
+  border: 1px solid #d4f45854;
+  border-radius: 22px;
+  background: #20152e;
+  box-shadow: 0 26px 90px #000a;
+  color: #f7f5f0;
+  text-align: center;
+}
+body.cinewave-site .guest-gate-brand {
+  color: #d4f458;
+  font-size: .82rem;
+  letter-spacing: .12em;
+  font-weight: 750;
+}
+body.cinewave-site .guest-gate-dialog h2 {
+  margin: 14px 0;
+  font-size: clamp(1.35rem, 5vw, 1.85rem);
+  color: #f7f5f0;
+}
+body.cinewave-site .guest-gate-dialog p {
+  margin: 12px 0;
+  line-height: 1.6;
+}
+body.cinewave-site .guest-gate-action {
+  display: block;
+  width: 100%;
+  justify-content: center;
+  margin: 22px 0 12px;
+}
+body.cinewave-site .guest-gate-text-button {
+  display: block;
+  width: 100%;
+  padding: 11px 8px;
+  border: 0;
+  background: transparent;
+  color: #d4f458;
+  text-decoration: underline;
+  cursor: pointer;
+  font: inherit;
+}
+body.cinewave-site .guest-gate-note {
+  font-size: .83rem;
+  opacity: .8;
+}
+body.cinewave-site .guest-gate-close {
+  position: absolute;
+  right: 12px;
+  top: 10px;
+  width: 42px;
+  height: 42px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: #f7f5f0;
+  cursor: pointer;
+  font-size: 1.8rem;
+  line-height: 1;
+}
+body.cinewave-site .guest-gate-dialog button:focus-visible {
+  outline: 3px solid #d4f458;
+  outline-offset: 3px;
+}
+body.cinewave-site .series-episode-link:is(button) { font: inherit; cursor: pointer; }
+@media (max-width: 520px) {
+  body.cinewave-site .guest-gate-dialog { padding: 22px 20px; }
+}
