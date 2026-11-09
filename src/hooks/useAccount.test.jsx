@@ -24,6 +24,7 @@ vi.mock("../services/backend", () => ({
 import useAccount from "./useAccount";
 const session = { user: { id: "user-1", email: "user@example.invalid" } };
 let chain;
+let externalChain;
 beforeEach(() => {
   vi.clearAllMocks();
   mocks.getSession.mockResolvedValue({ data: { session: null } });
@@ -40,7 +41,17 @@ beforeEach(() => {
     insert: vi.fn(async () => ({ error: null })),
     delete: vi.fn(() => chain),
   };
-  mocks.from.mockReturnValue(chain);
+  externalChain = {
+    ...chain,
+    select: vi.fn(() => externalChain),
+    eq: vi.fn(() => externalChain),
+    delete: vi.fn(() => externalChain),
+    insert: vi.fn(async () => ({ error: null })),
+    then: (resolve) => Promise.resolve({ data: [{ external_movie_id: "41" }] }).then(resolve),
+  };
+  mocks.from.mockImplementation((table) =>
+    table === "user_external_watchlist" ? externalChain : chain,
+  );
 });
 it("keeps account watchlist writes scoped to the authenticated user", async () => {
   mocks.getSession.mockResolvedValue({ data: { session } });
@@ -89,4 +100,33 @@ it("ignores malformed guest-list storage instead of breaking startup", async () 
   const { result } = renderHook(() => useAccount());
   await waitFor(() => expect(result.current.ready).toBe(true));
   expect([...result.current.list]).toEqual([]);
+});
+
+it("loads and saves external film favorites separately from legacy catalog favorites", async () => {
+  mocks.getSession.mockResolvedValue({ data: { session } });
+  const { result } = renderHook(() => useAccount());
+  await waitFor(() => expect(result.current.cloudReady).toBe(true));
+  expect(result.current.list.has("catalog:1")).toBe(true);
+  expect(result.current.list.has("external:41")).toBe(true);
+  await act(() => result.current.toggle({ id: "external:42" }));
+  expect(mocks.from).toHaveBeenCalledWith("user_external_watchlist");
+  expect(externalChain.insert).toHaveBeenCalledWith({
+    user_id: "user-1",
+    external_movie_id: "42",
+  });
+  expect(result.current.list.has("external:42")).toBe(true);
+  await act(() => result.current.toggle({ id: "external:41" }));
+  expect(externalChain.eq).toHaveBeenCalledWith("external_movie_id", "41");
+  expect(result.current.list.has("external:41")).toBe(false);
+  expect(chain.insert).not.toHaveBeenCalled();
+});
+it("never adds external favorites to the UI if the member insert is rejected", async () => {
+  mocks.getSession.mockResolvedValue({ data: { session } });
+  const { result } = renderHook(() => useAccount());
+  await waitFor(() => expect(result.current.cloudReady).toBe(true));
+  externalChain.insert.mockResolvedValue({ error: Error("RLS denied") });
+  await act(async () => {
+    await expect(result.current.toggle({ id: "external:45" })).rejects.toThrow("listFailed");
+  });
+  expect(result.current.list.has("external:45")).toBe(false);
 });
