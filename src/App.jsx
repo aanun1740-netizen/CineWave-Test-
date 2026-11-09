@@ -288,6 +288,13 @@ export default function App() {
   } catch {}
   const current = movies.find((movie) => movie.id === movieId),
     home = listing === "home" && !query && genre === "All";
+  // A pasted /watch hash must not bypass the same 5-film guest allowance.
+  // An existing choice is replayable; a new choice consumes one slot.
+  useEffect(() => {
+    if (!route.startsWith("watch/") || !current || !account.ready ||
+        account.session || guestFilms.includes(current.id)) return;
+    allowWatch(current);
+  }, [route, current?.id, account.ready, account.session, guestFilms]);
   const available = useMemo(() => movies.filter(watchable), [movies, watchable]),
     continuing = available.filter((movie) => {
       const p = playback.progressFor(movie.id);
@@ -819,7 +826,7 @@ export default function App() {
         <MovieDialog
           movie={current}
           loading={state === "loading"}
-          watch={route.startsWith("watch/")}
+          watch={route.startsWith("watch/") && Boolean(account.session || guestFilms.includes(current?.id))}
           language={language}
           t={t}
           close={() => navigate(underlay.current, true)}
