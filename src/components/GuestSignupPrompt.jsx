@@ -3,24 +3,24 @@ import { FREE_GUEST_FILMS } from "../guest-watch";
 
 const words = {
   hy: {
-    headline: "Քո 5 անվճար ֆիլմերն օգտագործված են",
-    desc: "Դու արդեն բացել ես 5 տարբեր ֆիլմերի դիտման հղում։ Գրանցվիր անվճար՝ մնացած բոլոր ֆիլմերի «Դիտել» հղումները բացելու և KinoLab-ի հնարավորություններից օգտվելու համար։",
+    headline: "5 անվճար ֆիլմի սահմանաչափը լրացել է",
+    desc: "Մյուս ֆիլմերը դիտելու համար գրանցվիր անվճար KinoLab-ում։",
     action: "Գրանցվել անվճար", login: "Արդեն ունե՞ս հաշիվ։ Մուտք գործիր",
     dismiss: "Շարունակել ուսումնասիրել կատալոգը",
     note: "Ֆիլմերի նկարագրությունները, որոնումը և թրեյլերները մնում են հասանելի առանց գրանցվելու։",
     close: "Փակել",
   },
   ru: {
-    headline: "Пять бесплатных фильмов уже выбраны",
-    desc: "Ты открыл ссылки просмотра пяти разных фильмов. Зарегистрируйся бесплатно, чтобы открывать ссылки остальных фильмов и пользоваться возможностями KinoLab.",
+    headline: "Лимит 5 бесплатных фильмов исчерпан",
+    desc: "Зарегистрируйся бесплатно в KinoLab, чтобы смотреть другие фильмы.",
     action: "Зарегистрироваться бесплатно", login: "Уже есть аккаунт? Войти",
     dismiss: "Продолжить изучать каталог",
     note: "Каталог, описания, поиск и трейлеры доступны без регистрации.",
     close: "Закрыть",
   },
   en: {
-    headline: "You've used your 5 free movie choices",
-    desc: "You've opened Watch links for five different movies. Create a free account to open Watch links for the rest of the catalog and use KinoLab features.",
+    headline: "You've reached your 5 free movies",
+    desc: "Sign up for free on KinoLab to watch more movies.",
     action: "Create a free account", login: "Already have an account? Sign in",
     dismiss: "Keep browsing the catalog",
     note: "You can still browse titles, descriptions, search and trailers without an account.",
