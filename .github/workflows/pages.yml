@@ -28,7 +28,7 @@ concurrency:
 jobs:
   build:
     if: github.repository == 'aanun1740-netizen/CineWave-Test-'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Validate explicit publication approval
         env:
@@ -73,7 +73,7 @@ jobs:
       inputs.confirm_repository == 'aanun1740-netizen/CineWave-Test-' &&
       inputs.approved_sha == github.sha
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     permissions:
       pages: write
       id-token: write
