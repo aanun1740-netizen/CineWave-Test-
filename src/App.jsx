@@ -74,12 +74,12 @@ export default function App() {
     }[language] || null;
     if (!seo) return;
     document.documentElement.lang = language;
-    document.title = seo.title;
+    if (!route.startsWith("play/")) document.title = seo.title;
     document.querySelector('meta[name="description"]')?.setAttribute("content", seo.description);
     document.querySelector('meta[property="og:title"]')?.setAttribute("content", seo.title);
     document.querySelector('meta[property="og:description"]')?.setAttribute("content", seo.description);
     document.querySelector('meta[property="og:locale"]')?.setAttribute("content", seo.locale);
-  }, [language]);
+  }, [language, route]);
   const accountPage = [
     "login",
     "register",
