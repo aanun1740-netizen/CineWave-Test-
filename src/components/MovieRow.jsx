@@ -3,6 +3,7 @@ import { localizedMovie, genreLabel, POSTER_FALLBACK } from "../domain";
 import { playback } from "./Player";
 import { Icon } from "./Icons";
 import { vkEmbedUrl } from "../services/vk-embed";
+import { isCleanPlayerMovie } from "../services/clean-player";
 export function Artwork({ src, alt, ...props }) {
   const [failed, setFailed] = useState(false);
   return (
@@ -103,6 +104,7 @@ export default function MovieRow({
             available = watchable(movie),
             official = !available ? externalWatchUrl(movie) : null,
             vkPlayer = official ? vkEmbedUrl(official) : null,
+            cleanPlayer = isCleanPlayerMovie(movie, official),
             progress = playback.progressFor(movie.id);
           return (
             <article
@@ -111,7 +113,7 @@ export default function MovieRow({
               data-id={movie.id}
               tabIndex={0}
               role="button"
-              aria-label={`${info.title} — ${t(available || vkPlayer ? "watch" : "details")}`}
+              aria-label={`${info.title} — ${t(available || vkPlayer || cleanPlayer ? "watch" : "details")}`}
               onClick={() => open(movie)}
               onKeyDown={(e) => {
                 if (["Enter", " "].includes(e.key)) {
@@ -137,11 +139,18 @@ export default function MovieRow({
                   alt={info.title}
                 />
                 <span
-                  className={`poster-badge ${available || vkPlayer ? "available" : ""}`}
+                  className={`poster-badge ${available || vkPlayer || cleanPlayer ? "available" : ""}`}
                 >
-                  {t(available || vkPlayer ? "available" : "catalogOnly")}
+                  {t(available || vkPlayer || cleanPlayer ? "available" : "catalogOnly")}
                 </span>
-                {vkPlayer ? (
+                {cleanPlayer ? (
+                  <button className="play-overlay" type="button"
+                    aria-label={`${info.title} — ${t("watch")}`}
+                    onClick={(e) => { e.stopPropagation(); open(movie, "clean"); }}
+                    onKeyDown={(e) => e.stopPropagation()}>
+                    <Icon name="play" />{t("watch")}
+                  </button>
+                ) : vkPlayer ? (
                   <button className="play-overlay" type="button"
                     aria-label={`${info.title} — ${t("watch")}`}
                     onClick={(e) => { e.stopPropagation(); open(movie, true); }}

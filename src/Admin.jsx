@@ -574,13 +574,13 @@ export default function Admin() {
             <small>STUDIO</small>
              </a>
             <nav>
-              {["overview", "movies", "external", "archive", "analytics"].map((page) => (
+              {["overview", "movies", "external", "clean", "archive", "analytics"].map((page) => (
                 <button
                   key={page}
                   className={view === page ? "active" : ""}
                   onClick={() => leave(page)}
                 >
-                  {page==="analytics" ? ({hy:"▥ Վիճակագրություն",ru:"▥ Статистика",en:"▥ Analytics"}[language]) : page==="external" ? ({hy:"▶ Արագ ֆիլմ ավելացնել",ru:"▶ Быстро добавить фильм",en:"▶ Quick add movie"}[language]) : page==="archive" ? ({hy:"▤ Վերնագրերի արխիվ",ru:"▤ Архив названий",en:"▤ Title archive"}[language]) : t(page === "overview" ? "◈ Overview" : "▤ Movie library")}
+                  {page==="analytics" ? ({hy:"▥ Վիճակագրություն",ru:"▥ Статистика",en:"▥ Analytics"}[language]) : page==="external" ? ({hy:"▶ Արագ ֆիլմ ավելացնել",ru:"▶ Быстро добавить фильм",en:"▶ Quick add movie"}[language]) : page==="clean" ? ({hy:"▣ Մաքուր փլեյերով ֆիլմ",ru:"▣ Фильм с чистым плеером",en:"▣ Clean player movie"}[language]) : page==="archive" ? ({hy:"▤ Վերնագրերի արխիվ",ru:"▤ Архив названий",en:"▤ Title archive"}[language]) : t(page === "overview" ? "◈ Overview" : "▤ Movie library")}
                 </button>
               ))}
               <button onClick={() => edit()}>{t("＋ Add movie")}</button>
@@ -605,6 +605,7 @@ export default function Admin() {
                       archive: ({hy:"Վերնագրերի արխիվ",ru:"Архив названий",en:"Title archive"}[language]),
                       analytics: ({hy:"Այցելությունների վիճակագրություն",ru:"Статистика посещений",en:"Traffic analytics"}[language]),
                       external: ({hy:"Արագ ֆիլմ ավելացնել",ru:"Быстро добавить фильм",en:"Quick add movie"}[language]),
+                      clean: ({hy:"Մաքուր փլեյերով ֆիլմ ավելացնել",ru:"Добавить фильм с чистым плеером",en:"Add a clean-player movie"}[language]),
                       editor: editing ? "Edit movie" : "Add movie",
                     }[view],
                   )}
@@ -685,7 +686,8 @@ export default function Admin() {
             )}
             {view === "archive" && <ArchiveImporter language={language} />}
             {view === "analytics" && <AnalyticsDashboard language={language} />}
-            {view === "external" && <QuickExternalMovie language={language} />}
+            {view === "external" && <QuickExternalMovie language={language} mode="external" />}
+            {view === "clean" && <QuickExternalMovie language={language} mode="clean" />}
             {view === "movies" && (
               <section>
                 <div className="toolbar">

@@ -65,7 +65,7 @@ export function initialLanguage() {
 export function routeFromHash(hash = location.hash) {
   if (/^#(?:access_token|refresh_token|error)=/.test(hash)) return "home";
   const route = hash.replace(/^#\/?/, "") || "home";
-  return /^(home|movies|tv|my-list|login|register|profile|forgot|recover|movie\/.+|watch\/.+)$/.test(
+  return /^(home|movies|tv|my-list|login|register|profile|forgot|recover|movie\/.+|watch\/.+|play\/.+)$/.test(
     route,
   )
     ? route
