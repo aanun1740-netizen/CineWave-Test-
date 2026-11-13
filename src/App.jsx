@@ -2,6 +2,7 @@ import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } fr
 import { backendFetch, config, base } from "./services/backend";
 import { allowedExternalWatch } from "./services/external-links";
 import { vkEmbedUrl } from "./services/vk-embed";
+import { cleanEmbedUrl, isCleanPlayerMovie } from "./services/clean-player";
 import {
   mapCatalogMovie,
   localizedMovie,
@@ -18,6 +19,7 @@ import useAccount from "./hooks/useAccount";
 import Accounts from "./components/Accounts";
 import MovieRow, { Artwork } from "./components/MovieRow";
 import MovieDialog from "./components/MovieDialog";
+import CleanWatchPage from "./components/CleanWatchPage";
 import { playback } from "./components/Player";
 import { Brand, Icon, Icons } from "./components/Icons";
 import AI from "./components/AI";
@@ -86,6 +88,7 @@ export default function App() {
     "recover",
   ].includes(route);
   const modal = /^(movie|watch)\//.test(route);
+  const cleanPage = route.startsWith("play/");
   const listing = route in navs ? route : underlay.current;
   const mayCount = account.ready && (!account.session || account.cloudReady) && !account.admin;
   useEffect(() => {
@@ -292,7 +295,7 @@ export default function App() {
   // A pasted /watch hash must not bypass the same 5-film guest allowance.
   // An existing choice is replayable; a new choice consumes one slot.
   useEffect(() => {
-    if (!route.startsWith("watch/") || !current || !account.ready ||
+    if (!/^(watch|play)\//.test(route) || !current || !account.ready ||
         account.session || guestFilms.includes(current.id)) return;
     allowWatch(current);
   }, [route, current?.id, account.ready, account.session, guestFilms]);
@@ -364,7 +367,7 @@ export default function App() {
   function openWatch(movie, route = false) {
     if (!allowWatch(movie)) return false;
     if (mayCount) recordMetric("watch_click", movie.id, language);
-    if (route) navigate("watch/" + encodeURIComponent(movie.id));
+    if (route) navigate((route === "clean" ? "play/" : "watch/") + encodeURIComponent(movie.id));
     return true;
   }
   function outboundClick(event, movie) {
@@ -382,7 +385,7 @@ export default function App() {
     guestLocked,
     onOutbound: outboundClick,
     open: (movie, play = false) => {
-      if (play) openWatch(movie, true);
+      if (play) openWatch(movie, play === "clean" ? "clean" : true);
       else navigate("movie/" + encodeURIComponent(movie.id));
     },
   };
@@ -412,6 +415,15 @@ export default function App() {
       ))}
     </nav>
   );
+  if (cleanPage) {
+    const url = current ? externalWatchUrl(current) : null;
+    const supported = isCleanPlayerMovie(current, url);
+    const access = account.ready && Boolean(account.session || guestFilms.includes(current?.id));
+    const locked = account.ready && !account.session && guestFilms.length >= FREE_GUEST_FILMS && !guestFilms.includes(current?.id);
+    return <CleanWatchPage movie={supported ? current : null} language={language}
+      ready={account.ready && state !== "loading"} access={access} locked={locked}
+      onBack={() => navigate(underlay.current)} />;
+  }
   return (
     <>
       <a className="skip-link" href="#catalog">
@@ -597,7 +609,13 @@ export default function App() {
                 </p>
                 <div className="actions">
                   {featured && externalWatchUrl(featured) && !watchable(featured) ? (
-                    vkEmbedUrl(externalWatchUrl(featured)) ? (
+                    isCleanPlayerMovie(featured, externalWatchUrl(featured)) ? (
+                      <button type="button" className="btn primary"
+                        aria-label={`${t("watch")} — clean player`}
+                        onClick={() => openWatch(featured, "clean")}>
+                        <Icon name="play" /><span>{t("watch")}</span>
+                      </button>
+                    ) : vkEmbedUrl(externalWatchUrl(featured)) ? (
                       <button type="button" className="btn primary"
                         aria-label={`${t("watch")} — VK embedded player`}
                         onClick={() => openWatch(featured, true)}>
@@ -845,6 +863,7 @@ export default function App() {
           t={t}
           close={() => navigate(underlay.current, true)}
           onWatch={() => openWatch(current, true)}
+          onCleanWatch={() => openWatch(current, "clean")}
           toggle={toggle}
           saved={Boolean(current && account.list.has(current.id))}
           watchable={watchable}
