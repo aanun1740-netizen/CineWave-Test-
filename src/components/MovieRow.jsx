@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { localizedMovie, genreLabel, POSTER_FALLBACK } from "../domain";
 import { playback } from "./Player";
 import { Icon } from "./Icons";
+import { vkEmbedUrl } from "../services/vk-embed";
 export function Artwork({ src, alt, ...props }) {
   const [failed, setFailed] = useState(false);
   return (
@@ -101,6 +102,7 @@ export default function MovieRow({
           const info = localizedMovie(movie, language),
             available = watchable(movie),
             official = !available ? externalWatchUrl(movie) : null,
+            vkPlayer = official ? vkEmbedUrl(official) : null,
             progress = playback.progressFor(movie.id);
           return (
             <article
@@ -109,7 +111,7 @@ export default function MovieRow({
               data-id={movie.id}
               tabIndex={0}
               role="button"
-              aria-label={`${info.title} — ${t(available ? "watch" : "details")}`}
+              aria-label={`${info.title} — ${t(available || vkPlayer ? "watch" : "details")}`}
               onClick={() => open(movie)}
               onKeyDown={(e) => {
                 if (["Enter", " "].includes(e.key)) {
@@ -135,11 +137,18 @@ export default function MovieRow({
                   alt={info.title}
                 />
                 <span
-                  className={`poster-badge ${available ? "available" : ""}`}
+                  className={`poster-badge ${available || vkPlayer ? "available" : ""}`}
                 >
-                  {t(available ? "available" : "catalogOnly")}
+                  {t(available || vkPlayer ? "available" : "catalogOnly")}
                 </span>
-                {official ? (
+                {vkPlayer ? (
+                  <button className="play-overlay" type="button"
+                    aria-label={`${info.title} — ${t("watch")}`}
+                    onClick={(e) => { e.stopPropagation(); open(movie, true); }}
+                    onKeyDown={(e) => e.stopPropagation()}>
+                    <Icon name="play" />{t("watch")}
+                  </button>
+                ) : official ? (
                   guestLocked?.(movie) ? (
                     <button className="play-overlay" type="button"
                       aria-label={`${info.title} — ${t("watch")} (sign in)`}

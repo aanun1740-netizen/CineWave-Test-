@@ -97,3 +97,26 @@ CI media decoding-ի ուղղման հետաքննությունը՝ [CI-MEDIA-F
 GitHub Pages workflow-ի անվտանգ նախապատրաստումն ու առանձին հաստատման քայլերը՝
 [PAGES-DEPLOYMENT.md](PAGES-DEPLOYMENT.md)։ Workflow-ը լռելյայն միայն build է պատրաստում
 և push/PR իրադարձությամբ ոչինչ չի հրապարակում։
+
+
+## VK Video embedded watch (feature branch)
+
+External-link movies can use the regular VK Video page URL
+(\`https://vkvideo.ru/video-123_456\`) or the exact VK-provided \`iframe\`
+snippet in the admin **External watch URL** field. The admin stores a validated
+\`https://vkvideo.ru/video_ext.php?oid=...&id=...\` URL, preserving a VK-issued
+\`hash\` where present. Existing title/genre/year/poster/EN-RU-HY descriptions
+are not changed.
+
+- VK external links open in a responsive player **inside the KinoLab film dialog**.
+- Other external links continue to open in a new tab. Authorized MP4/HLS
+  playback still uses the existing first-party player.
+- The site's existing guest 5-film limit is enforced before entering \`#/watch/...\`.
+- Only approved VK hostnames and video formats are embedded; \`vk.cc\`
+  short links must first be expanded to the original VK Video address.
+- VK branding and controls inside the embedded player belong to VK and cannot
+  be removed by the site. VK permissions, regional restrictions and availability
+  still apply. A publicly available URL alone is not distribution permission.
+
+This is a staging source change only; it does not deploy production or modify
+Supabase database records. Run \`npm test\` and \`npm run build\` before merging.

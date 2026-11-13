@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { backendFetch, config, base } from "./services/backend";
 import { allowedExternalWatch } from "./services/external-links";
+import { vkEmbedUrl } from "./services/vk-embed";
 import {
   mapCatalogMovie,
   localizedMovie,
@@ -596,7 +597,13 @@ export default function App() {
                 </p>
                 <div className="actions">
                   {featured && externalWatchUrl(featured) && !watchable(featured) ? (
-                    guestLocked(featured) ? (
+                    vkEmbedUrl(externalWatchUrl(featured)) ? (
+                      <button type="button" className="btn primary"
+                        aria-label={`${t("watch")} — VK embedded player`}
+                        onClick={() => openWatch(featured, true)}>
+                        <Icon name="play" /><span>{t("watch")}</span>
+                      </button>
+                    ) : guestLocked(featured) ? (
                       <button type="button" className="btn primary"
                         aria-label={`${t("watch")} — registration`}
                         onClick={() => outboundClick(null, featured)}>
