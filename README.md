@@ -120,3 +120,40 @@ are not changed.
 
 This is a staging source change only; it does not deploy production or modify
 Supabase database records. Run \`npm test\` and \`npm run build\` before merging.
+
+
+## Clean-player movie editor (staging only)
+
+KinoLab Studio has a separate **Clean player movie / Մաքուր փլեյերով ֆիլմ** menu.
+It reuses the existing external-catalog movie editor with the same title
+(EN/RU/HY), overview (EN/RU/HY), poster upload, genre, year and trailer inputs.
+In this mode, movie URLs or provider-issued iframe snippets are validated
+against a narrow allowlist of VK Video, RUTUBE, OK Video, YouTube, Vimeo,
+Dailymotion, Internet Archive and NextEmbed, then stored as official embed URLs.
+
+The staging Supabase project \`zayssiouqexwdicudalc\` was migrated with:
+
+\`\`\`sql
+alter table public.kinolab_external_catalog
+  add column if not exists playback_mode text not null default 'external';
+alter table public.kinolab_external_catalog
+  add constraint kinolab_external_catalog_playback_mode_check
+  check (playback_mode in ('external','clean'));
+\`\`\`
+
+Existing records default to \`external\` and retain their old behavior. New clean
+records save \`playback_mode='clean'\` in the same table. Storefront \`#/play/{id}\`
+displays only the film title and responsive iframe on an isolated page; the
+site-level five guest-film rule is checked on direct links too. Normal external
+links remain outbound and already configured VK embeds retain their older
+in-dialog experience.
+
+**Not a proxy:** the third-party iframe can still show provider branding,
+ads, region restrictions or an unavailable-video message. The browser
+tab title is the film's localized name, not the provider site. Users must
+hold the rights to publicly embed/distribute the content. A public link alone
+is insufficient.
+
+**Do not merge staging config to production.** The staging project uses
+a separate Supabase backend and base path; production requires its own
+schema migration and correctly built/deployed production bundle.
