@@ -1,6 +1,8 @@
 import { useEffect, useRef } from "react";
 import { localizedMovie, genreLabel, adminModel, externalWatchUrl } from "../domain";
 import Player from "./Player";
+import VkEmbedPlayer from "./VkEmbedPlayer";
+import { vkEmbedUrl } from "../services/vk-embed";
 import { Artwork } from "./MovieRow";
 
 // Only trusted, intentionally embeddable platforms; never embed arbitrary hosts.
@@ -67,6 +69,7 @@ export default function MovieDialog({
   const hasDirectPlayback = movie ? watchable(movie) : false;
   const official = /^https:\/\/(?:www\.)?netflix\.com\/title\/\d+\/?$/.test(movie?.officialWatch || "") ? movie.officialWatch : null;
   const externalWatch = !hasDirectPlayback ? externalWatchUrl(movie) : null;
+  const vkPlayer = externalWatch ? vkEmbedUrl(externalWatch) : null;
   return (
     <div
       className="modal open"
@@ -118,7 +121,9 @@ export default function MovieDialog({
           </button>
         </div>
         <div className="video-wrap">
-          {movie && (watch && hasDirectPlayback ? (
+          {movie && (watch && vkPlayer ? (
+            <VkEmbedPlayer url={externalWatch} title={info.title} language={language} />
+          ) : watch && hasDirectPlayback ? (
             <Player movie={movie} language={language} onProgress={onProgress} />
           ) : (
             <div className="details-art">
@@ -167,7 +172,12 @@ export default function MovieDialog({
           )}
           {movie && (
             <div className="detail-actions">
-              {externalWatch && !watch && (
+              {vkPlayer && !watch && (
+                <button className="btn primary" type="button" onClick={onWatch}>
+                  {({hy:"Դիտել ֆիլմը",ru:"Смотреть фильм",en:"Watch movie"}[language])}
+                </button>
+              )}
+              {externalWatch && !watch && !vkPlayer && (
                 <div className="movielab-external-watch">
                   {guestLocked?.(movie) ? (
                     <button className="btn primary" type="button" onClick={() => onOutbound?.(null,movie)}>
